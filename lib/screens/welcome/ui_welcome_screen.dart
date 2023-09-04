@@ -1,3 +1,4 @@
+import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -44,19 +45,22 @@ class WelcomeScreen extends StatelessWidget {
             Positioned(
               left: 16,
               right: 16,
-              bottom: 16,
-              child: TextButton(
-                child: const Text("Create an account"),
-                onPressed: () {},
+              bottom: 80,
+              child: AppTextButton(
+                text: "Create an Account",
+                onTap: () {},
+                color: const Color.fromRGBO(0, 137, 85, 1),
               ),
             ),
             Positioned(
               left: 16,
               right: 16,
-              bottom: 0,
-              child: TextButton(
-                child: const Text("Login"),
-                onPressed: () {},
+              bottom: 10,
+              child: AppTextButton(
+                color: null,
+                onTap: () {},
+                text: "Login",
+                textColor: const Color.fromRGBO(0, 137, 85, 1),
               ),
             ),
           ],
