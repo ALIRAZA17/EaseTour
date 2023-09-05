@@ -64,6 +64,7 @@ class _EtAppBarState extends State<EtAppBar> {
                             left: 0,
                             child: ActionButton(
                               icon: 'assets/icons/bars-ver.svg',
+                              iconColor: Styles.primaryIconColor,
                               onTap: widget.onLeadingPress ?? () {},
                             ))
                         : widget.addBackButton

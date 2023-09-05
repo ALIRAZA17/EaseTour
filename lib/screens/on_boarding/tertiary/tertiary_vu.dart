@@ -14,11 +14,11 @@ class TertiaryView extends StackedView<TertiaryViewModel> {
       BuildContext context, TertiaryViewModel viewModel, Widget? child) {
     return Scaffold(
       appBar: EtAppBar(
-        color: Styles.backgroundColor,
+        color: Styles.trans,
         addBackButton: false,
         actions: [
           GestureDetector(
-            onTap: viewModel.onSkipTap,
+            onTap: () => viewModel.changeMode(context),
             child: Text(
               'Skip',
               style: Styles.displayMedNormalStyle
@@ -36,7 +36,7 @@ class TertiaryView extends StackedView<TertiaryViewModel> {
             ),
             SvgPicture.asset('assets/images/tertiary_onBoarding.svg'),
             const SizedBox(
-              height: 25,
+              height: 45,
             ),
             Text(
               'Book your car',

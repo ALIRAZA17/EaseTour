@@ -39,6 +39,7 @@ dependencies:
   flutter_svg: ^1.1.6
   provider: ^6.0.5
   get: ^4.6.5
+  flutter_platform_widgets: ^3.3.5
 
 dev_dependencies:
   flutter_test:

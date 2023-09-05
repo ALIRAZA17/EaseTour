@@ -17,14 +17,26 @@ class ThemeProvider extends ChangeNotifier {
   _updateColorScheme() {
     if (themeMode == ThemeMode.dark) {
       _updateDarkColors();
-      _updateTextColors(Colors.white);
+      _updateTextColors(Colors.white, const Color.fromARGB(255, 224, 216, 216));
     } else {
       _updateLightColors();
-      _updateTextColors(Styles.primaryTextColor);
+      _updateTextColors(const Color(0xff414141), const Color(0xffA0A0A0));
     }
   }
 
-  _updateDarkColors() {}
-  _updateLightColors() {}
-  _updateTextColors(Color color) {}
+  _updateDarkColors() {
+    Styles.backgroundColor = Colors.black;
+    notifyListeners();
+  }
+
+  _updateLightColors() {
+    Styles.backgroundColor = Colors.white;
+    notifyListeners();
+  }
+
+  _updateTextColors(Color primaryColor, Color secondryColor) {
+    Styles.primaryTextColor = primaryColor;
+    Styles.secondryTextColor = secondryColor;
+    notifyListeners();
+  }
 }

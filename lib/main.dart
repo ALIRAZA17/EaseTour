@@ -16,17 +16,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
-      builder: (_, __) => Consumer(
-        builder: (context, ThemeProvider provider, child) => GetMaterialApp(
+      builder: (_, __) =>
+          Consumer(builder: (context, ThemeProvider provider, child) {
+        return GetMaterialApp(
           title: 'Ease Tour',
           theme: Themes.lightThemeData(),
           darkTheme: Themes.darkThemeData(),
           themeMode: provider.themeMode,
           debugShowCheckedModeBanner: false,
-          initialRoute: '/onBoarding/primary',
+          initialRoute: '/main_screen',
           getPages: appRoutes(),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

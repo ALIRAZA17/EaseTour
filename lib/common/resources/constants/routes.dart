@@ -1,3 +1,4 @@
+import 'package:ease_tour/screens/bottom_nav/bottom_nav_vu.dart';
 import 'package:ease_tour/screens/on_boarding/primary/primary_vu.dart';
 import 'package:ease_tour/screens/on_boarding/secondry/secondry_vu.dart';
 import 'package:ease_tour/screens/on_boarding/tertiary/tertiary_vu.dart';
@@ -20,6 +21,12 @@ appRoutes() => [
       GetPage(
         name: '/onBoarding/tertiary',
         page: () => const TertiaryView(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+      GetPage(
+        name: '/main_screen',
+        page: () => const BottomNavView(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),

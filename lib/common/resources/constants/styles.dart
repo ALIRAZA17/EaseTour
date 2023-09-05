@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Styles {
   //Light Mode Colors
-
+  static Color trans = Colors.transparent;
   static Color backgroundColor = Colors.white;
 
   static Color primaryColor = const Color(0xff08B783);
