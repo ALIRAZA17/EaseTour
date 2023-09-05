@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           darkTheme: Themes.darkThemeData(),
           themeMode: provider.themeMode,
           debugShowCheckedModeBanner: false,
-          initialRoute: '/onBoarding/primary',
+          initialRoute: '/signup',
           getPages: appRoutes(),
         ),
       ),
