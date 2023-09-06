@@ -7,12 +7,14 @@ class AppTextButton extends StatelessWidget {
     required this.onTap,
     required this.color,
     this.textColor,
+    this.addBorder = false,
   });
 
   final String text;
   final VoidCallback onTap;
   final Color? color;
   final Color? textColor;
+  final bool addBorder;
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +24,11 @@ class AppTextButton extends StatelessWidget {
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
+            side: const BorderSide(color: Color.fromRGBO(184, 184, 184, 1)),
           ),
         ),
         padding: MaterialStateProperty.all(
-          const EdgeInsets.only(
-            top: 15.5,
-            bottom: 15.5,
-            left: 94,
-            right: 94,
-          ),
+          const EdgeInsets.symmetric(horizontal: 20, vertical: 15.5),
         ),
       ),
       onPressed: onTap,

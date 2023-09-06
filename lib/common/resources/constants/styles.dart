@@ -16,11 +16,14 @@ class Styles {
   static Color primaryTextColor = const Color(0xff414141);
   static Color secondryTextColor = const Color(0xffA0A0A0);
   static Color tertiaryTextColor = const Color.fromRGBO(208, 208, 208, 1);
+  static Color lightGrayTextColor = const Color.fromRGBO(184, 184, 184, 1);
 
   static Color primaryIconColor = const Color(0xff414141);
 
   static Color primaryButtonTextColor = Colors.white;
   static Color secondryButtonTextColor = primaryColorMed;
+
+  static Color blackTextColor = const Color.fromRGBO(208, 208, 208, 1);
 
   //Light Mode TextStyles
 
