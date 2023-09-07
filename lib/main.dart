@@ -2,8 +2,9 @@ import 'package:ease_tour/common/resources/app_theme/theme_provider.dart';
 import 'package:ease_tour/common/resources/constants/routes.dart';
 import 'package:ease_tour/common/resources/constants/themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as provider;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -13,7 +14,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -21,18 +22,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    return provider.ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
       builder: (_, __) => Consumer(
-        builder: (context, ThemeProvider provider, child) => GetMaterialApp(
-          title: 'Ease Tour',
-          theme: Themes.lightThemeData(),
-          darkTheme: Themes.darkThemeData(),
-          themeMode: provider.themeMode,
-          debugShowCheckedModeBanner: false,
-          initialRoute: '/signup',
-          getPages: appRoutes(),
-        ),
+        builder: (context, WidgetRef ref, child) {
+          final themeProvider = ref.read(ThemeProvider.provider);
+          return GetMaterialApp(
+            title: 'Ease Tour',
+            theme: Themes.lightThemeData(),
+            darkTheme: Themes.darkThemeData(),
+            themeMode: themeProvider.themeMode,
+            debugShowCheckedModeBanner: false,
+            initialRoute: '/signup',
+            getPages: appRoutes(),
+          );
+        },
       ),
     );
   }

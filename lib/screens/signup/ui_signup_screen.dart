@@ -2,6 +2,7 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
+import 'package:ease_tour/screens/signup/providers/contact_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup/providers/email_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup/providers/gender_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup/providers/name_text_controller_provider.dart';
@@ -24,7 +25,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   Widget build(BuildContext context) {
     final emailController = ref.watch(emailTextControllerProvider);
     final nameController = ref.watch(nameTextControllerProvider);
-    final contactController = ref.watch(genderTextControllerProvider);
+    final contactController = ref.watch(contactTextControllerProvider);
     final genderController = ref.watch(genderTextControllerProvider);
 
     return Scaffold(
