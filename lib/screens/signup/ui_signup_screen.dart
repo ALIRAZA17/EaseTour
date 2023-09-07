@@ -5,8 +5,29 @@ import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final formKey = GlobalKey<FormState>();
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final contactController = TextEditingController();
+  final genderController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+    emailController.dispose();
+    contactController.dispose();
+    genderController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,29 +51,78 @@ class SignUpScreen extends StatelessWidget {
                 height: 30,
               ),
               Form(
+                key: formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const AppTextField(
+                    AppTextField(
                       label: "Name",
+                      keyboardType: TextInputType.name,
+                      controller: nameController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Name is required';
+                        } else if (!RegExp(r'^[a-z A-Z]').hasMatch(
+                          value,
+                        )) {
+                          return "Enter Correct Name";
+                        }
+                        return "";
+                      },
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    const AppTextField(
+                    AppTextField(
                       label: "Email",
+                      keyboardType: TextInputType.emailAddress,
+                      controller: emailController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Email is required';
+                        } else if (!RegExp(
+                                r'^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})')
+                            .hasMatch(
+                          value,
+                        )) {
+                          return "Enter a valid email address";
+                        }
+                        return "";
+                      },
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    const AppTextField(
+                    AppTextField(
                       label: "Mobile Number",
+                      keyboardType: TextInputType.number,
+                      controller: contactController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Mobile Number is required';
+                        } else if (!RegExp(
+                                r'^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}')
+                            .hasMatch(
+                          value,
+                        )) {
+                          return "Enter valid mobile number";
+                        }
+                        return "";
+                      },
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    const AppTextField(
+                    AppTextField(
                       label: "Gender",
+                      keyboardType: TextInputType.number,
+                      controller: genderController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Gender is required';
+                        }
+                        return "";
+                      },
                     ),
                     const SizedBox(
                       height: 20,
@@ -119,7 +189,9 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     AppTextButton(
                       text: "Sign Up",
-                      onTap: () {},
+                      onTap: () {
+                        if (formKey.currentState!.validate()) {}
+                      },
                       color: Styles.buttonColorPrimary,
                     ),
                     const SizedBox(

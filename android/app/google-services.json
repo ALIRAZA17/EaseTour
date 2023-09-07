@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "973382249906",
+    "project_id": "easetour-782d1",
+    "storage_bucket": "easetour-782d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973382249906:android:bbb9325e6bb560c4f408ab",
+        "android_client_info": {
+          "package_name": "com.example.ease_tour"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "973382249906-euh738sql0du0nj9roc3hqt29adq0dr9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVvhZruvxxgerlqSi7rEYTSJVlfob6mjg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "973382249906-euh738sql0du0nj9roc3hqt29adq0dr9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "973382249906-8qtk32aoc5sufh3atv7k29ro2oe7ssut.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.easeTour"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

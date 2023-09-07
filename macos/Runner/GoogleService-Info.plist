@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>973382249906-fhq54g6cjuuoaa6ege08rrbp3g26m0e6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.973382249906-fhq54g6cjuuoaa6ege08rrbp3g26m0e6</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD4SI08KqR6qb9j_02RrbK7aZ6KIb8DHV4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>973382249906</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.easeTour.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>easetour-782d1</string>
+	<key>STORAGE_BUCKET</key>
+	<string>easetour-782d1.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:973382249906:ios:e99721fc20ee350cf408ab</string>
+</dict>
+</plist>

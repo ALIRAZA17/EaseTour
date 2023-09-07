@@ -39,6 +39,7 @@ dependencies:
   flutter_svg: ^1.1.6
   provider: ^6.0.5
   get: ^4.6.5
+  firebase_core: ^2.15.1
 
 dev_dependencies:
   flutter_test:
