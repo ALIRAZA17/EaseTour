@@ -2,6 +2,7 @@ import 'package:ease_tour/screens/on_boarding/primary/primary_vu.dart';
 import 'package:ease_tour/screens/on_boarding/secondry/secondry_vu.dart';
 import 'package:ease_tour/screens/on_boarding/tertiary/tertiary_vu.dart';
 import 'package:ease_tour/screens/signup/ui_signup_screen.dart';
+import 'package:ease_tour/screens/signup/widgets/otp_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,6 +31,12 @@ appRoutes() => [
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),
+      GetPage(
+        name: '/signup/otp',
+        page: () => const OtpVerificationScreen(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      )
     ];
 
 class MyMiddelware extends GetMiddleware {

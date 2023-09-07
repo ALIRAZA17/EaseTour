@@ -2,35 +2,31 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
+import 'package:ease_tour/screens/signup/providers/email_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup/providers/gender_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup/providers/name_text_controller_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final formKey = GlobalKey<FormState>();
-
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final contactController = TextEditingController();
-  final genderController = TextEditingController();
-
-  @override
-  void dispose() {
-    super.dispose();
-    nameController.dispose();
-    emailController.dispose();
-    contactController.dispose();
-    genderController.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final emailController = ref.watch(emailTextControllerProvider);
+    final nameController = ref.watch(nameTextControllerProvider);
+    final contactController = ref.watch(genderTextControllerProvider);
+    final genderController = ref.watch(genderTextControllerProvider);
+
     return Scaffold(
       appBar: const EtAppBar(),
       body: SingleChildScrollView(
@@ -190,7 +186,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     AppTextButton(
                       text: "Sign Up",
                       onTap: () {
-                        if (formKey.currentState!.validate()) {}
+                        if (formKey.currentState!.validate()) {
+                          Get.toNamed('/signup/otp');
+                        }
                       },
                       color: Styles.buttonColorPrimary,
                     ),
