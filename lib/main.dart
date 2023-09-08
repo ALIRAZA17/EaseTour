@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             darkTheme: Themes.darkThemeData(),
             themeMode: themeProvider.themeMode,
             debugShowCheckedModeBanner: false,
-            initialRoute: '/signup',
+            initialRoute: '/signup/setPasswordScreen',
             getPages: appRoutes(),
           );
         },

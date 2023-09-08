@@ -40,7 +40,7 @@ appRoutes() => [
       ),
       GetPage(
         name: '/signup/setPasswordScreen',
-        page: () => const SetPasswordScreen(),
+        page: () => SetPasswordScreen(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),
