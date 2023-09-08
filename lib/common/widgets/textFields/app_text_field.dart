@@ -12,7 +12,7 @@ class AppTextField extends StatelessWidget {
   final String label;
   final TextInputType keyboardType;
   final TextEditingController controller;
-  final String Function(String?) validator;
+  final String? Function(String?) validator;
 
   @override
   Widget build(BuildContext context) {

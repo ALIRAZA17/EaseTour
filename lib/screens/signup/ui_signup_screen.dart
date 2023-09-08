@@ -6,6 +6,7 @@ import 'package:ease_tour/screens/signup/providers/contact_text_controller_provi
 import 'package:ease_tour/screens/signup/providers/email_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup/providers/gender_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup/providers/name_text_controller_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -64,7 +65,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         )) {
                           return "Enter Correct Name";
                         }
-                        return "";
+                        return null;
                       },
                     ),
                     const SizedBox(
@@ -84,7 +85,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         )) {
                           return "Enter a valid email address";
                         }
-                        return "";
+                        return null;
                       },
                     ),
                     const SizedBox(
@@ -104,7 +105,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         )) {
                           return "Enter valid mobile number";
                         }
-                        return "";
+                        return null;
                       },
                     ),
                     const SizedBox(
@@ -118,7 +119,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         if (value == null || value.isEmpty) {
                           return 'Gender is required';
                         }
-                        return "";
+                        return null;
                       },
                     ),
                     const SizedBox(
@@ -186,9 +187,20 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ),
                     AppTextButton(
                       text: "Sign Up",
-                      onTap: () {
+                      onTap: () async {
                         if (formKey.currentState!.validate()) {
-                          Get.toNamed('/signup/otp');
+                          await FirebaseAuth.instance.verifyPhoneNumber(
+                            phoneNumber: contactController.text,
+                            verificationCompleted:
+                                (PhoneAuthCredential credential) {},
+                            verificationFailed: (FirebaseAuthException e) {},
+                            codeSent:
+                                (String verificationId, int? resendToken) {
+                              Get.toNamed('/signup/otp');
+                            },
+                            codeAutoRetrievalTimeout:
+                                (String verificationId) {},
+                          );
                         }
                       },
                       color: Styles.buttonColorPrimary,
