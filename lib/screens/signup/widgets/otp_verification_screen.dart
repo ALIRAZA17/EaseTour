@@ -2,7 +2,6 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
-import 'package:ease_tour/screens/signup/providers/email_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup/providers/otp_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup/ui_signup_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -110,17 +109,18 @@ class OtpVerificationScreen extends ConsumerWidget {
 
                       if (authResult.user != null) {
                         await authResult.user?.delete();
-
                         Get.toNamed('/signup/setPasswordScreen');
                       } else {
-                        print("Sign-in failed");
+                        print("Sign-Up failed");
                       }
                     } on FirebaseAuthException catch (e) {
                       if (e.code == 'invalid-verification-code') {
-                        print("Invalid verification code");
-                      } else {
-                        print(e);
-                      }
+                        const snackBar = SnackBar(
+                          content: Text('Invalid Verification Code'),
+                        );
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      } else {}
                     }
                   },
                   text: "Verify",
