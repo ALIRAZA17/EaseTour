@@ -94,7 +94,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ),
                     AppTextField(
                       label: "Mobile Number",
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       controller: contactController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -114,7 +114,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ),
                     AppTextField(
                       label: "Gender",
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       controller: genderController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
