@@ -3,12 +3,16 @@ import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
 import 'package:ease_tour/screens/signup/providers/otp_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup/ui_signup_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OtpVerificationScreen extends ConsumerWidget {
-  const OtpVerificationScreen({super.key});
+  OtpVerificationScreen({super.key});
+
+  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -91,7 +95,15 @@ class OtpVerificationScreen extends ConsumerWidget {
                 bottom: 5,
                 child: AppTextButton(
                   color: Styles.buttonColorPrimary,
-                  onTap: () {},
+                  onTap: () async {
+                    PhoneAuthCredential credential =
+                        PhoneAuthProvider.credential(
+                      verificationId: SignUpScreen.verificationId,
+                      smsCode: otpController.text,
+                    );
+
+                    await auth.signInWithCredential(credential);
+                  },
                   text: "Verify",
                   textColor: Colors.white,
                 ),

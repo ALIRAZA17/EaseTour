@@ -14,6 +14,7 @@ import 'package:get/get.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
+  static String verificationId = "";
 
   @override
   ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
@@ -196,6 +197,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                             verificationFailed: (FirebaseAuthException e) {},
                             codeSent:
                                 (String verificationId, int? resendToken) {
+                              SignUpScreen.verificationId = verificationId;
                               Get.toNamed('/signup/otp');
                             },
                             codeAutoRetrievalTimeout:
