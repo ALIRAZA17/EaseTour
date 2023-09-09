@@ -108,7 +108,7 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
                               validator: (value) {
                                 return null;
                               },
-                              obscureText: false,
+                              obscureText: true,
                             ),
                             const SizedBox(
                               height: 20,
