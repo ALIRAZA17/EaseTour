@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
@@ -8,7 +9,6 @@ import 'package:ease_tour/screens/signup/providers/contact_text_controller_provi
 import 'package:ease_tour/screens/signup/providers/email_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup/providers/gender_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup/providers/name_text_controller_provider.dart';
-import 'package:ease_tour/screens/signup/providers/otp_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup/providers/password_text_controller_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +30,26 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
     try {
       UserCredential credential = await auth.createUserWithEmailAndPassword(
           email: user.email, password: user.password);
+
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
+
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      DocumentReference userRef = users.doc(uid);
+
+      userRef
+          .set({
+            'full_name': user.name,
+            'email': user.email,
+            'password': user.password,
+            'contact': user.contactNumber,
+            'gender': user.gender,
+          })
+          .then((value) => print("user added"))
+          .catchError(
+            (error) => print("Failed to add user in firestore: $error"),
+          );
       Get.toNamed('/home');
       return credential.user;
     } catch (e) {
