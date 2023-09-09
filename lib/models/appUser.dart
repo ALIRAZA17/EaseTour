@@ -1,11 +1,11 @@
-class User {
+class AppUser {
   final String name;
   final String contactNumber;
   final String gender;
   final String email;
   final String password;
 
-  User({
+  AppUser({
     required this.contactNumber,
     required this.gender,
     required this.email,

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "973382249906-vu7k6npmt7iqt39ngi1q5mdarajdh8a3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ease_tour",
+            "certificate_hash": "da58ff5e12f8273a5dc9f9bd11956de482e68e21"
+          }
+        },
+        {
           "client_id": "973382249906-euh738sql0du0nj9roc3hqt29adq0dr9.apps.googleusercontent.com",
           "client_type": 3
         }

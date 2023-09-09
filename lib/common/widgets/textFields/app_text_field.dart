@@ -2,17 +2,20 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:flutter/material.dart';
 
 class AppTextField extends StatelessWidget {
-  const AppTextField(
-      {super.key,
-      required this.label,
-      required this.keyboardType,
-      required this.controller,
-      required this.validator});
+  const AppTextField({
+    super.key,
+    required this.label,
+    required this.keyboardType,
+    required this.controller,
+    required this.validator,
+    this.obscureText = false,
+  });
 
   final String label;
   final TextInputType keyboardType;
   final TextEditingController controller;
   final String? Function(String?) validator;
+  final bool obscureText;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +50,7 @@ class AppTextField extends StatelessWidget {
       keyboardType: keyboardType,
       controller: controller,
       validator: validator,
+      obscureText: obscureText,
     );
   }
 }

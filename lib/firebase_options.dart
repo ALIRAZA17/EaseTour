@@ -67,6 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '973382249906',
     projectId: 'easetour-782d1',
     storageBucket: 'easetour-782d1.appspot.com',
+    androidClientId: '973382249906-vu7k6npmt7iqt39ngi1q5mdarajdh8a3.apps.googleusercontent.com',
     iosClientId: '973382249906-8qtk32aoc5sufh3atv7k29ro2oe7ssut.apps.googleusercontent.com',
     iosBundleId: 'com.example.easeTour',
   );
@@ -77,6 +78,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '973382249906',
     projectId: 'easetour-782d1',
     storageBucket: 'easetour-782d1.appspot.com',
+    androidClientId: '973382249906-vu7k6npmt7iqt39ngi1q5mdarajdh8a3.apps.googleusercontent.com',
     iosClientId: '973382249906-fhq54g6cjuuoaa6ege08rrbp3g26m0e6.apps.googleusercontent.com',
     iosBundleId: 'com.example.easeTour.RunnerTests',
   );
