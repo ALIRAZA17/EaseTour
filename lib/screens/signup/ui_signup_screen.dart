@@ -153,9 +153,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                         color: Styles.primaryColor,
                                       ),
                                       recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          // code to open / launch terms of service link here
-                                        }),
+                                        ..onTap = () {}),
                                   TextSpan(
                                     text: ' and ',
                                     style: TextStyle(
@@ -170,9 +168,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                           color: Styles.primaryColor,
                                         ),
                                         recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            // code to open / launch privacy policy link here
-                                          },
+                                          ..onTap = () {},
                                       )
                                     ],
                                   )
@@ -249,15 +245,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       height: 20,
                     ),
                     AppTextButton(
-                      text: "Sign up with Facebook",
-                      onTap: () {},
-                      color: Styles.primaryButtonTextColor,
-                      textColor: Colors.black,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    AppTextButton(
                       text: "Sign up with Apple",
                       onTap: () {},
                       color: Styles.primaryButtonTextColor,
@@ -283,7 +270,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  // code to handle the sign-in action
+                                  Get.toNamed('/login');
                                 },
                             ),
                           ],

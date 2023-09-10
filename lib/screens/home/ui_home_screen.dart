@@ -1,17 +1,42 @@
+import 'package:ease_tour/common/resources/constants/styles.dart';
+import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final auth = FirebaseAuth.instance;
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
 
-    final myuser = auth.currentUser?.uid;
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final auth = FirebaseAuth.instance;
+
+  void logout() async {
+    await auth.signOut();
+    Get.toNamed("/login");
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(myuser ?? ""),
+        child: Column(
+          children: [
+            Text(auth.currentUser!.uid),
+            const SizedBox(
+              height: 20,
+            ),
+            AppTextButton(
+              text: "Log Out",
+              onTap: logout,
+              color: Styles.buttonColorPrimary,
+            )
+          ],
+        ),
       ),
     );
   }

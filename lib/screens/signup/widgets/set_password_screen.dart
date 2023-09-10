@@ -26,6 +26,16 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
   final auth = FirebaseAuth.instance;
   final formKey = GlobalKey<FormState>();
 
+  @override
+  void initState() {
+    super.initState();
+    ref.read(passswordTextControllerProvider).clear();
+    ref.read(emailTextControllerProvider).clear();
+    ref.read(genderTextControllerProvider).clear();
+    ref.read(contactTextControllerProvider).clear();
+    ref.read(nameTextControllerProvider).clear();
+  }
+
   Future<User?> saveUser(AppUser user) async {
     try {
       UserCredential credential = await auth.createUserWithEmailAndPassword(
@@ -50,7 +60,8 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
           .catchError(
             (error) => print("Failed to add user in firestore: $error"),
           );
-      Get.toNamed('/home');
+
+      Get.toNamed('/login');
       return credential.user;
     } catch (e) {
       print(e);
@@ -160,8 +171,6 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
                           ref.read(passswordTextControllerProvider).text;
                       final name = ref.read(nameTextControllerProvider).text;
 
-                      print("I am $email");
-                      print("I am $password");
                       final user = AppUser(
                           contactNumber: contactNumber,
                           gender: gender,

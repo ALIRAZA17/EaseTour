@@ -1,4 +1,5 @@
 import 'package:ease_tour/screens/home/ui_home_screen.dart';
+import 'package:ease_tour/screens/login/ui_login_screen.dart';
 import 'package:ease_tour/screens/on_boarding/primary/primary_vu.dart';
 import 'package:ease_tour/screens/on_boarding/secondry/secondry_vu.dart';
 import 'package:ease_tour/screens/on_boarding/tertiary/tertiary_vu.dart';
@@ -42,6 +43,12 @@ appRoutes() => [
       GetPage(
         name: '/signup/setPasswordScreen',
         page: () => const SetPasswordScreen(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+      GetPage(
+        name: '/login',
+        page: () => const LoginScreen(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),
