@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
@@ -22,6 +23,24 @@ class SignUpScreen extends ConsumerStatefulWidget {
 
 class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final formKey = GlobalKey<FormState>();
+
+  Future<void> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    await FirebaseAuth.instance.signInWithCredential(credential);
+
+    if (FirebaseAuth.instance.currentUser != null) {
+      Get.toNamed('/home');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +256,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ),
                     AppTextButton(
                       text: "Sign up with Gmail",
-                      onTap: () {},
+                      onTap: signInWithGoogle,
                       color: Styles.primaryButtonTextColor,
                       textColor: Colors.black,
                     ),

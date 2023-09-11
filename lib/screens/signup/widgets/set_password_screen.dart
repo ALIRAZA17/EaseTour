@@ -111,6 +111,7 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
                       Form(
                         key: formKey,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             AppTextField(
                               label: "Enter Your Password",
