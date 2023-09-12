@@ -1,11 +1,12 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
-import 'package:ease_tour/screens/signup/providers/contact_text_controller_provider.dart';
-import 'package:ease_tour/screens/signup/providers/email_text_controller_provider.dart';
-import 'package:ease_tour/screens/signup/providers/gender_text_controller_provider.dart';
-import 'package:ease_tour/screens/signup/providers/name_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/contact_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/email_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/gender_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/name_text_controller_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
@@ -48,6 +49,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final nameController = ref.watch(nameTextControllerProvider);
     final contactController = ref.watch(contactTextControllerProvider);
     final genderController = ref.watch(genderTextControllerProvider);
+
+    final List<String> genderItems = [
+      'Male',
+      'Female',
+    ];
+
+    String? selectedValue;
 
     return Scaffold(
       appBar: const EtAppBar(),
@@ -141,6 +149,128 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         }
                         return null;
                       },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    DropdownButtonFormField2<String>(
+                      isExpanded: true,
+                      decoration: InputDecoration(
+                        // Add Horizontal padding using menuItemStyleData.padding so it matches
+                        // the menu padding when button's width is not specified.
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 16),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        // Add more decoration..
+                      ),
+                      hint: const Text(
+                        'Select Your Gender',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      items: genderItems
+                          .map((item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select gender.';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        //Do something when selected item is changed.
+                      },
+                      onSaved: (value) {
+                        selectedValue = value.toString();
+                      },
+                      buttonStyleData: const ButtonStyleData(
+                        padding: EdgeInsets.only(right: 8),
+                      ),
+                      iconStyleData: const IconStyleData(
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.black45,
+                        ),
+                        iconSize: 24,
+                      ),
+                      dropdownStyleData: DropdownStyleData(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      menuItemStyleData: const MenuItemStyleData(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    DropdownButtonFormField2<String>(
+                      isExpanded: true,
+                      decoration: InputDecoration(
+                        // Add Horizontal padding using menuItemStyleData.padding so it matches
+                        // the menu padding when button's width is not specified.
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 16),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        // Add more decoration..
+                      ),
+                      hint: const Text(
+                        'Select Your Role',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      items: genderItems
+                          .map((item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select gender.';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        //Do something when selected item is changed.
+                      },
+                      onSaved: (value) {
+                        selectedValue = value.toString();
+                      },
+                      buttonStyleData: const ButtonStyleData(
+                        padding: EdgeInsets.only(right: 8),
+                      ),
+                      iconStyleData: const IconStyleData(
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.black45,
+                        ),
+                        iconSize: 24,
+                      ),
+                      dropdownStyleData: DropdownStyleData(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      menuItemStyleData: const MenuItemStyleData(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                      ),
                     ),
                     const SizedBox(
                       height: 20,

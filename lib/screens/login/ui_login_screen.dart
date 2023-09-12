@@ -1,8 +1,8 @@
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
-import 'package:ease_tour/screens/signup/providers/email_text_controller_provider.dart';
-import 'package:ease_tour/screens/signup/providers/password_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/email_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/password_text_controller_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
