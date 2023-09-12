@@ -25,6 +25,9 @@ class Styles {
 
   static Color blackTextColor = const Color.fromRGBO(208, 208, 208, 1);
 
+  static Color transportSelectContainerColor =
+      const Color.fromRGBO(226, 245, 237, 1);
+
   //Light Mode TextStyles
 
   static TextStyle displayXlNormalStyle = const TextStyle(
