@@ -48,7 +48,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final emailController = ref.watch(emailTextControllerProvider);
     final nameController = ref.watch(nameTextControllerProvider);
     final contactController = ref.watch(contactTextControllerProvider);
-    final genderController = ref.watch(genderTextControllerProvider);
 
     final List<String> genderItems = [
       'Male',
@@ -139,31 +138,14 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    AppTextField(
-                      label: "Gender",
-                      keyboardType: TextInputType.text,
-                      controller: genderController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Gender is required';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     DropdownButtonFormField2<String>(
                       isExpanded: true,
                       decoration: InputDecoration(
-                        // Add Horizontal padding using menuItemStyleData.padding so it matches
-                        // the menu padding when button's width is not specified.
                         contentPadding:
                             const EdgeInsets.symmetric(vertical: 16),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        // Add more decoration..
                       ),
                       hint: const Text(
                         'Select Your Gender',
@@ -187,7 +169,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         return null;
                       },
                       onChanged: (value) {
-                        //Do something when selected item is changed.
+                        ref.read(genderProvider.notifier).state =
+                            selectedValue ?? "Male";
                       },
                       onSaved: (value) {
                         selectedValue = value.toString();

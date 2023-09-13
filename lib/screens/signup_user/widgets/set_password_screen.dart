@@ -4,6 +4,7 @@ import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
 import 'package:ease_tour/models/appUser.dart';
+import 'package:ease_tour/screens/role/providers/role_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/confirm_password_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/contact_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/email_text_controller_provider.dart';
@@ -31,7 +32,6 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
     super.initState();
     ref.read(passswordTextControllerProvider).clear();
     ref.read(emailTextControllerProvider).clear();
-    ref.read(genderTextControllerProvider).clear();
     ref.read(contactTextControllerProvider).clear();
     ref.read(nameTextControllerProvider).clear();
   }
@@ -41,8 +41,9 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
       UserCredential credential = await auth.createUserWithEmailAndPassword(
           email: user.email, password: user.password);
 
-      CollectionReference users =
-          FirebaseFirestore.instance.collection('users');
+      String role = ref.read(roleProvider.notifier).state;
+
+      CollectionReference users = FirebaseFirestore.instance.collection(role);
 
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
@@ -165,8 +166,7 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
                     if (formKey.currentState!.validate()) {
                       final contactNumber =
                           ref.read(contactTextControllerProvider).text;
-                      final gender =
-                          ref.read(genderTextControllerProvider).text;
+                      final gender = ref.read(genderProvider.notifier).state;
                       final email = ref.read(emailTextControllerProvider).text;
                       final password =
                           ref.read(passswordTextControllerProvider).text;

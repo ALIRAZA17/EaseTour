@@ -1,7 +1,6 @@
 import 'package:ease_tour/common/resources/app_theme/theme_provider.dart';
 import 'package:ease_tour/common/resources/constants/padding.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
-import 'package:ease_tour/common/widgets/button/action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
