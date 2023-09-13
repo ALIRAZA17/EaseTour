@@ -1,3 +1,4 @@
+import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +50,7 @@ class WelcomeScreen extends StatelessWidget {
               child: AppTextButton(
                 text: "Create an Account",
                 onTap: () {},
-                color: const Color.fromRGBO(0, 137, 85, 1),
+                color: Styles.buttonColorPrimary,
               ),
             ),
             Positioned(
@@ -60,7 +61,8 @@ class WelcomeScreen extends StatelessWidget {
                 color: null,
                 onTap: () {},
                 text: "Login",
-                textColor: const Color.fromRGBO(0, 137, 85, 1),
+                textColor: Styles.buttonColorPrimary,
+                borderColor: Styles.buttonColorPrimary,
               ),
             ),
           ],

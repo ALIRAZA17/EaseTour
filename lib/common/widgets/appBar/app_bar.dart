@@ -61,10 +61,13 @@ class _EtAppBarState extends State<EtAppBar> {
                     widget.addLeadingButton
                         ? Positioned(
                             top: 10,
-                            left: 0,
-                            child: ActionButton(
-                              icon: 'assets/icons/bars-ver.svg',
+                            right: 0,
+                            child: GestureDetector(
                               onTap: widget.onLeadingPress ?? () {},
+                              child: Text(
+                                "Skip",
+                                style: Styles.displayMedLightStyle,
+                              ),
                             ))
                         : widget.addBackButton
                             ? Positioned(

@@ -8,13 +8,17 @@ class AppTextButton extends StatelessWidget {
     required this.color,
     this.textColor,
     this.addBorder = false,
+    this.borderColor,
+    this.fontSize = 16,
   });
 
   final String text;
   final VoidCallback onTap;
   final Color? color;
   final Color? textColor;
+  final Color? borderColor;
   final bool addBorder;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,8 @@ class AppTextButton extends StatelessWidget {
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
-            side: const BorderSide(color: Color.fromRGBO(184, 184, 184, 1)),
+            side: BorderSide(
+                color: borderColor ?? const Color.fromRGBO(184, 184, 184, 1)),
           ),
         ),
         padding: MaterialStateProperty.all(
@@ -35,7 +40,7 @@ class AppTextButton extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 16,
+          fontSize: fontSize,
           color: textColor ?? Colors.white,
           fontFamily: 'Poppins',
           fontWeight: FontWeight.w500,

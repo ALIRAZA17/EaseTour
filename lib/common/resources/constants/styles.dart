@@ -5,12 +5,12 @@ class Styles {
 
   static Color backgroundColor = Colors.white;
 
-  static Color primaryColor = const Color(0xff08B783);
+  static Color primaryColor = const Color.fromRGBO(0, 175, 245, 100);
 
   static Color primaryColorLight = const Color(0xffE2F5ED);
   static Color primaryColorMed = const Color(0xffB9E5D1);
 
-  static Color buttonColorPrimary = const Color(0xff008955);
+  static Color buttonColorPrimary = const Color.fromRGBO(0, 175, 245, 100);
   static Color actionButtonColorPrimary = const Color(0xff8AD4B5);
 
   static Color primaryTextColor = const Color(0xff414141);
