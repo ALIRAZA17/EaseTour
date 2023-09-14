@@ -22,10 +22,9 @@ class SelectTransportScreen extends StatelessWidget {
             ),
             Center(
               child: Text(
-                "Select your transport",
-                style: Styles.displayXlBoldStyle.copyWith(
-                  fontSize: 24,
-                ),
+                "Suggestions",
+                style: Styles.displayXlBoldStyle
+                    .copyWith(fontSize: 32, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(
@@ -34,8 +33,8 @@ class SelectTransportScreen extends StatelessWidget {
             Row(
               children: [
                 TransportOptionsContainer(
-                  image: "Car.jpg",
-                  title: "Car",
+                  image: "car.png",
+                  title: "Car Mini",
                   onTap: () {
                     Get.toNamed('/signup');
                   },
@@ -44,8 +43,8 @@ class SelectTransportScreen extends StatelessWidget {
                   width: 20,
                 ),
                 TransportOptionsContainer(
-                  image: "Bike.jpg",
-                  title: "Bike",
+                  image: "car.png",
+                  title: "Car AC",
                   onTap: () {},
                 ),
               ],
@@ -56,16 +55,16 @@ class SelectTransportScreen extends StatelessWidget {
             Row(
               children: [
                 TransportOptionsContainer(
-                  image: "Cycle.jpg",
-                  title: "Cycle",
+                  image: "rikshaw.png",
+                  title: "Rikshaw",
                   onTap: () {},
                 ),
                 const SizedBox(
                   width: 20,
                 ),
                 TransportOptionsContainer(
-                  image: "Taxi.jpg",
-                  title: "Taxi",
+                  image: "bike.png",
+                  title: "Bike",
                   onTap: () {},
                 ),
               ],

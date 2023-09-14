@@ -24,6 +24,7 @@ class Styles {
   static Color secondryButtonTextColor = primaryColorMed;
 
   static Color blackTextColor = const Color.fromRGBO(208, 208, 208, 1);
+  static Color backgroundGrayColor = const Color.fromRGBO(247, 247, 247, 100);
 
   static Color transportSelectContainerColor =
       const Color.fromRGBO(226, 245, 237, 1);

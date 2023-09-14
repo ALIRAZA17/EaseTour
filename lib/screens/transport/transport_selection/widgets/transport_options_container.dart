@@ -2,11 +2,12 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:flutter/material.dart';
 
 class TransportOptionsContainer extends StatelessWidget {
-  const TransportOptionsContainer(
-      {super.key,
-      required this.image,
-      required this.title,
-      required this.onTap});
+  const TransportOptionsContainer({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.onTap,
+  });
 
   final String image;
   final String title;
@@ -21,7 +22,7 @@ class TransportOptionsContainer extends StatelessWidget {
         width: 160,
         height: 160,
         decoration: BoxDecoration(
-          color: Styles.transportSelectContainerColor,
+          color: Styles.backgroundGrayColor,
           border: Border.all(
             color: Styles.primaryColor,
           ),
