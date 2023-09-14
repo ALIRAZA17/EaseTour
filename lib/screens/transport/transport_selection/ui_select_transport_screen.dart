@@ -18,7 +18,39 @@ class SelectTransportScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(
-              height: 30,
+              height: 17,
+            ),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.only(left: 22, top: 27),
+                decoration: BoxDecoration(
+                  color: Styles.gradientColor,
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                width: 357,
+                height: 162,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      "WeGo",
+                      style: Styles.displayXlBoldStyle.copyWith(
+                        fontSize: 48,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Text(
+                      "Go anywhere, get anything",
+                      style: Styles.displayMedNormalStyle,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 47,
             ),
             Center(
               child: Text(

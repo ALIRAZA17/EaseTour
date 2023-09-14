@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class Themes {
   static ThemeData lightThemeData() {
     return ThemeData(
-      fontFamily: 'Poppins',
+      fontFamily: "Outfit",
       brightness: Brightness.light,
       primaryColor: Styles.primaryColor,
       scaffoldBackgroundColor: Styles.backgroundColor,
@@ -16,7 +16,7 @@ class Themes {
 // dark Theme
   static ThemeData darkThemeData() {
     return ThemeData(
-      fontFamily: 'Poppins',
+      fontFamily: "Outfit",
       brightness: Brightness.dark,
       primaryColor: Styles.primaryColor,
       scaffoldBackgroundColor: Styles.backgroundColor,
