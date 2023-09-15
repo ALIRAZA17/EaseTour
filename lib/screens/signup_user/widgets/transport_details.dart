@@ -3,6 +3,7 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
+import 'package:ease_tour/models/appDriver.dart';
 import 'package:ease_tour/models/appUser.dart';
 import 'package:ease_tour/screens/role/providers/role_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/cnic_text_controller_provider.dart';
@@ -40,10 +41,10 @@ class _TransportDetailsState extends ConsumerState<TransportDetails> {
     ref.read(cnicTextControllerProvider).clear();
   }
 
-  Future<User?> saveUser(AppUser user) async {
+  Future<User?> saveDriver(AppDriver driver) async {
     try {
       UserCredential credential = await auth.createUserWithEmailAndPassword(
-          email: user.email, password: user.password);
+          email: driver.email, password: driver.password);
 
       String role = ref.read(roleProvider.notifier).state;
 
@@ -55,11 +56,11 @@ class _TransportDetailsState extends ConsumerState<TransportDetails> {
 
       userRef
           .set({
-            'full_name': user.name,
-            'email': user.email,
-            'password': user.password,
-            'contact': user.contactNumber,
-            'gender': user.gender,
+            'full_name': driver.name,
+            'email': driver.email,
+            'password': driver.password,
+            'contact': driver.contactNumber,
+            'gender': driver.gender,
           })
           .then((value) => print("user added"))
           .catchError(
@@ -176,13 +177,14 @@ class _TransportDetailsState extends ConsumerState<TransportDetails> {
                           ref.read(passswordTextControllerProvider).text;
                       final name = ref.read(nameTextControllerProvider).text;
 
-                      final user = AppUser(
+                      final user = AppDriver(
                           contactNumber: contactNumber,
                           gender: gender,
                           email: email,
                           password: password,
-                          name: name);
-                      saveUser(user);
+                          name: name,
+                          cnic: );
+                      saveDriver(user);
                     }
                   },
                   text: "Register",

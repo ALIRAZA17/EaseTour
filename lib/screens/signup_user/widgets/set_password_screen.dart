@@ -36,12 +36,10 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
     ref.read(nameTextControllerProvider).clear();
   }
 
-  Future<User?> saveUser(AppUser user) async {
+  Future<User?> saveUser(AppUser user, String role) async {
     try {
       UserCredential credential = await auth.createUserWithEmailAndPassword(
           email: user.email, password: user.password);
-
-      String role = ref.read(roleProvider.notifier).state;
 
       CollectionReference users = FirebaseFirestore.instance.collection(role);
 
@@ -172,13 +170,19 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
                           ref.read(passswordTextControllerProvider).text;
                       final name = ref.read(nameTextControllerProvider).text;
 
-                      final user = AppUser(
-                          contactNumber: contactNumber,
-                          gender: gender,
-                          email: email,
-                          password: password,
-                          name: name);
-                      saveUser(user);
+                      String role = ref.read(roleProvider.notifier).state;
+
+                      if (role == "users") {
+                        final user = AppUser(
+                            contactNumber: contactNumber,
+                            gender: gender,
+                            email: email,
+                            password: password,
+                            name: name);
+                        saveUser(user, role);
+                      } else {
+                        Get.toNamed('');
+                      }
                     }
                   },
                   text: "Register",
