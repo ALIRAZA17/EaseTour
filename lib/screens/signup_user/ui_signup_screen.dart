@@ -197,6 +197,33 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     const SizedBox(
                       height: 20,
                     ),
+                    AppTextField(
+                        label: "Cnic",
+                        keyboardType: TextInputType.text,
+                        controller: contactController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter Cnic';
+                          }
+                          return null;
+                        }),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    AppTextField(
+                      label: "License No.",
+                      keyboardType: TextInputType.text,
+                      controller: contactController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter license no';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Container(
                       alignment: Alignment.center,
                       child: Row(
