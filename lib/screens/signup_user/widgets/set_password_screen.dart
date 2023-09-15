@@ -5,10 +5,12 @@ import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
 import 'package:ease_tour/models/appUser.dart';
 import 'package:ease_tour/screens/role/providers/role_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/cnic_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/confirm_password_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/contact_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/email_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/gender_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/license_number_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/name_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/password_text_controller_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,6 +36,9 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
     ref.read(emailTextControllerProvider).clear();
     ref.read(contactTextControllerProvider).clear();
     ref.read(nameTextControllerProvider).clear();
+    ref.read(genderProvider.notifier).state = '';
+    ref.read(cnicTextControllerProvider).clear();
+    ref.read(licenseNumberTextControllerProvider).clear();
   }
 
   Future<User?> saveUser(AppUser user, String role) async {
@@ -181,7 +186,7 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
                             name: name);
                         saveUser(user, role);
                       } else {
-                        Get.toNamed('');
+                        Get.toNamed('/transport_details');
                       }
                     }
                   },

@@ -4,16 +4,16 @@ import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
 import 'package:ease_tour/models/appDriver.dart';
-import 'package:ease_tour/models/appUser.dart';
 import 'package:ease_tour/screens/role/providers/role_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/cnic_text_controller_provider.dart';
-import 'package:ease_tour/screens/signup_user/providers/confirm_password_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/contact_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/email_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/gender_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/license_number_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/name_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/password_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/vehicle_name_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/vehicle_number_plate_text_contoller_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,12 +33,8 @@ class _TransportDetailsState extends ConsumerState<TransportDetails> {
   @override
   void initState() {
     super.initState();
-    ref.read(passswordTextControllerProvider).clear();
-    ref.read(emailTextControllerProvider).clear();
-    ref.read(contactTextControllerProvider).clear();
-    ref.read(nameTextControllerProvider).clear();
-    ref.read(licenseNumberTextControllerProvider).clear();
-    ref.read(cnicTextControllerProvider).clear();
+    ref.read(vehicleNameTextControllerProvider).clear();
+    ref.read(vehicleNumberPlateTextControllerProvider).clear();
   }
 
   Future<User?> saveDriver(AppDriver driver) async {
@@ -48,11 +44,11 @@ class _TransportDetailsState extends ConsumerState<TransportDetails> {
 
       String role = ref.read(roleProvider.notifier).state;
 
-      CollectionReference users = FirebaseFirestore.instance.collection(role);
+      CollectionReference drivers = FirebaseFirestore.instance.collection(role);
 
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
-      DocumentReference userRef = users.doc(uid);
+      DocumentReference userRef = drivers.doc(uid);
 
       userRef
           .set({
@@ -61,10 +57,14 @@ class _TransportDetailsState extends ConsumerState<TransportDetails> {
             'password': driver.password,
             'contact': driver.contactNumber,
             'gender': driver.gender,
+            'cnic': driver.cnic,
+            'licenseNo': driver.licenseNumber,
+            'vehicleName': driver.vehicleName,
+            'vehicalNumber': driver.vehicleNumberPlate,
           })
-          .then((value) => print("user added"))
+          .then((value) => print("Driver added"))
           .catchError(
-            (error) => print("Failed to add user in firestore: $error"),
+            (error) => print("Failed to add driver in firestore: $error"),
           );
 
       Get.toNamed('/login');
@@ -78,9 +78,9 @@ class _TransportDetailsState extends ConsumerState<TransportDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final passwordController = ref.watch(passswordTextControllerProvider);
-    final confirmPasswordController =
-        ref.watch(confirmPasswordTextControllerProvider);
+    final vehicleNameController = ref.watch(vehicleNameTextControllerProvider);
+    final vehicleNumberPlateController =
+        ref.watch(vehicleNumberPlateTextControllerProvider);
     return Scaffold(
         appBar: const EtAppBar(),
         body: SafeArea(
@@ -120,40 +120,33 @@ class _TransportDetailsState extends ConsumerState<TransportDetails> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             AppTextField(
-                              label: "Enter Your Password",
+                              label: "Enter your Vehicle Name",
                               keyboardType: TextInputType.text,
-                              controller: passwordController,
+                              controller: vehicleNameController,
                               validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter vehicle name";
+                                }
                                 return null;
                               },
-                              obscureText: true,
                             ),
                             const SizedBox(
                               height: 20,
                             ),
                             AppTextField(
-                              label: "Confirm Password",
+                              label: "Enter your vehicle number",
                               keyboardType: TextInputType.text,
-                              controller: confirmPasswordController,
+                              controller: vehicleNumberPlateController,
                               validator: (value) {
-                                if (passwordController.text !=
-                                    confirmPasswordController.text) {
-                                  return "Both Passwords should match";
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter vehicle number";
                                 }
                                 return null;
                               },
-                              obscureText: true,
                             ),
                             const SizedBox(
                               height: 10,
                             ),
-                            Text(
-                              "Atleast 1 number or a special character",
-                              style: Styles.displaySmNormalStyle.copyWith(
-                                color: Styles.secondryTextColor,
-                                fontSize: 14,
-                              ),
-                            )
                           ],
                         ),
                       ),
@@ -176,18 +169,30 @@ class _TransportDetailsState extends ConsumerState<TransportDetails> {
                       final password =
                           ref.read(passswordTextControllerProvider).text;
                       final name = ref.read(nameTextControllerProvider).text;
+                      final cnic = ref.read(cnicTextControllerProvider).text;
+                      final licenseNo =
+                          ref.read(licenseNumberTextControllerProvider).text;
+                      final vehicleName =
+                          ref.read(vehicleNameTextControllerProvider).text;
+                      final vehicleNumberlate = ref
+                          .read(vehicleNumberPlateTextControllerProvider)
+                          .text;
 
-                      final user = AppDriver(
-                          contactNumber: contactNumber,
-                          gender: gender,
-                          email: email,
-                          password: password,
-                          name: name,
-                          cnic: );
-                      saveDriver(user);
+                      final driver = AppDriver(
+                        contactNumber: contactNumber,
+                        gender: gender,
+                        email: email,
+                        password: password,
+                        name: name,
+                        cnic: cnic,
+                        licenseNumber: licenseNo,
+                        vehicleName: vehicleName,
+                        vehicleNumberPlate: vehicleNumberlate,
+                      );
+                      saveDriver(driver);
                     }
                   },
-                  text: "Register",
+                  text: "Save",
                   textColor: Colors.white,
                 ),
               ),
