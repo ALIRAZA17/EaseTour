@@ -62,15 +62,16 @@ class _TransportDetailsState extends ConsumerState<TransportDetails> {
             'vehicleName': driver.vehicleName,
             'vehicalNumber': driver.vehicleNumberPlate,
           })
-          .then((value) => print("Driver added"))
+          .then((value) => Get.snackbar(
+              "Driver Added", "Driver has been added successfully!"))
           .catchError(
-            (error) => print("Failed to add driver in firestore: $error"),
+            (error) => Get.snackbar("Process Failed", "Error: $error"),
           );
 
       Get.toNamed('/login');
       return credential.user;
     } catch (e) {
-      print(e);
+      Get.snackbar("Process Failed", "Error: $e");
     }
 
     return null;
@@ -96,19 +97,10 @@ class _TransportDetailsState extends ConsumerState<TransportDetails> {
                       ),
                       Center(
                         child: Text(
-                          "Set Password",
+                          "Transport Detials",
                           style: Styles.displayLargeNormalStyle.copyWith(
                             fontSize: 24,
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Set your password",
-                        style: Styles.displaySmNormalStyle.copyWith(
-                          color: Styles.secondryTextColor,
                         ),
                       ),
                       const SizedBox(

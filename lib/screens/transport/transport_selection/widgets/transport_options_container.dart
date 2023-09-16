@@ -19,8 +19,8 @@ class TransportOptionsContainer extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: 160,
-        height: 160,
+        width: 140,
+        height: 140,
         decoration: BoxDecoration(
           color: Styles.backgroundGrayColor,
           border: Border.all(

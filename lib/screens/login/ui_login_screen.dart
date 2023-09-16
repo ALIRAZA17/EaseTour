@@ -20,24 +20,36 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final formKey = GlobalKey<FormState>();
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool isLoading = false;
+  bool isGoogleSignInLoading = false;
 
   Future<void> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    setState(() {
+      isGoogleSignInLoading = true;
+    });
 
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
-    await FirebaseAuth.instance.signInWithCredential(credential);
+      await FirebaseAuth.instance.signInWithCredential(credential);
 
-    if (FirebaseAuth.instance.currentUser != null) {
-      Get.toNamed('/home');
+      if (FirebaseAuth.instance.currentUser != null) {
+        Get.toNamed('/home');
+      }
+    } catch (e) {
+      Get.snackbar("Sign in with Google failed", "Please try again!");
+    } finally {
+      setState(() {
+        isGoogleSignInLoading = false;
+      });
     }
   }
 
@@ -48,16 +60,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.read(emailTextControllerProvider).clear();
   }
 
-  void signIn(String email, String password) async {
+  Future<void> signIn(String email, String password) async {
     try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      setState(() {
+        isLoading = true;
+      });
 
-      print('User signed in: ${userCredential.user?.uid}');
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
 
       Get.toNamed('/home');
     } catch (e) {
-      print(e);
+      Get.snackbar("Sign in failed",
+          "Your password or email is wrong. Please try again!");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -122,19 +140,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const SizedBox(
                         height: 69,
                       ),
-                      AppTextButton(
-                        text: "Sign In",
-                        onTap: () async {
-                          if (formKey.currentState!.validate()) {
-                            final email =
-                                ref.read(emailTextControllerProvider).text;
-                            final password =
-                                ref.read(passswordTextControllerProvider).text;
-                            signIn(email, password);
-                          }
-                        },
-                        color: Styles.buttonColorPrimary,
-                      ),
+                      isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : AppTextButton(
+                              text: "Sign In",
+                              onTap: () async {
+                                if (formKey.currentState!.validate()) {
+                                  final email = ref
+                                      .read(emailTextControllerProvider)
+                                      .text;
+                                  final password = ref
+                                      .read(passswordTextControllerProvider)
+                                      .text;
+                                  await signIn(email, password);
+                                }
+                              },
+                              color: Styles.buttonColorPrimary,
+                            ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -168,12 +190,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      AppTextButton(
-                        text: "Sign in with Gmail",
-                        onTap: signInWithGoogle,
-                        color: Styles.primaryButtonTextColor,
-                        textColor: Colors.black,
-                      ),
+                      isGoogleSignInLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : AppTextButton(
+                              text: "Sign in with Gmail",
+                              onTap: () async {
+                                if (isGoogleSignInLoading) {
+                                  return;
+                                }
+                                setState(() {
+                                  isGoogleSignInLoading = true;
+                                });
+
+                                try {
+                                  await signInWithGoogle();
+
+                                  if (FirebaseAuth.instance.currentUser !=
+                                      null) {
+                                    Get.toNamed('/home');
+                                  }
+                                } catch (e) {
+                                  Get.snackbar("Sign in with Google failed",
+                                      "Please try again!");
+                                } finally {
+                                  setState(() {
+                                    isGoogleSignInLoading = false;
+                                  });
+                                }
+                              },
+                              color: Styles.primaryButtonTextColor,
+                              textColor: Colors.black,
+                            ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -203,7 +250,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Get.toNamed('/signup');
+                                    Get.toNamed('/role_screen');
                                   },
                               ),
                             ],

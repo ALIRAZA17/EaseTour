@@ -3,9 +3,12 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
+import 'package:ease_tour/screens/role/providers/role_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/cnic_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/contact_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/email_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/gender_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/license_number_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/name_text_controller_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,21 +28,46 @@ class SignUpScreen extends ConsumerStatefulWidget {
 class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final formKey = GlobalKey<FormState>();
 
+  bool isSignUpLoading = false;
+  bool isGoogleSignInLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(emailTextControllerProvider).clear();
+    ref.read(nameTextControllerProvider).clear();
+    ref.read(contactTextControllerProvider).clear();
+    ref.read(licenseNumberTextControllerProvider).clear();
+    ref.read(cnicTextControllerProvider).clear();
+  }
+
   Future<void> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    setState(() {
+      isGoogleSignInLoading = true;
+    });
 
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
-    await FirebaseAuth.instance.signInWithCredential(credential);
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
-    if (FirebaseAuth.instance.currentUser != null) {
-      Get.toNamed('/home');
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      if (FirebaseAuth.instance.currentUser != null) {
+        Get.toNamed('/home');
+      }
+    } catch (e) {
+      Get.snackbar("Sign up with Google failed", "Please try again!");
+    } finally {
+      setState(() {
+        isGoogleSignInLoading = false;
+      });
     }
   }
 
@@ -48,6 +76,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final emailController = ref.watch(emailTextControllerProvider);
     final nameController = ref.watch(nameTextControllerProvider);
     final contactController = ref.watch(contactTextControllerProvider);
+    final cnicController = ref.watch(cnicTextControllerProvider);
+    final licenseNoController = ref.watch(licenseNumberTextControllerProvider);
+    final role = ref.read(roleProvider.notifier).state;
 
     final List<String> genderItems = [
       'Male',
@@ -197,33 +228,37 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    AppTextField(
-                        label: "Cnic",
+                    if (role == "drivers")
+                      AppTextField(
+                          label: "Cnic",
+                          keyboardType: TextInputType.text,
+                          controller: cnicController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Cnic';
+                            }
+                            return null;
+                          }),
+                    if (role == "drivers")
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    if (role == "drivers")
+                      AppTextField(
+                        label: "License No.",
                         keyboardType: TextInputType.text,
-                        controller: contactController,
+                        controller: licenseNoController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter Cnic';
+                            return 'Please enter license no';
                           }
                           return null;
-                        }),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    AppTextField(
-                      label: "License No.",
-                      keyboardType: TextInputType.text,
-                      controller: contactController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter license no';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                        },
+                      ),
+                    if (role == "drivers")
+                      const SizedBox(
+                        height: 20,
+                      ),
                     Container(
                       alignment: Alignment.center,
                       child: Row(
@@ -280,27 +315,54 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     const SizedBox(
                       height: 40,
                     ),
-                    AppTextButton(
-                      text: "Sign Up",
-                      onTap: () async {
-                        if (formKey.currentState!.validate()) {
-                          await FirebaseAuth.instance.verifyPhoneNumber(
-                            phoneNumber: contactController.text,
-                            verificationCompleted:
-                                (PhoneAuthCredential credential) {},
-                            verificationFailed: (FirebaseAuthException e) {},
-                            codeSent:
-                                (String verificationId, int? resendToken) {
-                              SignUpScreen.verificationId = verificationId;
-                              Get.toNamed('/signup/otp');
+                    isSignUpLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : AppTextButton(
+                            text: "Sign Up",
+                            onTap: () async {
+                              if (formKey.currentState!.validate()) {
+                                setState(() {
+                                  isSignUpLoading = true;
+                                });
+
+                                await FirebaseAuth.instance.verifyPhoneNumber(
+                                  phoneNumber: contactController.text,
+                                  verificationCompleted:
+                                      (PhoneAuthCredential credential) {
+                                    Get.snackbar(
+                                      "Verification Completed",
+                                      "Verification Completed Successfully!!",
+                                    );
+                                  },
+                                  verificationFailed:
+                                      (FirebaseAuthException e) {
+                                    Get.snackbar(
+                                      "Verification Failed",
+                                      "An error occurred while sending OTP. Please try again later.",
+                                    );
+                                    setState(() {
+                                      isSignUpLoading = false;
+                                    });
+                                  },
+                                  codeSent: (String verificationId,
+                                      int? resendToken) {
+                                    SignUpScreen.verificationId =
+                                        verificationId;
+
+                                    Get.toNamed('/signup/otp')
+                                        ?.whenComplete(() {
+                                      setState(() {
+                                        isSignUpLoading = false;
+                                      });
+                                    });
+                                  },
+                                  codeAutoRetrievalTimeout:
+                                      (String verificationId) {},
+                                );
+                              }
                             },
-                            codeAutoRetrievalTimeout:
-                                (String verificationId) {},
-                          );
-                        }
-                      },
-                      color: Styles.buttonColorPrimary,
-                    ),
+                            color: Styles.buttonColorPrimary,
+                          ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -333,12 +395,18 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    AppTextButton(
-                      text: "Sign up with Gmail",
-                      onTap: signInWithGoogle,
-                      color: Styles.primaryButtonTextColor,
-                      textColor: Colors.black,
-                    ),
+                    isGoogleSignInLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : AppTextButton(
+                            text: "Sign up with Gmail",
+                            onTap: () {
+                              if (!isGoogleSignInLoading) {
+                                signInWithGoogle();
+                              }
+                            },
+                            color: Styles.primaryButtonTextColor,
+                            textColor: Colors.black,
+                          ),
                     const SizedBox(
                       height: 20,
                     ),
