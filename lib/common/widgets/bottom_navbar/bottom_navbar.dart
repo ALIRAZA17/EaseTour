@@ -22,6 +22,8 @@ class BottomNavigation extends StatelessWidget {
     return SizedBox(
       height: 62,
       child: PlatformNavBar(
+        height: 62,
+
         material: (context, platform) {
           return MaterialNavBarData(
             selectedItemColor: Styles.primaryColor,

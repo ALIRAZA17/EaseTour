@@ -20,8 +20,10 @@ class EtAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Color? color;
   final Widget? searchWidget;
   final bool showWelcome;
+  final double height;
   const EtAppBar({
     super.key,
+    required this.height,
     this.title,
     this.actions,
     this.onBackPress,
@@ -53,6 +55,7 @@ class _EtAppBarState extends State<EtAppBar> {
                 child: widget.searchWidget ?? const SizedBox(),
               )
             : Container(
+                height: widget.height,
                 color: widget.color,
                 padding: Pads.primaryPadding,
                 alignment: Alignment.center,
