@@ -1,5 +1,6 @@
 import 'package:ease_tour/screens/home/ui_home_screen.dart';
 import 'package:ease_tour/screens/login/ui_login_screen.dart';
+import 'package:ease_tour/screens/home/home_vu.dart';
 import 'package:ease_tour/screens/on_boarding/primary/primary_vu.dart';
 import 'package:ease_tour/screens/on_boarding/secondry/secondry_vu.dart';
 import 'package:ease_tour/screens/on_boarding/tertiary/tertiary_vu.dart';
@@ -10,10 +11,26 @@ import 'package:ease_tour/screens/signup_user/widgets/set_password_screen.dart';
 import 'package:ease_tour/screens/signup_user/widgets/transport_details.dart';
 import 'package:ease_tour/screens/transport/transport_selection/ui_select_transport_screen.dart';
 import 'package:ease_tour/screens/welcome/ui_welcome_screen.dart';
+import 'package:ease_tour/screens/pickup/pickup_vu.dart';
+import 'package:ease_tour/screens/user_main/user_main_vu.dart';
+import 'package:ease_tour/screens/on_boarding/on_boarding_vu.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 appRoutes() => [
+      GetPage(
+        name: '/onBoarding',
+        page: () => const OnBoardingView(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+      GetPage(
+        name: '/main_screen',
+        page: () => const UserMainView(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
       GetPage(
         name: '/onBoarding/primary',
         page: () => const PrimaryView(),
@@ -57,12 +74,6 @@ appRoutes() => [
         transitionDuration: const Duration(milliseconds: 200),
       ),
       GetPage(
-        name: '/home',
-        page: () => const HomeScreen(),
-        transition: Transition.fadeIn,
-        transitionDuration: const Duration(milliseconds: 200),
-      ),
-      GetPage(
         name: '/home/transport_selection',
         page: () => const SelectTransportScreen(),
         transition: Transition.fadeIn,
@@ -83,6 +94,18 @@ appRoutes() => [
       GetPage(
         name: '/transport_details',
         page: () => const TransportDetails(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+      GetPage(
+        name: '/home',
+        page: () => const HomeView(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+      GetPage(
+        name: '/pickup',
+        page: () => const PickupView(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),

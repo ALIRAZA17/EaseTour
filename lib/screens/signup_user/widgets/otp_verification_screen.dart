@@ -33,7 +33,9 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
     final contactController = ref.read(contactTextControllerProvider);
 
     return Scaffold(
-      appBar: const EtAppBar(),
+      appBar: const EtAppBar(
+        height: 90,
+      ),
       body: SafeArea(
         child: Stack(
           children: [

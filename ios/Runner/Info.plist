@@ -4,6 +4,12 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSLocationWhenInUseageDescription</key>
+	<string>Need Location when in Use</string>
+	<key>NSLocationUseageDescription</key>
+	<string>Older Devices Need Location</string>
+	<key>NSLocationAlwaysUseageDescription</key>
+	<string>Can I have Locayion Always?</string>
 	<key>CFBundleDisplayName</key>
 	<string>Ease Tour</string>
 	<key>CFBundleExecutable</key>

@@ -33,7 +33,7 @@ class AppTextButton extends StatelessWidget {
           ),
         ),
         padding: MaterialStateProperty.all(
-          const EdgeInsets.symmetric(horizontal: 20, vertical: 15.5),
+          const EdgeInsets.only(top: 15.5, bottom: 15.5, left: 70, right: 70),
         ),
       ),
       onPressed: onTap,

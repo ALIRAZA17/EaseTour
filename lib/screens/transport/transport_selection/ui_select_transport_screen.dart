@@ -12,6 +12,7 @@ class SelectTransportScreen extends StatelessWidget {
     return Scaffold(
       appBar: const EtAppBar(
         title: "Select transport",
+        height: 90,
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 26, right: 26),

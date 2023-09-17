@@ -26,6 +26,7 @@ class SecondryView extends StackedView<SecondryViewModel> {
             ),
           )
         ],
+        height: 90,
       ),
       body: Padding(
         padding: Pads.primaryPaddingHor,

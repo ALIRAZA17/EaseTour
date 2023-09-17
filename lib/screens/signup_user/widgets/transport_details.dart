@@ -83,7 +83,9 @@ class _TransportDetailsState extends ConsumerState<TransportDetails> {
     final vehicleNumberPlateController =
         ref.watch(vehicleNumberPlateTextControllerProvider);
     return Scaffold(
-        appBar: const EtAppBar(),
+        appBar: const EtAppBar(
+          height: 90,
+        ),
         body: SafeArea(
           child: Stack(
             children: [

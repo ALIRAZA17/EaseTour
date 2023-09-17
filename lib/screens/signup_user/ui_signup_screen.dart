@@ -88,7 +88,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     String? selectedValue;
 
     return Scaffold(
-      appBar: const EtAppBar(),
+      appBar: const EtAppBar(
+        height: 90,
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.only(left: 16, right: 16),

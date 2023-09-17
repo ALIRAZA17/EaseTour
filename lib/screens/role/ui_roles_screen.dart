@@ -5,7 +5,6 @@ import 'package:ease_tour/screens/role/providers/role_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class RolesScreen extends ConsumerWidget {
   const RolesScreen({super.key});
@@ -15,6 +14,7 @@ class RolesScreen extends ConsumerWidget {
     return Scaffold(
       appBar: const EtAppBar(
         addLeadingButton: true,
+        height: 90,
       ),
       body: Column(
         children: [

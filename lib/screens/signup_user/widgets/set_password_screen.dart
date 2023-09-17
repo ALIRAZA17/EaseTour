@@ -82,7 +82,9 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
     final confirmPasswordController =
         ref.watch(confirmPasswordTextControllerProvider);
     return Scaffold(
-      appBar: const EtAppBar(),
+      appBar: const EtAppBar(
+        height: 90,
+      ),
       body: SafeArea(
         child: Stack(
           children: [

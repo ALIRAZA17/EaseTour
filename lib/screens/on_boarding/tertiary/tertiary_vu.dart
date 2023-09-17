@@ -26,6 +26,7 @@ class TertiaryView extends StackedView<TertiaryViewModel> {
             ),
           )
         ],
+        height: 90,
       ),
       body: Padding(
         padding: Pads.primaryPaddingHor,

@@ -26,6 +26,7 @@ class PrimaryView extends StackedView<PrimaryViewModel> {
             ),
           )
         ],
+        height: 90,
       ),
       body: Padding(
         padding: Pads.primaryPaddingHor,
