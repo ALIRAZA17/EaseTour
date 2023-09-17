@@ -1,4 +1,3 @@
-import 'package:ease_tour/screens/home/ui_home_screen.dart';
 import 'package:ease_tour/screens/login/ui_login_screen.dart';
 import 'package:ease_tour/screens/home/home_vu.dart';
 import 'package:ease_tour/screens/on_boarding/primary/primary_vu.dart';
@@ -57,7 +56,7 @@ appRoutes() => [
       ),
       GetPage(
         name: '/signup/otp',
-        page: () => OtpVerificationScreen(),
+        page: () => const OtpVerificationScreen(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),
