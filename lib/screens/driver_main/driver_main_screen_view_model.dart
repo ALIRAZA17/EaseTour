@@ -13,7 +13,7 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:stacked/stacked.dart';
 import 'package:geocoder2/geocoder2.dart';
 
-class UserMainViewModel extends BaseViewModel {
+class DriverMainScreenViewModel extends BaseViewModel {
   LatLng? currentLocation;
   LatLng? selectedLocation;
   LatLng defaultLocation = const LatLng(30.3753, 69.3451);

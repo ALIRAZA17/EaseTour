@@ -1,3 +1,5 @@
+import 'package:ease_tour/screens/driver_home/ui_driver_home_screen.dart';
+import 'package:ease_tour/screens/driver_main/ui_driver_main_screen.dart';
 import 'package:ease_tour/screens/login/ui_login_screen.dart';
 import 'package:ease_tour/screens/on_boarding/primary/primary_vu.dart';
 import 'package:ease_tour/screens/on_boarding/secondry/secondry_vu.dart';
@@ -105,6 +107,18 @@ appRoutes() => [
       GetPage(
         name: '/pickup',
         page: () => const PickupView(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+      GetPage(
+        name: '/driver_welcome_screen',
+        page: () => const DriverHomeView(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+      GetPage(
+        name: '/driver_main_screen',
+        page: () => const DriverMainScreen(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),

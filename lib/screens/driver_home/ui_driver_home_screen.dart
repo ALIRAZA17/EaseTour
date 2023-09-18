@@ -3,6 +3,7 @@ import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 class DriverHomeView extends StatelessWidget {
   const DriverHomeView({super.key});
@@ -28,7 +29,9 @@ class DriverHomeView extends StatelessWidget {
                   SizedBox(height: MediaQuery.of(context).size.height / 7),
                   AppTextButton(
                       text: 'Take a Ride',
-                      onTap: () {},
+                      onTap: () {
+                        Get.toNamed('/driver_main_screen');
+                      },
                       color: Styles.buttonColorPrimary)
                 ],
               ),

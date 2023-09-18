@@ -5,7 +5,7 @@ class Styles {
 
   static Color backgroundColor = Colors.white;
 
-  static Color primaryColor = const Color(0xff08B783);
+  static Color primaryColor = const Color.fromRGBO(0, 175, 245, 100);
 
   static Color primaryColorLight = const Color(0xffE2F5ED);
   static Color primaryColorMed = const Color(0xffB9E5D1);
@@ -20,6 +20,8 @@ class Styles {
 
   static Color primaryButtonTextColor = Colors.white;
   static Color secondryButtonTextColor = primaryColorMed;
+
+  static Color primaryMaroonColor = const Color.fromRGBO(135, 6, 46, 100);
 
   //Light Mode TextStyles
 
