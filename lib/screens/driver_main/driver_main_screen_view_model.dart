@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
+import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
-import 'package:ease_tour/resources/constants/others.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';

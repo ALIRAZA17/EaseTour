@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             darkTheme: Themes.darkThemeData(),
             themeMode: themeProvider.themeMode,
             debugShowCheckedModeBanner: false,
-            initialRoute: '/driver_welcome_screen',
+            initialRoute: '/driver_incoming_rides',
             getPages: appRoutes(),
           );
         },
