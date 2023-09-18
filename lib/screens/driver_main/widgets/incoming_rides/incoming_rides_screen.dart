@@ -22,48 +22,16 @@ class IncomingRides extends StackedView<IncomingRidesViewModel> {
         body: Column(
           children: [
             Container(
-              padding: const EdgeInsets.only(
-                  top: 25, bottom: 40, left: 15, right: 15),
+              width: 393,
+              height: 155,
               color: Styles.primaryColor,
-              child: Column(
-                children: [
-                  Text(
-                    'Invite Friends',
-                    style: Styles.displayXlBoldStyle
-                        .copyWith(color: Styles.primaryTextColor),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  TextFormField(
-                    enabled: true,
-                    autofocus: false,
-                    maxLines: 1,
-                    controller: viewModel.textEditingController,
-                    enableSuggestions: true,
-                    style: Styles.displayMedNormalStyle,
-                    decoration: InputDecoration(
-                      fillColor: Styles.textFormFieldBackColor,
-                      filled: true,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Styles.primaryButtonTextColor,
-                      ),
-                      border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8),
-                          ),
-                          borderSide: BorderSide.none),
-                      isCollapsed: true,
-                      label: Text(
-                        'Search',
-                        style: Styles.displaySmNormalStyle
-                            .copyWith(color: Styles.primaryButtonTextColor),
-                      ),
-                    ),
-                    keyboardType: TextInputType.text,
-                  ),
-                ],
+              child: Center(
+                child: Text(
+                  'Incoming Rides',
+                  style: Styles.displayXlBoldStyle.copyWith(
+                      color: Styles.transportSelectContainerColor,
+                      fontSize: 36),
+                ),
               ),
             ),
             friendsList(),
@@ -86,7 +54,7 @@ Widget friendsList() {
         children: [
           ListView.builder(
             padding: const EdgeInsets.only(top: 20),
-            itemCount: 5,
+            itemCount: 10,
             scrollDirection: Axis.vertical,
             physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
@@ -97,6 +65,7 @@ Widget friendsList() {
                   left: 15,
                 ),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ClipOval(
                       child: Container(
@@ -124,9 +93,38 @@ Widget friendsList() {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              'Jhonny Rias',
-                              style: Styles.displayXMxtrLightStyle,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Street 6 (Johar town Block F)',
+                                  style: Styles.displayXMxtrLightStyle
+                                      .copyWith(fontSize: 14),
+                                ),
+                                Text(
+                                  'Iqbal Town to M.A.O',
+                                  style: Styles.displayXXXSLightStyle.copyWith(
+                                    color: Styles.lightGrayTextColor,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Offer: Rs 209",
+                                      style: Styles.displaySmNormalStyle
+                                          .copyWith(
+                                              color: const Color.fromRGBO(
+                                                  135, 6, 46, 100),
+                                              fontSize: 14),
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    const Text("-2.1 Km")
+                                  ],
+                                ),
+                              ],
                             ),
                             Container(
                               width: 46.11199951171875,
