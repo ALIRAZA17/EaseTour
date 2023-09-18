@@ -47,18 +47,8 @@ class UserMainView extends StackedView<UserMainViewModel> {
                           target: viewModel.defaultLocation, zoom: 5),
                   onMapCreated: (controller) =>
                       viewModel.setController(controller),
-                  markers: viewModel.currentLocation != null
-                      ? {
-                          Marker(
-                            markerId: const MarkerId('maker'),
-                            position: viewModel.currentLocation!,
-                            draggable: true,
-                            onDragEnd: (location) =>
-                                viewModel.onDragEnd(location),
-                            icon: viewModel.markerIcon,
-                          ),
-                        }
-                      : {},
+                  markers: viewModel.markers,
+                  polylines: viewModel.polylines,
                   onTap: (location) => viewModel.onMapTap(location),
                 ),
                 Positioned(
@@ -70,7 +60,10 @@ class UserMainView extends StackedView<UserMainViewModel> {
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            enterDestination(context, viewModel),
+                            GestureDetector(
+                                onTap: () =>
+                                    viewModel.onGetDestinatation(context),
+                                child: enterDestination(context, viewModel)),
                             const SizedBox(
                               height: 15,
                             ),
@@ -189,7 +182,7 @@ Container showDestination(BuildContext context, UserMainViewModel viewModel) {
               height: 15,
             ),
             Text(
-              'Enter your destination',
+              viewModel.destinationAddress,
               style: Styles.displayXSBoldStyle.copyWith(
                 color: Styles.secondryTextColor,
               ),
