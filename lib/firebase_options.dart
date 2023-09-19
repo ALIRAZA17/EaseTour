@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '973382249906',
     projectId: 'easetour-782d1',
     authDomain: 'easetour-782d1.firebaseapp.com',
+    databaseURL: 'https://easetour-782d1-default-rtdb.firebaseio.com',
     storageBucket: 'easetour-782d1.appspot.com',
     measurementId: 'G-1V24F2YR6F',
   );
@@ -58,6 +59,7 @@ class DefaultFirebaseOptions {
     appId: '1:973382249906:android:bbb9325e6bb560c4f408ab',
     messagingSenderId: '973382249906',
     projectId: 'easetour-782d1',
+    databaseURL: 'https://easetour-782d1-default-rtdb.firebaseio.com',
     storageBucket: 'easetour-782d1.appspot.com',
   );
 
@@ -66,6 +68,7 @@ class DefaultFirebaseOptions {
     appId: '1:973382249906:ios:9f242252ff08837bf408ab',
     messagingSenderId: '973382249906',
     projectId: 'easetour-782d1',
+    databaseURL: 'https://easetour-782d1-default-rtdb.firebaseio.com',
     storageBucket: 'easetour-782d1.appspot.com',
     androidClientId: '973382249906-vu7k6npmt7iqt39ngi1q5mdarajdh8a3.apps.googleusercontent.com',
     iosClientId: '973382249906-8qtk32aoc5sufh3atv7k29ro2oe7ssut.apps.googleusercontent.com',
@@ -77,6 +80,7 @@ class DefaultFirebaseOptions {
     appId: '1:973382249906:ios:e99721fc20ee350cf408ab',
     messagingSenderId: '973382249906',
     projectId: 'easetour-782d1',
+    databaseURL: 'https://easetour-782d1-default-rtdb.firebaseio.com',
     storageBucket: 'easetour-782d1.appspot.com',
     androidClientId: '973382249906-vu7k6npmt7iqt39ngi1q5mdarajdh8a3.apps.googleusercontent.com',
     iosClientId: '973382249906-fhq54g6cjuuoaa6ege08rrbp3g26m0e6.apps.googleusercontent.com',
