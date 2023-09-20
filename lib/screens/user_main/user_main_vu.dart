@@ -71,12 +71,22 @@ class UserMainView extends StackedView<UserMainViewModel> {
                             const SizedBox(
                               height: 15,
                             ),
-                            MultiButton(
-                              btnLabel: 'Confirm',
-                              onTap: viewModel.onConfirmTap,
-                              expanded: true,
-                              verticalPad: 18,
+                            viewModel.destinationAddress !=
+                                    'Enter Your Destination'
+                                ? bidding(context, viewModel)
+                                : const SizedBox(),
+                            const SizedBox(
+                              height: 15,
                             ),
+                            viewModel.destinationAddress !=
+                                    'Enter Your Destination'
+                                ? MultiButton(
+                                    btnLabel: 'Confirm',
+                                    onTap: viewModel.onConfirmTap,
+                                    expanded: true,
+                                    verticalPad: 18,
+                                  )
+                                : const SizedBox()
                           ],
                         ),
                 ),
@@ -88,6 +98,56 @@ class UserMainView extends StackedView<UserMainViewModel> {
     );
   }
 
+  Container bidding(BuildContext context, UserMainViewModel viewModel) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.only(left: 30, right: 15, top: 5, bottom: 5),
+      decoration: BoxDecoration(
+        color: Styles.backgroundColor,
+        border: Border.all(color: Styles.primaryColor),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Text(
+            'Rs ${viewModel.money}',
+            style: Styles.displayLargeNormalStyle,
+          ),
+          const Spacer(),
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Styles.primaryColor,
+                  border: Border.all(color: Styles.primaryColor),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: IconButton(
+                  onPressed: viewModel.onPlusClicked,
+                  icon: const Icon(Icons.add),
+                ),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Styles.backgroundColor,
+                  border: Border.all(color: Styles.primaryColor),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: IconButton(
+                  onPressed: viewModel.onMinusClicked,
+                  icon: const Icon(Icons.remove),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   UserMainViewModel viewModelBuilder(BuildContext context) {
     UserMainViewModel userMainViewModel = UserMainViewModel();
@@ -96,45 +156,48 @@ class UserMainView extends StackedView<UserMainViewModel> {
   }
 }
 
-Container enterDestination(BuildContext context, UserMainViewModel viewModel) {
-  return Container(
-    width: MediaQuery.of(context).size.width,
-    padding: const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
-    decoration: BoxDecoration(
-      color: Styles.primaryColor,
-      border: Border.all(color: Styles.primaryColor),
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Enter Your Destination',
-              style: Styles.displayMedBoldStyle.copyWith(
-                color: Styles.primaryButtonTextColor,
+Widget enterDestination(BuildContext context, UserMainViewModel viewModel) {
+  return viewModel.showDes
+      ? Container(
+          width: MediaQuery.of(context).size.width,
+          padding:
+              const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
+          decoration: BoxDecoration(
+            color: Styles.primaryColor,
+            border: Border.all(color: Styles.primaryColor),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Enter Your Destination',
+                    style: Styles.displayMedBoldStyle.copyWith(
+                      color: Styles.primaryButtonTextColor,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    'Tell Us Wherever to Go',
+                    style: Styles.displayXSLightStyle.copyWith(
+                      color: Styles.primaryButtonTextColor,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              'Tell Us Wherever to Go',
-              style: Styles.displayXSLightStyle.copyWith(
-                color: Styles.primaryButtonTextColor,
+              GestureDetector(
+                onTap: viewModel.onCrossTap,
+                child: SvgPicture.asset('assets/icons/cross.svg'),
               ),
-            ),
-          ],
-        ),
-        GestureDetector(
-          onTap: viewModel.onCrossTap,
-          child: SvgPicture.asset('assets/icons/cross.svg'),
-        ),
-      ],
-    ),
-  );
+            ],
+          ),
+        )
+      : const SizedBox();
 }
 
 Container showDestination(BuildContext context, UserMainViewModel viewModel) {
@@ -181,10 +244,13 @@ Container showDestination(BuildContext context, UserMainViewModel viewModel) {
             const SizedBox(
               height: 15,
             ),
-            Text(
-              viewModel.destinationAddress,
-              style: Styles.displayXSBoldStyle.copyWith(
-                color: Styles.secondryTextColor,
+            GestureDetector(
+              onTap: () => viewModel.onGetDestinatation(context),
+              child: Text(
+                viewModel.destinationAddress,
+                style: Styles.displayXSBoldStyle.copyWith(
+                  color: Styles.secondryTextColor,
+                ),
               ),
             ),
           ],
