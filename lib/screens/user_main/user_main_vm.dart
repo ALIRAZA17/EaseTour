@@ -127,7 +127,6 @@ class UserMainViewModel extends BaseViewModel {
             ),
       );
       currentAddress = await _getAddressFromLatLng(currentLocation);
-      print(currentAddress);
     }
     notifyListeners();
   }
@@ -181,7 +180,6 @@ class UserMainViewModel extends BaseViewModel {
         latitude: location!.latitude,
         longitude: location.longitude,
         googleMapApiKey: apiKey);
-    print(data.address);
     return '${data.address.split(',')[1]}, ${data.address.split(',')[2]}';
   }
 
