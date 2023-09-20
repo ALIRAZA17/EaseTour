@@ -56,6 +56,7 @@ dependencies:
   google_api_headers: ^1.6.0
   flutter_polyline_points: ^1.0.0
   google_maps_utils: ^1.5.1+0
+  firebase_database: ^10.2.6
 
 
 
