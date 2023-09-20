@@ -1,9 +1,10 @@
 import 'package:ease_tour/common/resources/app_theme/theme_provider.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
+import 'package:ease_tour/common/widgets/button/app_icon_button.dart';
 import 'package:ease_tour/common/widgets/button/app_small_text_button.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
+import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
 import 'package:ease_tour/screens/driver_main/driver_main_screen_view_model.dart';
-import 'package:ease_tour/screens/user_main/driver_select/driver_select_vu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -53,11 +54,69 @@ class DriverMainScreen extends StackedView<DriverMainScreenViewModel> {
                   onTap: (location) => viewModel.onMapTap(location),
                 ),
                 Positioned(
-                  bottom: 90,
-                  left: 15,
-                  right: 15,
-                  child: viewModel.confirmPressed
-                      ? const DriverSelectView()
+                  bottom: viewModel.isCustomBidPressed ? 200 : 90,
+                  left: viewModel.isCustomBidPressed ? 0 : 15,
+                  right: viewModel.isCustomBidPressed ? 0 : 15,
+                  child: viewModel.isCustomBidPressed
+                      ? Container(
+                          width: double.infinity,
+                          color: Colors.grey,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                AppTextField(
+                                  label: "Your Bid",
+                                  keyboardType: TextInputType.number,
+                                  controller: viewModel.controller,
+                                  validator: (value) {
+                                    if (value != null) {
+                                      return "Please provide your bid";
+                                    }
+                                    return "";
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 25,
+                                ),
+                                const Divider(
+                                  color: Colors.white,
+                                  thickness: 0.5,
+                                ),
+                                const SizedBox(
+                                  height: 13,
+                                ),
+                                Center(
+                                  child: Text(
+                                    "Offer a Reasonable Price",
+                                    style: Styles.displayXXSLightStyle.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 14,
+                                ),
+                                AppTextButton(
+                                  text: "Offer",
+                                  onTap: () {},
+                                  color: Styles.primaryColor,
+                                ),
+                                const SizedBox(
+                                  height: 14,
+                                ),
+                                AppTextButton(
+                                  text: "Close",
+                                  onTap: () {},
+                                  color: Colors.grey,
+                                  borderColor: Styles.primaryColor,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -99,28 +158,42 @@ class DriverMainScreen extends StackedView<DriverMainScreenViewModel> {
                                   width: 77,
                                   height: 41,
                                 ),
-                                AppSmallTextButton(
-                                  text: "Rs 209",
-                                  onTap: () {},
-                                  color: Styles.primaryColor,
+                                Container(
                                   width: 77,
                                   height: 41,
-                                ),
+                                  decoration: BoxDecoration(
+                                    color: Styles.primaryColor,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 0.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: AppIconButton(
+                                    onTap: viewModel.customBid,
+                                    color: Styles.primaryColor,
+                                    icon: const Icon(
+                                      Icons.create_outlined,
+                                    ),
+                                  ),
+                                )
                               ],
                             )
                           ],
                         ),
                 ),
-                Positioned(
-                  bottom: 10,
-                  right: 15,
-                  left: 15,
-                  child: AppTextButton(
-                    text: "Close",
-                    onTap: () {},
-                    color: Styles.primaryColor,
-                  ),
-                )
+                viewModel.isCustomBidPressed
+                    ? Container()
+                    : Positioned(
+                        bottom: 10,
+                        right: 15,
+                        left: 15,
+                        child: AppTextButton(
+                          text: "Close",
+                          onTap: () {},
+                          color: Styles.primaryColor,
+                        ),
+                      )
               ],
             ),
           ),

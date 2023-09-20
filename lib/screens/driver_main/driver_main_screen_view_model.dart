@@ -19,7 +19,7 @@ class DriverMainScreenViewModel extends BaseViewModel {
   LatLng defaultLocation = const LatLng(30.3753, 69.3451);
   BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
   final formKey = GlobalKey<FormState>();
-  bool confirmPressed = false;
+  bool isCustomBidPressed = false;
   GoogleMapController? mapController;
   String currentAddress = 'Your Location';
   bool getDestinationCheck = false;
@@ -28,6 +28,7 @@ class DriverMainScreenViewModel extends BaseViewModel {
   List<LatLng> polylinesPoints = [];
   pp.PolylinePoints polylinePoints = pp.PolylinePoints();
   String destinationAddress = 'Enter Your Destination';
+  final controller = TextEditingController();
 
   addCustomIcon() async {
     final Uint8List marker =
@@ -160,22 +161,12 @@ class DriverMainScreenViewModel extends BaseViewModel {
   onDragEnd(LatLng loc) {}
 
   Future<bool> onWillPop() async {
-    confirmPressed = false;
+    isCustomBidPressed = false;
     notifyListeners();
     return false;
   }
 
   Future<String> _getAddressFromLatLng(LatLng? location) async {
-    // await placemarkFromCoordinates(
-    //         currentLocation!.latitude, currentLocation!.longitude)
-    //     .then((List<Placemark> placemarks) {
-    //   Placemark place = placemarks[0];
-
-    //   currentAddress = '${place.subLocality}, ${place.subAdministrativeArea}';
-    //   notifyListeners();
-    // }).catchError((e) {
-    //   debugPrint(e);
-    // });
     GeoData data = await Geocoder2.getDataFromCoordinates(
         latitude: location!.latitude,
         longitude: location.longitude,
@@ -205,10 +196,10 @@ class DriverMainScreenViewModel extends BaseViewModel {
   }
 
   void onBackPressed() {
-    if (confirmPressed) {
-      confirmPressed = false;
+    if (isCustomBidPressed) {
+      isCustomBidPressed = false;
     } else {
-      confirmPressed = true;
+      isCustomBidPressed = true;
     }
     notifyListeners();
     debugPrint('Back Pressed');
@@ -220,7 +211,16 @@ class DriverMainScreenViewModel extends BaseViewModel {
 
   void onConfirmTap() {
     debugPrint('Confirm Pressed');
-    confirmPressed = true;
+    isCustomBidPressed = true;
+    notifyListeners();
+  }
+
+  void customBid() {
+    if (isCustomBidPressed) {
+      isCustomBidPressed = false;
+    } else {
+      isCustomBidPressed = true;
+    }
     notifyListeners();
   }
 
