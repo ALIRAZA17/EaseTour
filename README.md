@@ -1,3 +1,3 @@
-# ease_tour
+# EaseTour
 
-A new Flutter project.
+A new Flutter project called Wego an Uber like project.
