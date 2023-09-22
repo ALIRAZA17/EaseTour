@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
+import 'package:firebase_database/firebase_database.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -28,6 +32,51 @@ class UserMainViewModel extends BaseViewModel {
   List<LatLng> polylinesPoints = [];
   pp.PolylinePoints polylinePoints = pp.PolylinePoints();
   String destinationAddress = 'Enter Your Destination';
+  bool showDes = true;
+  int money = 0;
+  double _distanceInKiloMeters = 0;
+  double pricePerKm = 200;
+
+  void getUserLocation() async {
+    var position = await GeolocatorPlatform.instance.getCurrentPosition();
+
+    currentLocation = LatLng(position.latitude, position.longitude);
+    await addCustomIcon();
+    if (currentLocation != null) {
+      markers.add(
+        Marker(
+          markerId: const MarkerId('maker'),
+          position: currentLocation!,
+          draggable: true,
+          onDragEnd: (location) => onDragEnd(location),
+          icon: markerIcon,
+        ),
+      );
+      mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+            CameraPosition(target: currentLocation!, zoom: 17)
+            //17 is new zoom level
+            ),
+      );
+      currentAddress = await _getAddressFromLatLng(currentLocation);
+    }
+    notifyListeners();
+    GeolocatorPlatform.instance
+        .getPositionStream(
+            // locationSettings: const LocationSettings(
+            //     accuracy: LocationAccuracy.bestForNavigation,
+            //     distanceFilter: 4,
+            //     timeLimit: Duration(seconds: 1))
+            )
+        .listen(
+      (position) {
+        debugPrint('${position.latitude}');
+        position = position;
+        currentLocation = LatLng(position.latitude, position.longitude);
+        notifyListeners();
+      },
+    );
+  }
 
   addCustomIcon() async {
     final Uint8List marker =
@@ -57,6 +106,9 @@ class UserMainViewModel extends BaseViewModel {
     polylines.clear();
     markers.clear();
     polylinesPoints = [];
+    destinationAddress = 'Enter Your Destination';
+    _distanceInKiloMeters = 0;
+    money = 0;
     markers.add(
       Marker(
         markerId: const MarkerId('maker'),
@@ -74,25 +126,25 @@ class UserMainViewModel extends BaseViewModel {
       language: 'en',
       strictbounds: false,
       types: [""],
-      decoration: InputDecoration(
-        fillColor: Styles.textFormFieldBackColor,
-        filled: true,
-        prefixIcon: Icon(
-          Icons.search,
-          color: Styles.primaryButtonTextColor,
-        ),
-        border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(8),
-            ),
-            borderSide: BorderSide.none),
-        isCollapsed: true,
-        label: Text(
-          'Search',
-          style: Styles.displaySmNormalStyle
-              .copyWith(color: Styles.primaryButtonTextColor),
-        ),
-      ),
+      // decoration: InputDecoration(
+      //   fillColor: Styles.textFormFieldBackColor,
+      //   filled: true,
+      //   prefixIcon: Icon(
+      //     Icons.search,
+      //     color: Styles.primaryButtonTextColor,
+      //   ),
+      //   border: const OutlineInputBorder(
+      //       borderRadius: BorderRadius.all(
+      //         Radius.circular(8),
+      //       ),
+      //       borderSide: BorderSide.none),
+      //   isCollapsed: true,
+      //   label: Text(
+      //     'Search',
+      //     style: Styles.displaySmNormalStyle
+      //         .copyWith(color: Styles.primaryButtonTextColor),
+      //   ),
+      // ),
       components: [
         Component(Component.country, 'pk'),
       ],
@@ -105,32 +157,6 @@ class UserMainViewModel extends BaseViewModel {
     debugPrint('Error in Places !!!!!!!!!!');
   }
 
-  void getUserLocation() async {
-    var position = await GeolocatorPlatform.instance.getCurrentPosition();
-
-    currentLocation = LatLng(position.latitude, position.longitude);
-    await addCustomIcon();
-    if (currentLocation != null) {
-      markers.add(
-        Marker(
-          markerId: const MarkerId('maker'),
-          position: currentLocation!,
-          draggable: true,
-          onDragEnd: (location) => onDragEnd(location),
-          icon: markerIcon,
-        ),
-      );
-      mapController?.animateCamera(
-        CameraUpdate.newCameraPosition(
-            CameraPosition(target: currentLocation!, zoom: 17)
-            //17 is new zoom level
-            ),
-      );
-      currentAddress = await _getAddressFromLatLng(currentLocation);
-    }
-    notifyListeners();
-  }
-
   void resetCurrentLocation() async {
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
 
@@ -141,9 +167,12 @@ class UserMainViewModel extends BaseViewModel {
           //17 is new zoom level
           ),
     );
+    destinationAddress = 'Enter Your Destination';
     polylinesPoints = [];
     polylines.clear();
     markers.clear();
+    _distanceInKiloMeters = 0;
+    money = 0;
     markers.add(
       Marker(
         markerId: const MarkerId('location'),
@@ -180,6 +209,7 @@ class UserMainViewModel extends BaseViewModel {
         latitude: location!.latitude,
         longitude: location.longitude,
         googleMapApiKey: apiKey);
+    print(data.address);
     return '${data.address.split(',')[1]}, ${data.address.split(',')[2]}';
   }
 
@@ -216,6 +246,8 @@ class UserMainViewModel extends BaseViewModel {
 
   void onCrossTap() {
     debugPrint('Crossed');
+    showDes = false;
+    notifyListeners();
   }
 
   void onConfirmTap() {
@@ -249,6 +281,7 @@ class UserMainViewModel extends BaseViewModel {
     );
     destinationAddress = await _getAddressFromLatLng(selectedLocation);
     await _getPolyline();
+    totalDistance();
     mapController?.animateCamera(
       CameraUpdate.newLatLngBounds(
         LatLngBounds(
@@ -284,5 +317,49 @@ class UserMainViewModel extends BaseViewModel {
       }
     }
     _addPolyLine();
+  }
+
+  onPlusClicked() {
+    money++;
+    notifyListeners();
+  }
+
+  totalDistance() {
+    for (var i = 0; i < polylinesPoints.length - 1; i++) {
+      _distanceInKiloMeters += calculateDistance(
+          polylinesPoints[i].latitude,
+          polylinesPoints[i].longitude,
+          polylinesPoints[i + 1].latitude,
+          polylinesPoints[i + 1].longitude);
+    }
+    money = (pricePerKm * _distanceInKiloMeters).round();
+    notifyListeners();
+  }
+
+  double calculateDistance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var a = 0.5 -
+        cos((lat2 - lat1) * p) / 2 +
+        cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
+  }
+
+  onMinusClicked() {
+    if (money > 0) {
+      money--;
+      notifyListeners();
+    }
+  }
+
+  //--------------->DataBase Operations<-----------------
+
+  Future<void> updateUserLocation(
+      String userId, double latitude, double longitude) async {
+    debugPrint('Updating Driver Location');
+    // Get a reference to the driver's location node in the database.
+    final userLocationRef =
+        FirebaseDatabase.instance.ref().child('/users/$userId/location');
+    await userLocationRef
+        .update({'latitude': latitude, 'longitude': longitude});
   }
 }
