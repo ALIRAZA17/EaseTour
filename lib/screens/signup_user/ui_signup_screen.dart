@@ -60,7 +60,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       await FirebaseAuth.instance.signInWithCredential(credential);
 
       if (FirebaseAuth.instance.currentUser != null) {
-        Get.toNamed('/home');
+        Get.toNamed('/app_user_info_screen');
       }
     } catch (e) {
       Get.snackbar("Sign up with Google failed", "Please try again!");
