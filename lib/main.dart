@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:ease_tour/common/resources/app_theme/theme_provider.dart';
 import 'package:ease_tour/common/resources/constants/routes.dart';
 import 'package:ease_tour/common/resources/constants/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart' as provider;
 
@@ -14,6 +17,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -33,7 +37,7 @@ class MyApp extends StatelessWidget {
             darkTheme: Themes.darkThemeData(),
             themeMode: themeProvider.themeMode,
             debugShowCheckedModeBanner: false,
-            initialRoute: '/onBoarding/primary',
+            initialRoute: '/login',
             getPages: appRoutes(),
           );
         },

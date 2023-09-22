@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
+import 'package:firebase_database/firebase_database.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -33,6 +36,47 @@ class UserMainViewModel extends BaseViewModel {
   int money = 0;
   double _distanceInKiloMeters = 0;
   double pricePerKm = 200;
+
+  void getUserLocation() async {
+    var position = await GeolocatorPlatform.instance.getCurrentPosition();
+
+    currentLocation = LatLng(position.latitude, position.longitude);
+    await addCustomIcon();
+    if (currentLocation != null) {
+      markers.add(
+        Marker(
+          markerId: const MarkerId('maker'),
+          position: currentLocation!,
+          draggable: true,
+          onDragEnd: (location) => onDragEnd(location),
+          icon: markerIcon,
+        ),
+      );
+      mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+            CameraPosition(target: currentLocation!, zoom: 17)
+            //17 is new zoom level
+            ),
+      );
+      currentAddress = await _getAddressFromLatLng(currentLocation);
+    }
+    notifyListeners();
+    GeolocatorPlatform.instance
+        .getPositionStream(
+            // locationSettings: const LocationSettings(
+            //     accuracy: LocationAccuracy.bestForNavigation,
+            //     distanceFilter: 4,
+            //     timeLimit: Duration(seconds: 1))
+            )
+        .listen(
+      (position) {
+        debugPrint('${position.latitude}');
+        position = position;
+        currentLocation = LatLng(position.latitude, position.longitude);
+        notifyListeners();
+      },
+    );
+  }
 
   addCustomIcon() async {
     final Uint8List marker =
@@ -111,32 +155,6 @@ class UserMainViewModel extends BaseViewModel {
   onPlaceError(PlacesAutocompleteResponse error) {
     Get.snackbar('Error', error.errorMessage!);
     debugPrint('Error in Places !!!!!!!!!!');
-  }
-
-  void getUserLocation() async {
-    var position = await GeolocatorPlatform.instance.getCurrentPosition();
-
-    currentLocation = LatLng(position.latitude, position.longitude);
-    await addCustomIcon();
-    if (currentLocation != null) {
-      markers.add(
-        Marker(
-          markerId: const MarkerId('maker'),
-          position: currentLocation!,
-          draggable: true,
-          onDragEnd: (location) => onDragEnd(location),
-          icon: markerIcon,
-        ),
-      );
-      mapController?.animateCamera(
-        CameraUpdate.newCameraPosition(
-            CameraPosition(target: currentLocation!, zoom: 17)
-            //17 is new zoom level
-            ),
-      );
-      currentAddress = await _getAddressFromLatLng(currentLocation);
-    }
-    notifyListeners();
   }
 
   void resetCurrentLocation() async {
@@ -331,5 +349,17 @@ class UserMainViewModel extends BaseViewModel {
       money--;
       notifyListeners();
     }
+  }
+
+  //--------------->DataBase Operations<-----------------
+
+  Future<void> updateUserLocation(
+      String userId, double latitude, double longitude) async {
+    debugPrint('Updating Driver Location');
+    // Get a reference to the driver's location node in the database.
+    final userLocationRef =
+        FirebaseDatabase.instance.ref().child('/users/$userId/location');
+    await userLocationRef
+        .update({'latitude': latitude, 'longitude': longitude});
   }
 }

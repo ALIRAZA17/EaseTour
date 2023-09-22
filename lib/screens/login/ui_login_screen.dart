@@ -3,6 +3,7 @@ import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
 import 'package:ease_tour/screens/signup_user/providers/email_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/password_text_controller_provider.dart';
+import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
@@ -152,7 +153,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   final password = ref
                                       .read(passswordTextControllerProvider)
                                       .text;
+                                  ref.read(userIdProvider.notifier).state =
+                                      FirebaseAuth.instance.currentUser!.uid;
                                   await signIn(email, password);
+                                  Get.offAllNamed('onBoarding/primary');
                                 }
                               },
                               color: Styles.buttonColorPrimary,
