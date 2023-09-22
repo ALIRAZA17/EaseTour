@@ -5,7 +5,6 @@ import 'package:ease_tour/common/resources/constants/routes.dart';
 import 'package:ease_tour/common/resources/constants/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart' as provider;
 
