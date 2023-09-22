@@ -25,6 +25,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool isLoading = false;
   bool isGoogleSignInLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    ref.read(passswordTextControllerProvider).clear();
+    ref.read(emailTextControllerProvider).clear();
+  }
+
   Future<void> signInWithGoogle() async {
     setState(() {
       isGoogleSignInLoading = true;
@@ -43,7 +50,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       await FirebaseAuth.instance.signInWithCredential(credential);
 
       if (FirebaseAuth.instance.currentUser != null) {
-        Get.toNamed('/home');
+        Get.toNamed('/myScreen');
       }
     } catch (e) {
       Get.snackbar("Sign in with Google failed", "Please try again!");
@@ -52,13 +59,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         isGoogleSignInLoading = false;
       });
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    ref.read(passswordTextControllerProvider).clear();
-    ref.read(emailTextControllerProvider).clear();
   }
 
   Future<void> signIn(String email, String password) async {
@@ -208,11 +208,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                                 try {
                                   await signInWithGoogle();
-
-                                  if (FirebaseAuth.instance.currentUser !=
-                                      null) {
-                                    Get.toNamed('/home');
-                                  }
                                 } catch (e) {
                                   Get.snackbar("Sign in with Google failed",
                                       "Please try again!");

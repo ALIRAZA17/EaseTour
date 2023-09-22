@@ -13,3 +13,17 @@ class AppUser {
     required this.name,
   });
 }
+
+class GoogleAppUser {
+  final String name;
+  final String contactNumber;
+  final String gender;
+  final String email;
+
+  GoogleAppUser({
+    required this.contactNumber,
+    required this.gender,
+    required this.email,
+    required this.name,
+  });
+}

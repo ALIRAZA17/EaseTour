@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
             darkTheme: Themes.darkThemeData(),
             themeMode: themeProvider.themeMode,
             debugShowCheckedModeBanner: false,
-            initialRoute: '/login',
+            initialRoute: '/role_screen',
             getPages: appRoutes(),
           );
         },

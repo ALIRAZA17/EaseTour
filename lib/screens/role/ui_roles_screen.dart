@@ -35,7 +35,7 @@ class RolesScreen extends ConsumerWidget {
                 Get.toNamed('/signup');
               },
               color: Styles.primaryColor,
-              fontSize: 24,
+              fontSize: 20,
             ),
           ),
           const SizedBox(
@@ -59,7 +59,7 @@ class RolesScreen extends ConsumerWidget {
                 Get.toNamed('/signup');
               },
               color: Styles.primaryColor,
-              fontSize: 24,
+              fontSize: 20,
             ),
           ),
         ],

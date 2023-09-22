@@ -26,7 +26,7 @@ class SetPasswordScreen extends ConsumerStatefulWidget {
 class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
   final auth = FirebaseAuth.instance;
   final formKey = GlobalKey<FormState>();
-  bool isRegisterLoading = false; // Add this flag
+  bool isRegisterLoading = false;
 
   @override
   void initState() {
