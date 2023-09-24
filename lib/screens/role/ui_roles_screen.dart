@@ -16,50 +16,59 @@ class RolesScreen extends ConsumerWidget {
         addLeadingButton: true,
         height: 90,
       ),
-      body: Column(
+      body: Stack(
         children: [
-          const SizedBox(
-            height: 48,
+          Column(
+            children: [
+              const SizedBox(
+                height: 48,
+              ),
+              Center(
+                child: Image.asset('assets/images/role_screen_main.jpg'),
+              ),
+              const SizedBox(
+                height: 182,
+              ),
+              Center(
+                child: AppTextButton(
+                  text: "Continue as a user",
+                  onTap: () {
+                    ref.read(roleProvider.notifier).state = 'users';
+                    Get.toNamed('/signup');
+                  },
+                  color: Styles.primaryColor,
+                  fontSize: 20,
+                ),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              Text(
+                "OR",
+                style: Styles.displayLargeNormalStyle.copyWith(
+                  fontSize: 24,
+                  color: Styles.lightGrayTextColor,
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+            ],
           ),
-          Center(
-            child: Image.asset('assets/images/role_screen_main.jpg'),
-          ),
-          const SizedBox(
-            height: 182,
-          ),
-          Center(
-            child: AppTextButton(
-              text: "Continue as a user",
-              onTap: () {
-                ref.read(roleProvider.notifier).state = 'users';
-                Get.toNamed('/signup');
-              },
-              color: Styles.primaryColor,
-              fontSize: 20,
-            ),
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          Text(
-            "OR",
-            style: Styles.displayLargeNormalStyle.copyWith(
-              fontSize: 24,
-              color: Styles.lightGrayTextColor,
-            ),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Center(
-            child: AppTextButton(
-              text: "Continue as a Driver",
-              onTap: () {
-                ref.read(roleProvider.notifier).state = 'drivers';
-                Get.toNamed('/signup');
-              },
-              color: Styles.primaryColor,
-              fontSize: 20,
+          Positioned(
+            bottom: 0,
+            left: 0, // You can adjust the left position as needed
+            right: 0, // You can adjust the right position as needed
+            child: Center(
+              child: AppTextButton(
+                text: "Continue as a Driver",
+                onTap: () {
+                  ref.read(roleProvider.notifier).state = 'drivers';
+                  Get.toNamed('/signup');
+                },
+                color: Styles.primaryColor,
+                fontSize: 20,
+              ),
             ),
           ),
         ],

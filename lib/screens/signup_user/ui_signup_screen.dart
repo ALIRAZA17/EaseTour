@@ -57,13 +57,21 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         idToken: googleAuth?.idToken,
       );
 
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      final authResult =
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
-      if (FirebaseAuth.instance.currentUser != null) {
-        final user = FirebaseAuth.instance.currentUser;
-        ref.read(emailTextControllerProvider).text = user?.email ?? "";
-        ref.read(nameTextControllerProvider).text = user?.displayName ?? "";
-        Get.toNamed("/app_user_info_screen");
+      if (authResult.user != null) {
+        final userExists = await doesUserExistInFirebase(authResult.user!.uid);
+
+        if (userExists) {
+          Get.toNamed('/onBoarding/primary');
+        } else {
+          ref.read(emailTextControllerProvider).text =
+              authResult.user?.email ?? "";
+          ref.read(nameTextControllerProvider).text =
+              authResult.user?.displayName ?? "";
+          Get.toNamed("/app_user_info_screen");
+        }
       }
     } catch (e) {
       Get.snackbar("Sign up with Google failed", "Please try again!");
@@ -71,6 +79,18 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       setState(() {
         isGoogleSignInLoading = false;
       });
+    }
+  }
+
+  Future<bool> doesUserExistInFirebase(String uid) async {
+    try {
+      final user = await FirebaseAuth.instance
+          .userChanges()
+          .firstWhere((user) => user?.uid == uid);
+
+      return user != null;
+    } catch (e) {
+      return false;
     }
   }
 
