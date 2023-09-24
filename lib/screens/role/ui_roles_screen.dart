@@ -57,8 +57,8 @@ class RolesScreen extends ConsumerWidget {
           ),
           Positioned(
             bottom: 0,
-            left: 0, // You can adjust the left position as needed
-            right: 0, // You can adjust the right position as needed
+            left: 0,
+            right: 0,
             child: Center(
               child: AppTextButton(
                 text: "Continue as a Driver",

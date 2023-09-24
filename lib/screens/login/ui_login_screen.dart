@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
@@ -52,7 +53,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       await FirebaseAuth.instance.signInWithCredential(credential);
 
       if (FirebaseAuth.instance.currentUser != null) {
-        Get.toNamed('/myScreen');
+        final role = ref.read(roleProvider.notifier).state;
+        if (role == "users") {
+          Get.toNamed("/onBoarding/primary");
+        } else {
+          Get.toNamed("/driver_welcome_screen");
+        }
       }
     } catch (e) {
       Get.snackbar("Sign in with Google failed", "Please try again!");
@@ -70,8 +76,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       });
 
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-
-      // Get.toNamed('/home');
     } catch (e) {
       Get.snackbar("Sign in failed",
           "Your password or email is wrong. Please try again!");
@@ -79,6 +83,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       setState(() {
         isLoading = false;
       });
+
+      final role = ref.read(roleProvider.notifier).state;
+      if (role == "users") {
+        Get.toNamed("/onBoarding/primary");
+      } else {
+        Get.toNamed("/driver_welcome_screen");
+      }
     }
   }
 
@@ -86,6 +97,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final emailController = ref.watch(emailTextControllerProvider);
     final passwordController = ref.watch(passswordTextControllerProvider);
+
+    final List<String> roleItems = [
+      'User',
+      'Driver',
+    ];
+
+    String? selectedValue;
 
     return Scaffold(
       body: SafeArea(
@@ -141,6 +159,68 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         obscureText: true,
                       ),
                       const SizedBox(
+                        height: 20,
+                      ),
+                      DropdownButtonFormField2<String>(
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 16),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        hint: const Text(
+                          'Select Your Role',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        items: roleItems
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please select Role';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          if (selectedValue == "User") {
+                            ref.read(roleProvider.notifier).state = "users";
+                          } else {
+                            ref.read(roleProvider.notifier).state = "drivers";
+                          }
+                        },
+                        onSaved: (value) {
+                          selectedValue = value.toString();
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.only(right: 8),
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.black45,
+                          ),
+                          iconSize: 24,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                        ),
+                      ),
+                      const SizedBox(
                         height: 69,
                       ),
                       isLoading
@@ -167,11 +247,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       .get();
                                   Map<String, dynamic>? docData = doc.data();
                                   debugPrint('======================>$docData');
-
-                                  // Get.offAllNamed('onBoarding/primary');
-
                                   Get.offAllNamed('driver_welcome_screen');
-                                  // Get.offAllNamed('onBoarding/primary');
                                 }
                               },
                               color: Styles.buttonColorPrimary,
