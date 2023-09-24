@@ -4,12 +4,17 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
+import 'package:ease_tour/models/appDriver.dart';
 import 'package:ease_tour/models/appUser.dart';
 import 'package:ease_tour/screens/role/providers/role_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/cnic_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/contact_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/email_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/gender_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/license_number_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/name_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/vehicle_name_text_controller_provider.dart';
+import 'package:ease_tour/screens/signup_user/providers/vehicle_number_plate_text_contoller_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,12 +29,14 @@ class AppUserInfoScreen extends ConsumerStatefulWidget {
 
 class _AppUserInfoScreenState extends ConsumerState<AppUserInfoScreen> {
   final formKey = GlobalKey<FormState>();
-  bool isRegisterLoading = false; // Add this flag
+  bool isRegisterLoading = false;
 
   @override
   void initState() {
     super.initState();
     ref.read(contactTextControllerProvider).clear();
+    ref.read(vehicleNameTextControllerProvider).clear();
+    ref.read(vehicleNumberPlateTextControllerProvider).clear();
   }
 
   void saveUser(GoogleAppUser user, String role) async {
@@ -64,13 +71,58 @@ class _AppUserInfoScreenState extends ConsumerState<AppUserInfoScreen> {
         isRegisterLoading = false;
       });
     }
+  }
 
-    return null;
+  void saveDriver(GoogleAppDriver driver, String role) async {
+    try {
+      setState(() {
+        isRegisterLoading = true;
+      });
+
+      CollectionReference users = FirebaseFirestore.instance.collection(role);
+
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      DocumentReference userRef = users.doc(uid);
+
+      userRef
+          .set({
+            'full_name': driver.name,
+            'email': driver.email,
+            'contact': driver.contactNumber,
+            'gender': driver.gender,
+            'cnic': driver.cnic,
+            'licenseNo': driver.licenseNumber,
+            'vehicleName': driver.vehicleName,
+            'vehicalNumber': driver.vehicleNumberPlate,
+          })
+          .then((value) =>
+              Get.snackbar("User Added", "User has been added successfully!"))
+          .catchError(
+            (error) => Get.snackbar("Process Failed", "Error: $error"),
+          );
+    } catch (e) {
+      Get.snackbar("Process Failed", "Error: $e");
+    } finally {
+      Get.toNamed("/onBoarding/primary");
+      setState(() {
+        isRegisterLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final contactController = ref.watch(contactTextControllerProvider);
+    String role = ref.read(roleProvider.notifier).state;
+    final vehicleNameController = ref.watch(vehicleNameTextControllerProvider);
+    final vehicleNumberPlateController =
+        ref.watch(vehicleNumberPlateTextControllerProvider);
+    final cnicController = ref.watch(cnicTextControllerProvider);
+    final licenseNoController = ref.watch(licenseNumberTextControllerProvider);
+    final email = ref.watch(emailTextControllerProvider).text;
+
+    final name = ref.watch(nameTextControllerProvider).text;
 
     final List<String> genderItems = [
       'Male',
@@ -184,35 +236,98 @@ class _AppUserInfoScreenState extends ConsumerState<AppUserInfoScreen> {
                     const SizedBox(
                       height: 20,
                     ),
+                    Visibility(
+                      visible: role == "drivers",
+                      child: Column(
+                        children: [
+                          AppTextField(
+                            label: "Enter your Vehicle Name",
+                            keyboardType: TextInputType.text,
+                            controller: vehicleNameController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please enter vehicle name";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          AppTextField(
+                            label: "Enter your vehicle number",
+                            keyboardType: TextInputType.text,
+                            controller: vehicleNumberPlateController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please enter vehicle number";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          AppTextField(
+                            label: "Cnic",
+                            keyboardType: TextInputType.text,
+                            controller: cnicController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter Cnic';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          AppTextField(
+                            label: "License No.",
+                            keyboardType: TextInputType.text,
+                            controller: licenseNoController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter license no';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     isRegisterLoading
                         ? const Center(child: CircularProgressIndicator())
                         : AppTextButton(
                             text: "Register",
                             onTap: () {
                               if (formKey.currentState!.validate()) {
-                                final contactNumber = ref
-                                    .read(contactTextControllerProvider)
-                                    .text;
                                 final gender =
                                     ref.read(genderProvider.notifier).state;
-                                final email =
-                                    ref.read(emailTextControllerProvider).text;
-
-                                final name =
-                                    ref.read(nameTextControllerProvider).text;
-
-                                String role =
-                                    ref.read(roleProvider.notifier).state;
-
                                 if (role == "users") {
                                   final user = GoogleAppUser(
-                                      contactNumber: contactNumber,
-                                      gender: gender,
-                                      email: email,
-                                      name: name);
+                                    contactNumber: contactController.text,
+                                    gender: gender,
+                                    email: email,
+                                    name: name,
+                                  );
                                   saveUser(user, role);
                                 } else {
-                                  Get.toNamed('/transport_details');
+                                  final driver = GoogleAppDriver(
+                                    contactNumber: contactController.text,
+                                    gender: gender,
+                                    cnic: cnicController.text,
+                                    licenseNumber: licenseNoController.text,
+                                    vehicleName: vehicleNameController.text,
+                                    vehicleNumberPlate:
+                                        vehicleNumberPlateController.text,
+                                    email: email,
+                                    name: name,
+                                  );
+                                  saveDriver(driver, role);
                                 }
                               }
                             },

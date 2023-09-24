@@ -401,7 +401,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       height: 20,
                     ),
                     isGoogleSignInLoading
-                        ? Center(child: CircularProgressIndicator())
+                        ? const Center(child: CircularProgressIndicator())
                         : AppTextButton(
                             text: "Sign up with Gmail",
                             onTap: () {

@@ -21,3 +21,25 @@ class AppDriver {
     required this.vehicleNumberPlate,
   });
 }
+
+class GoogleAppDriver {
+  final String name;
+  final String contactNumber;
+  final String gender;
+  final String email;
+  final String cnic;
+  final String licenseNumber;
+  final String vehicleName;
+  final String vehicleNumberPlate;
+
+  GoogleAppDriver({
+    required this.contactNumber,
+    required this.gender,
+    required this.email,
+    required this.name,
+    required this.cnic,
+    required this.licenseNumber,
+    required this.vehicleName,
+    required this.vehicleNumberPlate,
+  });
+}
