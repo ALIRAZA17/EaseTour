@@ -1,5 +1,6 @@
 import 'package:ease_tour/common/resources/app_theme/theme_provider.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
+import 'package:ease_tour/common/widgets/button/action_button.dart';
 import 'package:ease_tour/common/widgets/button/multi_button.dart';
 import 'package:ease_tour/screens/user_main/driver_select/driver_select_vu.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
@@ -64,8 +65,53 @@ class WillPop extends ConsumerWidget {
         appBar: EtAppBar(
           height: 90,
           color: Styles.trans,
-          addBackButton: true,
-          onBackPress: viewModel.onBackPressed,
+          addBackButton: false,
+          actions: [
+            Builder(builder: (context) {
+              return ActionButton(
+                icon: 'assets/icons/bars-ver.svg',
+                onTap: () => viewModel.onActionPressed(context),
+              );
+            })
+          ],
+        ),
+        drawer: SafeArea(
+          child: Drawer(
+            // width: MediaQuery.of(context).size.width / 1.7,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(40),
+                  bottomRight: Radius.circular(40)),
+            ),
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Styles.primaryColor,
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Ease Tour',
+                      style: Styles.displayXlBoldStyle,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.logout,
+                    size: 30,
+                  ),
+                  title: Text(
+                    'Logout',
+                    style: Styles.displayMedBoldStyle
+                        .copyWith(color: Styles.primaryTextColor),
+                  ),
+                  onTap: viewModel.onLogout,
+                )
+              ],
+            ),
+          ),
         ),
         body: Stack(
           children: [

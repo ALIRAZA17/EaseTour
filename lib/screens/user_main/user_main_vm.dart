@@ -17,7 +17,6 @@ import 'package:get/get.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:geocoder2/geocoder2.dart';
 
@@ -235,14 +234,18 @@ class UserMainViewModel extends BaseViewModel {
     );
   }
 
-  void onBackPressed() {
-    if (confirmPressed) {
-      confirmPressed = false;
-    } else {
-      confirmPressed = true;
+  void onActionPressed(BuildContext context) {
+    {
+      Scaffold.of(context).openDrawer();
     }
+    // if (confirmPressed) {
+    //   confirmPressed = false;
+    // } else {
+    //   confirmPressed = true;
+    // }
+
     notifyListeners();
-    debugPrint('Back Pressed');
+    debugPrint('Drawer Pressed');
   }
 
   void onCrossTap() {
@@ -380,5 +383,9 @@ class UserMainViewModel extends BaseViewModel {
       'bid_amount': bid,
       'searching': true,
     });
+  }
+
+  onLogout() {
+    debugPrint('Logout');
   }
 }

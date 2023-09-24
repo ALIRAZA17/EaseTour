@@ -161,9 +161,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   ref.read(userIdProvider.notifier).state =
                                       FirebaseAuth.instance.currentUser!.uid;
 
-                                  // Get.offAllNamed('onBoarding/primary');
+                                  Get.offAllNamed('onBoarding/primary');
 
-                                  Get.offAllNamed('driver_welcome_screen');
+                                  // Get.offAllNamed('driver_welcome_screen');
                                   // Get.offAllNamed('onBoarding/primary');
                                 }
                               },
