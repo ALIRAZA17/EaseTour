@@ -377,7 +377,8 @@ class UserMainViewModel extends BaseViewModel {
     await userLocationRef.update({
       'des_latitude': latitude,
       'des_longitude': longitude,
-      'bid_amount': bid
+      'bid_amount': bid,
+      'searching': true,
     });
   }
 }

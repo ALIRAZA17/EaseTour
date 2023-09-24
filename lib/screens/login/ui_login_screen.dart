@@ -161,13 +161,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   ref.read(userIdProvider.notifier).state =
                                       FirebaseAuth.instance.currentUser!.uid;
 
-                                  final doc = await FirebaseFirestore.instance
-                                      .collection('drivers')
-                                      .doc(ref.read(userIdProvider))
-                                      .get();
-                                  Map<String, dynamic>? docData = doc.data();
-                                  debugPrint('======================>$docData');
-
                                   // Get.offAllNamed('onBoarding/primary');
 
                                   Get.offAllNamed('driver_welcome_screen');
