@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
+import 'package:ease_tour/screens/role/providers/role_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/email_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/password_text_controller_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
@@ -69,7 +71,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       await _auth.signInWithEmailAndPassword(email: email, password: password);
 
-      Get.toNamed('/home');
+      // Get.toNamed('/home');
     } catch (e) {
       Get.snackbar("Sign in failed",
           "Your password or email is wrong. Please try again!");
@@ -150,13 +152,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   final email = ref
                                       .read(emailTextControllerProvider)
                                       .text;
+
                                   final password = ref
                                       .read(passswordTextControllerProvider)
                                       .text;
+                                  await signIn(email, password);
+
                                   ref.read(userIdProvider.notifier).state =
                                       FirebaseAuth.instance.currentUser!.uid;
-                                  await signIn(email, password);
-                                  Get.offAllNamed('onBoarding/primary');
+
+                                  final doc = await FirebaseFirestore.instance
+                                      .collection('drivers')
+                                      .doc(ref.read(userIdProvider))
+                                      .get();
+                                  Map<String, dynamic>? docData = doc.data();
+                                  debugPrint('======================>$docData');
+
+                                  // Get.offAllNamed('onBoarding/primary');
+
+                                  Get.offAllNamed('driver_welcome_screen');
+                                  // Get.offAllNamed('onBoarding/primary');
                                 }
                               },
                               color: Styles.buttonColorPrimary,

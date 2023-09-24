@@ -3,17 +3,21 @@ import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
+import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
+import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart' as pp;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:geocoder2/geocoder2.dart';
 
@@ -100,9 +104,7 @@ class UserMainViewModel extends BaseViewModel {
     mapController = controller;
   }
 
-  void onGetDestinatation(
-    BuildContext context,
-  ) async {
+  void onGetDestinatation(BuildContext context, WidgetRef ref) async {
     polylines.clear();
     markers.clear();
     polylinesPoints = [];
@@ -149,7 +151,7 @@ class UserMainViewModel extends BaseViewModel {
         Component(Component.country, 'pk'),
       ],
     );
-    displayPredictions(p);
+    displayPredictions(p, ref);
   }
 
   onPlaceError(PlacesAutocompleteResponse error) {
@@ -209,7 +211,6 @@ class UserMainViewModel extends BaseViewModel {
         latitude: location!.latitude,
         longitude: location.longitude,
         googleMapApiKey: apiKey);
-    print(data.address);
     return '${data.address.split(',')[1]}, ${data.address.split(',')[2]}';
   }
 
@@ -250,13 +251,13 @@ class UserMainViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onConfirmTap() {
-    debugPrint('Confirm Pressed');
+  void onConfirmTap(WidgetRef ref) {
+    debugPrint('Confirm Pressed, =========> ${ref.read(moneyProvider)}');
     confirmPressed = true;
     notifyListeners();
   }
 
-  Future<void> displayPredictions(Prediction? p) async {
+  Future<void> displayPredictions(Prediction? p, WidgetRef ref) async {
     GoogleMapsPlaces places = GoogleMapsPlaces(
       apiKey: apiKey,
       apiHeaders: await const GoogleApiHeaders().getHeaders(),
@@ -281,7 +282,9 @@ class UserMainViewModel extends BaseViewModel {
     );
     destinationAddress = await _getAddressFromLatLng(selectedLocation);
     await _getPolyline();
-    totalDistance();
+    totalDistance(ref);
+    await saveUserDesAndBid(ref.read(userIdProvider),
+        selectedLocation!.latitude, selectedLocation!.longitude, money);
     mapController?.animateCamera(
       CameraUpdate.newLatLngBounds(
         LatLngBounds(
@@ -324,7 +327,7 @@ class UserMainViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  totalDistance() {
+  totalDistance(WidgetRef ref) {
     for (var i = 0; i < polylinesPoints.length - 1; i++) {
       _distanceInKiloMeters += calculateDistance(
           polylinesPoints[i].latitude,
@@ -333,6 +336,8 @@ class UserMainViewModel extends BaseViewModel {
           polylinesPoints[i + 1].longitude);
     }
     money = (pricePerKm * _distanceInKiloMeters).round();
+    ref.read(moneyProvider.notifier).state = money;
+
     notifyListeners();
   }
 
@@ -355,11 +360,24 @@ class UserMainViewModel extends BaseViewModel {
 
   Future<void> updateUserLocation(
       String userId, double latitude, double longitude) async {
-    debugPrint('Updating Driver Location');
+    debugPrint('Updating User Location');
     // Get a reference to the driver's location node in the database.
     final userLocationRef =
         FirebaseDatabase.instance.ref().child('/users/$userId/location');
     await userLocationRef
         .update({'latitude': latitude, 'longitude': longitude});
+  }
+
+  Future<void> saveUserDesAndBid(
+      String userId, double latitude, double longitude, int bid) async {
+    debugPrint('Updating User Selected Destination and Bid Amount');
+    // Get a reference to the driver's location node in the database.
+    final userLocationRef =
+        FirebaseDatabase.instance.ref().child('/users/$userId/rides');
+    await userLocationRef.update({
+      'des_latitude': latitude,
+      'des_longitude': longitude,
+      'bid_amount': bid
+    });
   }
 }

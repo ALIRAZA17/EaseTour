@@ -89,12 +89,13 @@ class WillPop extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         GestureDetector(
-                            onTap: () => viewModel.onGetDestinatation(context),
+                            onTap: () =>
+                                viewModel.onGetDestinatation(context, ref),
                             child: enterDestination(context, viewModel, ref)),
                         const SizedBox(
                           height: 15,
                         ),
-                        showDestination(context, viewModel),
+                        showDestination(context, viewModel, ref),
                         const SizedBox(
                           height: 15,
                         ),
@@ -107,7 +108,7 @@ class WillPop extends ConsumerWidget {
                         viewModel.destinationAddress != 'Enter Your Destination'
                             ? MultiButton(
                                 btnLabel: 'Confirm',
-                                onTap: viewModel.onConfirmTap,
+                                onTap: () => viewModel.onConfirmTap(ref),
                                 expanded: true,
                                 verticalPad: 18,
                               )
@@ -219,7 +220,8 @@ Widget enterDestination(
       : const SizedBox();
 }
 
-Container showDestination(BuildContext context, UserMainViewModel viewModel) {
+Container showDestination(
+    BuildContext context, UserMainViewModel viewModel, WidgetRef ref) {
   return Container(
     width: MediaQuery.of(context).size.width,
     padding: const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
@@ -264,7 +266,7 @@ Container showDestination(BuildContext context, UserMainViewModel viewModel) {
               height: 15,
             ),
             GestureDetector(
-              onTap: () => viewModel.onGetDestinatation(context),
+              onTap: () => viewModel.onGetDestinatation(context, ref),
               child: Text(
                 viewModel.destinationAddress,
                 style: Styles.displayXSBoldStyle.copyWith(

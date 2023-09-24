@@ -5,10 +5,12 @@ import 'package:ease_tour/common/widgets/button/app_small_text_button.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
 import 'package:ease_tour/screens/driver_main/driver_main_screen_view_model.dart';
+import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:stacked/stacked.dart';
 
 import '../../common/resources/constants/styles.dart';
@@ -19,184 +21,10 @@ class DriverMainScreen extends StackedView<DriverMainScreenViewModel> {
   @override
   Widget builder(BuildContext context, DriverMainScreenViewModel viewModel,
       Widget? child) {
-    return Consumer(
+    return pv.Consumer(
       builder: (context, ThemeProvider provider, child) {
-        return WillPopScope(
-          onWillPop: () async => viewModel.onWillPop(),
-          child: Scaffold(
-            floatingActionButton: FloatingActionButton.small(
-              onPressed: viewModel.resetCurrentLocation,
-              backgroundColor: Styles.buttonColorPrimary,
-              child: const Icon(Icons.gps_fixed),
-            ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-            resizeToAvoidBottomInset: false,
-            backgroundColor: Styles.backgroundColor,
-            appBar: EtAppBar(
-              height: 90,
-              color: Styles.trans,
-              addBackButton: true,
-              onBackPress: viewModel.onBackPressed,
-            ),
-            body: Stack(
-              children: [
-                GoogleMap(
-                  zoomControlsEnabled: false,
-                  initialCameraPosition: viewModel.currentLocation != null
-                      ? CameraPosition(
-                          target: viewModel.currentLocation!, zoom: 14)
-                      : CameraPosition(
-                          target: viewModel.defaultLocation, zoom: 5),
-                  onMapCreated: (controller) =>
-                      viewModel.setController(controller),
-                  markers: viewModel.markers,
-                  polylines: viewModel.polylines,
-                  onTap: (location) => viewModel.onMapTap(location),
-                ),
-                Positioned(
-                  bottom: viewModel.isCustomBidPressed ? 200 : 90,
-                  left: viewModel.isCustomBidPressed ? 0 : 15,
-                  right: viewModel.isCustomBidPressed ? 0 : 15,
-                  child: viewModel.isCustomBidPressed
-                      ? Container(
-                          width: double.infinity,
-                          color: Colors.grey,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                AppTextField(
-                                  label: "Your Bid",
-                                  keyboardType: TextInputType.number,
-                                  controller: viewModel.controller,
-                                  validator: (value) {
-                                    if (value != null) {
-                                      return "Please provide your bid";
-                                    }
-                                    return "";
-                                  },
-                                ),
-                                const SizedBox(
-                                  height: 25,
-                                ),
-                                const Divider(
-                                  color: Colors.white,
-                                  thickness: 0.5,
-                                ),
-                                const SizedBox(
-                                  height: 13,
-                                ),
-                                Center(
-                                  child: Text(
-                                    "Offer a Reasonable Price",
-                                    style: Styles.displayXXSLightStyle.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 14,
-                                ),
-                                AppTextButton(
-                                  text: "Offer",
-                                  onTap: () {},
-                                  color: Styles.primaryColor,
-                                ),
-                                const SizedBox(
-                                  height: 14,
-                                ),
-                                AppTextButton(
-                                  text: "Close",
-                                  onTap: () {},
-                                  color: Colors.grey,
-                                  borderColor: Styles.primaryColor,
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            showDestination(context, viewModel),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            AppTextButton(
-                              text: "Accept for 209",
-                              onTap: () {},
-                              color: Styles.primaryColor,
-                            ),
-                            const SizedBox(
-                              height: 11,
-                            ),
-                            Center(
-                              child: Text(
-                                "Offer your fare",
-                                style: Styles.displaySmBoldStyle,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 17,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                AppSmallTextButton(
-                                  text: "Rs 209",
-                                  onTap: () {},
-                                  color: Styles.primaryColor,
-                                  width: 77,
-                                  height: 41,
-                                ),
-                                AppSmallTextButton(
-                                  text: "Rs 209",
-                                  onTap: () {},
-                                  color: Styles.primaryColor,
-                                  width: 77,
-                                  height: 41,
-                                ),
-                                Container(
-                                  width: 77,
-                                  height: 41,
-                                  decoration: BoxDecoration(
-                                    color: Styles.primaryColor,
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 0.5,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: AppIconButton(
-                                    onTap: viewModel.customBid,
-                                    color: Styles.primaryColor,
-                                    icon: const Icon(
-                                      Icons.create_outlined,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                ),
-                viewModel.isCustomBidPressed
-                    ? Container()
-                    : Positioned(
-                        bottom: 10,
-                        right: 15,
-                        left: 15,
-                        child: AppTextButton(
-                          text: "Close",
-                          onTap: () {},
-                          color: Styles.primaryColor,
-                        ),
-                      )
-              ],
-            ),
-          ),
+        return WillPop(
+          viewModel: viewModel,
         );
       },
     );
@@ -207,7 +35,197 @@ class DriverMainScreen extends StackedView<DriverMainScreenViewModel> {
     DriverMainScreenViewModel driverMainScreenModel =
         DriverMainScreenViewModel();
     driverMainScreenModel.getUserLocation();
+    driverMainScreenModel.getUsersBidding();
     return driverMainScreenModel;
+  }
+}
+
+class WillPop extends ConsumerWidget {
+  const WillPop({super.key, required this.viewModel});
+  final DriverMainScreenViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (viewModel.currentLocation != null) {
+      viewModel.updateUserLocation(
+          ref.read(userIdProvider),
+          viewModel.currentLocation!.latitude,
+          viewModel.currentLocation!.longitude);
+    }
+    return WillPopScope(
+      onWillPop: () async => viewModel.onWillPop(),
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton.small(
+          onPressed: viewModel.resetCurrentLocation,
+          backgroundColor: Styles.buttonColorPrimary,
+          child: const Icon(Icons.gps_fixed),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Styles.backgroundColor,
+        appBar: EtAppBar(
+          height: 90,
+          color: Styles.trans,
+          addBackButton: true,
+          onBackPress: viewModel.onBackPressed,
+        ),
+        body: Stack(
+          children: [
+            GoogleMap(
+              zoomControlsEnabled: false,
+              initialCameraPosition: viewModel.currentLocation != null
+                  ? CameraPosition(target: viewModel.currentLocation!, zoom: 14)
+                  : CameraPosition(target: viewModel.defaultLocation, zoom: 5),
+              onMapCreated: (controller) => viewModel.setController(controller),
+              markers: viewModel.markers,
+              polylines: viewModel.polylines,
+              onTap: (location) => viewModel.onMapTap(location),
+            ),
+            Positioned(
+              bottom: viewModel.isCustomBidPressed ? 200 : 90,
+              left: viewModel.isCustomBidPressed ? 0 : 15,
+              right: viewModel.isCustomBidPressed ? 0 : 15,
+              child: viewModel.isCustomBidPressed
+                  ? Container(
+                      width: double.infinity,
+                      color: Colors.grey,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            AppTextField(
+                              label: "Your Bid",
+                              keyboardType: TextInputType.number,
+                              controller: viewModel.controller,
+                              validator: (value) {
+                                if (value != null) {
+                                  return "Please provide your bid";
+                                }
+                                return "";
+                              },
+                            ),
+                            const SizedBox(
+                              height: 25,
+                            ),
+                            const Divider(
+                              color: Colors.white,
+                              thickness: 0.5,
+                            ),
+                            const SizedBox(
+                              height: 13,
+                            ),
+                            Center(
+                              child: Text(
+                                "Offer a Reasonable Price",
+                                style: Styles.displayXXSLightStyle.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 14,
+                            ),
+                            AppTextButton(
+                              text: "Offer",
+                              onTap: () {},
+                              color: Styles.primaryColor,
+                            ),
+                            const SizedBox(
+                              height: 14,
+                            ),
+                            AppTextButton(
+                              text: "Close",
+                              onTap: () {},
+                              color: Colors.grey,
+                              borderColor: Styles.primaryColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        showDestination(context, viewModel),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        AppTextButton(
+                          text: "Accept for 209",
+                          onTap: () {},
+                          color: Styles.primaryColor,
+                        ),
+                        const SizedBox(
+                          height: 11,
+                        ),
+                        Center(
+                          child: Text(
+                            "Offer your fare",
+                            style: Styles.displaySmBoldStyle,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 17,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            AppSmallTextButton(
+                              text: "Rs 209",
+                              onTap: () {},
+                              color: Styles.primaryColor,
+                              width: 77,
+                              height: 41,
+                            ),
+                            AppSmallTextButton(
+                              text: "Rs 209",
+                              onTap: () {},
+                              color: Styles.primaryColor,
+                              width: 77,
+                              height: 41,
+                            ),
+                            Container(
+                              width: 77,
+                              height: 41,
+                              decoration: BoxDecoration(
+                                color: Styles.primaryColor,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 0.5,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: AppIconButton(
+                                onTap: viewModel.customBid,
+                                color: Styles.primaryColor,
+                                icon: const Icon(
+                                  Icons.create_outlined,
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+            ),
+            viewModel.isCustomBidPressed
+                ? Container()
+                : Positioned(
+                    bottom: 10,
+                    right: 15,
+                    left: 15,
+                    child: AppTextButton(
+                      text: "Close",
+                      onTap: () {},
+                      color: Styles.primaryColor,
+                    ),
+                  )
+          ],
+        ),
+      ),
+    );
   }
 }
 

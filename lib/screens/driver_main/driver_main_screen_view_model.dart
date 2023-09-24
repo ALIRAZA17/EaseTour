@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -36,6 +37,17 @@ class DriverMainScreenViewModel extends BaseViewModel {
 
     markerIcon = BitmapDescriptor.fromBytes(marker);
     notifyListeners();
+  }
+
+  getUsersBidding() async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("users");
+    Stream stream = ref.onValue;
+    stream.listen((event) {
+      final rides = event.snapshot.value;
+      debugPrint(
+          'Event Type: ==========> ${rides.runtimeType}'); // DatabaseEventType.value;
+      debugPrint('Snapshot: =-==========> $rides'); // DataSnapshot
+    });
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
@@ -130,6 +142,21 @@ class DriverMainScreenViewModel extends BaseViewModel {
       currentAddress = await _getAddressFromLatLng(currentLocation);
     }
     notifyListeners();
+    GeolocatorPlatform.instance
+        .getPositionStream(
+            // locationSettings: const LocationSettings(
+            //     accuracy: LocationAccuracy.bestForNavigation,
+            //     distanceFilter: 4,
+            //     timeLimit: Duration(seconds: 1))
+            )
+        .listen(
+      (position) {
+        debugPrint('${position.latitude}');
+        position = position;
+        currentLocation = LatLng(position.latitude, position.longitude);
+        notifyListeners();
+      },
+    );
   }
 
   void resetCurrentLocation() async {
@@ -284,5 +311,17 @@ class DriverMainScreenViewModel extends BaseViewModel {
       }
     }
     _addPolyLine();
+  }
+
+  //--------------->DataBase Operations<-----------------
+
+  Future<void> updateUserLocation(
+      String driverId, double latitude, double longitude) async {
+    debugPrint('Updating Driver Location');
+    // Get a reference to the driver's location node in the database.
+    final userLocationRef =
+        FirebaseDatabase.instance.ref().child('/drivers/$driverId/location');
+    await userLocationRef
+        .update({'latitude': latitude, 'longitude': longitude});
   }
 }

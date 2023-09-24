@@ -3,7 +3,7 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/screens/user_main/driver_select/driver_select_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:stacked/stacked.dart';
 
 class DriverSelectView extends StackedView<DriverSelectViewModel> {
@@ -12,78 +12,91 @@ class DriverSelectView extends StackedView<DriverSelectViewModel> {
   @override
   Widget builder(
       BuildContext context, DriverSelectViewModel viewModel, Widget? child) {
-    return Consumer(builder: (context, ThemeProvider provider, child) {
-      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        container1(context, viewModel),
-        const SizedBox(
-          height: 15,
-        ),
-        container2(context, viewModel),
-        const SizedBox(
-          height: 15,
-        ),
-        GestureDetector(
-          onTap: viewModel.onBookTap,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
-            // height: 48,
-            decoration: BoxDecoration(
-              color: Styles.buttonColorPrimary,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 3.5,
-                  child: Column(
-                    children: [
-                      Text(
-                        'Total',
-                        style: Styles.displayXXXSLightStyle
-                            .copyWith(color: Styles.primaryButtonTextColor),
-                        // textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        'Rs 290',
-                        style: Styles.displaySmBoldStyle
-                            .copyWith(color: Styles.primaryButtonTextColor),
-                        // textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: 1,
-                  height: 35,
-                  color: Styles.primaryTextColor,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Book Now',
-                          style: Styles.displayXMBoldStyle
-                              .copyWith(color: Styles.primaryButtonTextColor),
-                        ),
-                        SvgPicture.asset('assets/icons/for_arrow.svg'),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        )
-      ]);
+    return pv.Consumer(builder: (context, ThemeProvider provider, child) {
+      return MainWidget(viewModel: viewModel);
     });
   }
 
   @override
   DriverSelectViewModel viewModelBuilder(BuildContext context) {
     return DriverSelectViewModel();
+  }
+}
+
+class MainWidget extends StatelessWidget {
+  const MainWidget({
+    super.key,
+    required this.viewModel,
+  });
+  final DriverSelectViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      container1(context, viewModel),
+      const SizedBox(
+        height: 15,
+      ),
+      container2(context, viewModel),
+      const SizedBox(
+        height: 15,
+      ),
+      GestureDetector(
+        onTap: viewModel.onBookTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
+          // height: 48,
+          decoration: BoxDecoration(
+            color: Styles.buttonColorPrimary,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 3.5,
+                child: Column(
+                  children: [
+                    Text(
+                      'Total',
+                      style: Styles.displayXXXSLightStyle
+                          .copyWith(color: Styles.primaryButtonTextColor),
+                      // textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      'Rs 290',
+                      style: Styles.displaySmBoldStyle
+                          .copyWith(color: Styles.primaryButtonTextColor),
+                      // textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: 1,
+                height: 35,
+                color: Styles.primaryTextColor,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Book Now',
+                        style: Styles.displayXMBoldStyle
+                            .copyWith(color: Styles.primaryButtonTextColor),
+                      ),
+                      SvgPicture.asset('assets/icons/for_arrow.svg'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      )
+    ]);
   }
 }
 
