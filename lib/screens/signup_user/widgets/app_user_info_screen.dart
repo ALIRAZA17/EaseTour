@@ -31,6 +31,8 @@ class _AppUserInfoScreenState extends ConsumerState<AppUserInfoScreen> {
   final formKey = GlobalKey<FormState>();
   bool isRegisterLoading = false;
 
+  String? selectedValue;
+
   @override
   void initState() {
     super.initState();
@@ -129,8 +131,6 @@ class _AppUserInfoScreenState extends ConsumerState<AppUserInfoScreen> {
       'Female',
     ];
 
-    String? selectedValue;
-
     return Scaffold(
       appBar: const EtAppBar(
         height: 90,
@@ -208,6 +208,7 @@ class _AppUserInfoScreenState extends ConsumerState<AppUserInfoScreen> {
                         return null;
                       },
                       onChanged: (value) {
+                        selectedValue = value;
                         ref.read(genderProvider.notifier).state =
                             selectedValue ?? "Male";
                       },

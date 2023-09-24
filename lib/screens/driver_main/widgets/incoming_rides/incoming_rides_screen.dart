@@ -43,7 +43,9 @@ class IncomingRides extends StackedView<IncomingRidesViewModel> {
 
   @override
   IncomingRidesViewModel viewModelBuilder(BuildContext context) {
-    return IncomingRidesViewModel();
+    IncomingRidesViewModel incomingRidesViewModel = IncomingRidesViewModel();
+    incomingRidesViewModel.getUsersBidding();
+    return incomingRidesViewModel;
   }
 }
 

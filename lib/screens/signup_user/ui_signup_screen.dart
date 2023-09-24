@@ -31,6 +31,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   bool isSignUpLoading = false;
   bool isGoogleSignInLoading = false;
 
+  String? selectedValue;
+
   @override
   void initState() {
     super.initState();
@@ -61,17 +63,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           await FirebaseAuth.instance.signInWithCredential(credential);
 
       if (authResult.user != null) {
-        final userExists = await doesUserExistInFirebase(authResult.user!.uid);
+        // final userExists = await doesUserExistInFirebase(authResult.user!.uid);
 
-        if (userExists) {
-          Get.toNamed('/onBoarding/primary');
-        } else {
-          ref.read(emailTextControllerProvider).text =
-              authResult.user?.email ?? "";
-          ref.read(nameTextControllerProvider).text =
-              authResult.user?.displayName ?? "";
-          Get.toNamed("/app_user_info_screen");
-        }
+        ref.read(emailTextControllerProvider).text =
+            authResult.user?.email ?? "";
+        ref.read(nameTextControllerProvider).text =
+            authResult.user?.displayName ?? "";
+        Get.toNamed("/app_user_info_screen");
       }
     } catch (e) {
       Get.snackbar("Sign up with Google failed", "Please try again!");
@@ -107,8 +105,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       'Male',
       'Female',
     ];
-
-    String? selectedValue;
 
     return Scaffold(
       appBar: const EtAppBar(
@@ -225,6 +221,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         return null;
                       },
                       onChanged: (value) {
+                        selectedValue = value;
                         ref.read(genderProvider.notifier).state =
                             selectedValue ?? "Male";
                       },

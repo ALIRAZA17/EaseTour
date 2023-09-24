@@ -34,7 +34,7 @@ class DriverHomeView extends StatelessWidget {
                         if (await Permission.location.serviceStatus.isEnabled) {
                           var status = await Permission.location.status;
                           if (status.isGranted) {
-                            Get.offAllNamed('/home');
+                            Get.offAllNamed('/driver_incoming_rides');
                           } else if (status.isDenied) {
                             await [
                               Permission.location,

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
@@ -33,6 +32,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.initState();
     ref.read(passswordTextControllerProvider).clear();
     ref.read(emailTextControllerProvider).clear();
+    ref.read(roleProvider.notifier).state = "";
   }
 
   Future<void> signInWithGoogle() async {
@@ -53,7 +53,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       await FirebaseAuth.instance.signInWithCredential(credential);
 
       if (FirebaseAuth.instance.currentUser != null) {
-        final role = ref.read(roleProvider.notifier).state;
+        final role = ref.watch(roleProvider.notifier).state;
         if (role == "users") {
           Get.toNamed("/onBoarding/primary");
         } else {
@@ -84,7 +84,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         isLoading = false;
       });
 
-      final role = ref.read(roleProvider.notifier).state;
+      final role = ref.watch(roleProvider.notifier).state;
+
+      print("I am role: $role");
       if (role == "users") {
         Get.toNamed("/onBoarding/primary");
       } else {
@@ -192,6 +194,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           return null;
                         },
                         onChanged: (value) {
+                          selectedValue = value;
                           if (selectedValue == "User") {
                             ref.read(roleProvider.notifier).state = "users";
                           } else {
@@ -240,14 +243,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                                   ref.read(userIdProvider.notifier).state =
                                       FirebaseAuth.instance.currentUser!.uid;
-
-                                  final doc = await FirebaseFirestore.instance
-                                      .collection('drivers')
-                                      .doc(ref.read(userIdProvider))
-                                      .get();
-                                  Map<String, dynamic>? docData = doc.data();
-                                  debugPrint('======================>$docData');
-                                  Get.offAllNamed('driver_welcome_screen');
                                 }
                               },
                               color: Styles.buttonColorPrimary,

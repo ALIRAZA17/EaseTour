@@ -35,7 +35,6 @@ class DriverMainScreen extends StackedView<DriverMainScreenViewModel> {
     DriverMainScreenViewModel driverMainScreenModel =
         DriverMainScreenViewModel();
     driverMainScreenModel.getUserLocation();
-    driverMainScreenModel.getUsersBidding();
     return driverMainScreenModel;
   }
 }

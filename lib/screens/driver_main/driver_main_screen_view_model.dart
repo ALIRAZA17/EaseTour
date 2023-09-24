@@ -39,17 +39,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  getUsersBidding() async {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("users");
-    Stream stream = ref.onValue;
-    stream.listen((event) {
-      final rides = event.snapshot.value;
-      debugPrint(
-          'Event Type: ==========> ${rides.runtimeType}'); // DatabaseEventType.value;
-      debugPrint('Snapshot: =-==========> $rides'); // DataSnapshot
-    });
-  }
-
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
