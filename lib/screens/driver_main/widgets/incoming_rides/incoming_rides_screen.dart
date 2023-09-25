@@ -34,7 +34,7 @@ class IncomingRides extends StackedView<IncomingRidesViewModel> {
                 ),
               ),
             ),
-            friendsList(),
+            friendsList(viewModel),
           ],
         ),
       );
@@ -49,14 +49,16 @@ class IncomingRides extends StackedView<IncomingRidesViewModel> {
   }
 }
 
-Widget friendsList() {
+Widget friendsList(IncomingRidesViewModel incomingRidesViewModel) {
+  final ridesData = incomingRidesViewModel.ridesData;
+
   return Expanded(
     child: SingleChildScrollView(
       child: Column(
         children: [
           ListView.builder(
             padding: const EdgeInsets.only(top: 20),
-            itemCount: 10,
+            itemCount: ridesData.keys.length,
             scrollDirection: Axis.vertical,
             physics: const BouncingScrollPhysics(),
             shrinkWrap: true,

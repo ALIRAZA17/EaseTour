@@ -4,6 +4,7 @@ import 'package:stacked/stacked.dart';
 
 class IncomingRidesViewModel extends BaseViewModel {
   TextEditingController textEditingController = TextEditingController();
+  Map<dynamic, dynamic> ridesData = {};
   onBackPressed() {
     debugPrint('Back Pressed');
   }
@@ -13,9 +14,8 @@ class IncomingRidesViewModel extends BaseViewModel {
     Stream stream = ref.onValue;
     stream.listen((event) {
       final rides = event.snapshot.value;
-      debugPrint(
-          'Event Type: ==========> ${rides.runtimeType}'); // DatabaseEventType.value;
-      debugPrint('Snapshot: =-==========> $rides'); // DataSnapshot
+      ridesData = rides;
+      notifyListeners();
     });
   }
 }
