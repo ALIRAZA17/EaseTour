@@ -48,7 +48,8 @@ class WillPop extends ConsumerWidget {
       viewModel.updateUserLocation(
           ref.read(userIdProvider),
           viewModel.currentLocation!.latitude,
-          viewModel.currentLocation!.longitude);
+          viewModel.currentLocation!.longitude,
+          viewModel.currentAddress);
     }
 
     return WillPopScope(
