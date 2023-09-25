@@ -377,7 +377,7 @@ class UserMainViewModel extends BaseViewModel {
   }
 
   Future<void> saveUserDesAndBid(String userId, double latitude,
-      double longitude, int bid, String des_address) async {
+      double longitude, int bid, String desAddress) async {
     debugPrint('Updating User Selected Destination and Bid Amount');
     // Get a reference to the driver's location node in the database.
     final userLocationRef =
@@ -385,7 +385,7 @@ class UserMainViewModel extends BaseViewModel {
     await userLocationRef.update({
       'des_latitude': latitude,
       'des_longitude': longitude,
-      'des_address': des_address,
+      'des_address': desAddress,
       'bid_amount': bid,
       'searching': true,
     });
