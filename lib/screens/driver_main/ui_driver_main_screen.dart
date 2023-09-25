@@ -174,14 +174,14 @@ class WillPop extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             AppSmallTextButton(
-                              text: "Rs 209",
+                              text: "Rs ${bid + 100}",
                               onTap: () {},
                               color: Styles.primaryColor,
                               width: 77,
                               height: 41,
                             ),
                             AppSmallTextButton(
-                              text: "Rs 209",
+                              text: "Rs ${bid + 200}",
                               onTap: () {},
                               color: Styles.primaryColor,
                               width: 77,
