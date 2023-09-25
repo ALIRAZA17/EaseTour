@@ -120,8 +120,8 @@ class _EtAppBarState extends State<EtAppBar> {
                               )
                             : const Center(child: SizedBox()),
                     Positioned(
-                        right: 0,
-                        top: 10,
+                        left: 0,
+                        top: 0,
                         child:
                             Row(children: widget.actions ?? [const SizedBox()]))
                   ],

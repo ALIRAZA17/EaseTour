@@ -234,14 +234,18 @@ class UserMainViewModel extends BaseViewModel {
     );
   }
 
-  void onBackPressed() {
-    if (confirmPressed) {
-      confirmPressed = false;
-    } else {
-      confirmPressed = true;
+  void onActionPressed(BuildContext context) {
+    {
+      Scaffold.of(context).openDrawer();
     }
+    // if (confirmPressed) {
+    //   confirmPressed = false;
+    // } else {
+    //   confirmPressed = true;
+    // }
+
     notifyListeners();
-    debugPrint('Back Pressed');
+    debugPrint('Drawer Pressed');
   }
 
   void onCrossTap() {
@@ -281,9 +285,7 @@ class UserMainViewModel extends BaseViewModel {
     );
     destinationAddress = await _getAddressFromLatLng(selectedLocation);
     await _getPolyline();
-    totalDistance(ref);
-    await saveUserDesAndBid(ref.read(userIdProvider),
-        selectedLocation!.latitude, selectedLocation!.longitude, money);
+
     mapController?.animateCamera(
       CameraUpdate.newLatLngBounds(
         LatLngBounds(
@@ -295,6 +297,13 @@ class UserMainViewModel extends BaseViewModel {
         0,
       ),
     );
+    totalDistance(ref);
+    await saveUserDesAndBid(
+        ref.read(userIdProvider),
+        selectedLocation!.latitude,
+        selectedLocation!.longitude,
+        money,
+        destinationAddress);
 
     notifyListeners();
   }
@@ -358,17 +367,17 @@ class UserMainViewModel extends BaseViewModel {
   //--------------->DataBase Operations<-----------------
 
   Future<void> updateUserLocation(
-      String userId, double latitude, double longitude) async {
+      String userId, double latitude, double longitude, String address) async {
     debugPrint('Updating User Location');
     // Get a reference to the driver's location node in the database.
     final userLocationRef =
         FirebaseDatabase.instance.ref().child('/users/$userId/location');
-    await userLocationRef
-        .update({'latitude': latitude, 'longitude': longitude});
+    await userLocationRef.update(
+        {'latitude': latitude, 'longitude': longitude, 'address': address});
   }
 
-  Future<void> saveUserDesAndBid(
-      String userId, double latitude, double longitude, int bid) async {
+  Future<void> saveUserDesAndBid(String userId, double latitude,
+      double longitude, int bid, String des_address) async {
     debugPrint('Updating User Selected Destination and Bid Amount');
     // Get a reference to the driver's location node in the database.
     final userLocationRef =
@@ -376,7 +385,13 @@ class UserMainViewModel extends BaseViewModel {
     await userLocationRef.update({
       'des_latitude': latitude,
       'des_longitude': longitude,
-      'bid_amount': bid
+      'des_address': des_address,
+      'bid_amount': bid,
+      'searching': true,
     });
+  }
+
+  onLogout() {
+    debugPrint('Logout');
   }
 }
