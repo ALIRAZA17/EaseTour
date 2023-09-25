@@ -63,6 +63,15 @@ Widget friendsList(IncomingRidesViewModel incomingRidesViewModel) {
             physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
+              final userAddress = ridesData.values
+                  .elementAt(index)["location"]["address"]
+                  .toString();
+              final userDestinationAddress = ridesData.values
+                  .elementAt(index)["rides"]["des_address"]
+                  .toString();
+              final bid = ridesData.values
+                  .elementAt(index)["rides"]["bid_amount"]
+                  .toString();
               return Padding(
                 padding: const EdgeInsets.only(
                   top: 20.0,
@@ -101,12 +110,12 @@ Widget friendsList(IncomingRidesViewModel incomingRidesViewModel) {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Street 6 (Johar town Block F)',
+                                  userDestinationAddress,
                                   style: Styles.displayXMxtrLightStyle
                                       .copyWith(fontSize: 14),
                                 ),
                                 Text(
-                                  'Iqbal Town to M.A.O',
+                                  userAddress,
                                   style: Styles.displayXXXSLightStyle.copyWith(
                                     color: Styles.lightGrayTextColor,
                                     fontSize: 14,
@@ -115,7 +124,7 @@ Widget friendsList(IncomingRidesViewModel incomingRidesViewModel) {
                                 Row(
                                   children: [
                                     Text(
-                                      "Offer: Rs 209",
+                                      "Offers $bid",
                                       style: Styles.displaySmNormalStyle
                                           .copyWith(
                                               color: const Color.fromRGBO(
