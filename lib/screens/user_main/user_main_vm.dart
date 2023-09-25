@@ -286,8 +286,12 @@ class UserMainViewModel extends BaseViewModel {
     destinationAddress = await _getAddressFromLatLng(selectedLocation);
     await _getPolyline();
     totalDistance(ref);
-    await saveUserDesAndBid(ref.read(userIdProvider),
-        selectedLocation!.latitude, selectedLocation!.longitude, money);
+    await saveUserDesAndBid(
+        ref.read(userIdProvider),
+        selectedLocation!.latitude,
+        selectedLocation!.longitude,
+        money,
+        destinationAddress);
     mapController?.animateCamera(
       CameraUpdate.newLatLngBounds(
         LatLngBounds(
@@ -371,8 +375,8 @@ class UserMainViewModel extends BaseViewModel {
         .update({'latitude': latitude, 'longitude': longitude});
   }
 
-  Future<void> saveUserDesAndBid(
-      String userId, double latitude, double longitude, int bid) async {
+  Future<void> saveUserDesAndBid(String userId, double latitude,
+      double longitude, int bid, String address) async {
     debugPrint('Updating User Selected Destination and Bid Amount');
     // Get a reference to the driver's location node in the database.
     final userLocationRef =
@@ -380,6 +384,7 @@ class UserMainViewModel extends BaseViewModel {
     await userLocationRef.update({
       'des_latitude': latitude,
       'des_longitude': longitude,
+      'address': address,
       'bid_amount': bid,
       'searching': true,
     });
