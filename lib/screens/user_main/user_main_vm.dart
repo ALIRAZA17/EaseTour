@@ -6,7 +6,6 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:firebase_database/firebase_database.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';

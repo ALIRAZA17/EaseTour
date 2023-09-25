@@ -18,7 +18,7 @@ class HistroyView extends StackedView<HistoryViewModel> {
             backgroundColor: Styles.backgroundColor,
             appBar: EtAppBar(
               height: 90,
-              title: 'History',
+              title: 'Setting',
               addBackButton: true,
               onBackPress: viewModel.onBackPressed,
             ),
