@@ -5,6 +5,9 @@ import 'package:ease_tour/common/widgets/button/app_small_text_button.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
 import 'package:ease_tour/screens/driver_main/driver_main_screen_view_model.dart';
+import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination_provider.dart';
+import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
+import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,6 +48,7 @@ class WillPop extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final bid = ref.read(moneyProvider.notifier).state;
     if (viewModel.currentLocation != null) {
       viewModel.updateUserLocation(
           ref.read(userIdProvider),
@@ -65,8 +69,6 @@ class WillPop extends ConsumerWidget {
         appBar: EtAppBar(
           height: 90,
           color: Styles.trans,
-          addBackButton: true,
-          onBackPress: viewModel.onBackPressed,
         ),
         body: Stack(
           children: [
@@ -147,12 +149,12 @@ class WillPop extends ConsumerWidget {
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        showDestination(context, viewModel),
+                        showDestination(context, viewModel, ref),
                         const SizedBox(
                           height: 20,
                         ),
                         AppTextButton(
-                          text: "Accept for 209",
+                          text: "Accept for $bid",
                           onTap: () {},
                           color: Styles.primaryColor,
                         ),
@@ -229,7 +231,11 @@ class WillPop extends ConsumerWidget {
 }
 
 Container showDestination(
-    BuildContext context, DriverMainScreenViewModel viewModel) {
+    BuildContext context, DriverMainScreenViewModel viewModel, WidgetRef ref) {
+  final userLocation = ref.read(userLocationProvider.notifier).state;
+  final userDestination = ref.read(userDestinationProvider.notifier).state;
+  final bid = ref.read(moneyProvider.notifier).state;
+
   return Container(
     width: MediaQuery.of(context).size.width,
     padding: const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
@@ -242,7 +248,7 @@ Container showDestination(
       children: [
         const Text("Total Distance: 2.1 km"),
         Text(
-          "Offer: Rs 209",
+          "Offer: Rs $bid",
           style: Styles.displaySmNormalStyle.copyWith(
               color: const Color.fromRGBO(135, 6, 46, 100), fontSize: 14),
         ),
@@ -266,7 +272,7 @@ Container showDestination(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  viewModel.currentAddress,
+                  userLocation,
                   style: Styles.displayXSBoldStyle.copyWith(
                     color: Styles.primaryTextColor,
                   ),
@@ -283,7 +289,7 @@ Container showDestination(
                   height: 15,
                 ),
                 Text(
-                  viewModel.destinationAddress,
+                  userDestination,
                   style: Styles.displayXSBoldStyle.copyWith(
                     color: Styles.secondryTextColor,
                   ),

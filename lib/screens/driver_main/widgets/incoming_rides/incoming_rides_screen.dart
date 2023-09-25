@@ -2,8 +2,14 @@ import 'package:ease_tour/common/resources/app_theme/theme_provider.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/screens/driver_main/widgets/incoming_rides/incoming_rides_view_model.dart';
+import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination_provider.dart';
+import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
+import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
+import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart' as pv;
 import 'package:stacked/stacked.dart';
 
 class IncomingRides extends StackedView<IncomingRidesViewModel> {
@@ -12,31 +18,9 @@ class IncomingRides extends StackedView<IncomingRidesViewModel> {
   @override
   Widget builder(
       BuildContext context, IncomingRidesViewModel viewModel, Widget? child) {
-    return Consumer(builder: (context, ThemeProvider provider, child) {
-      return Scaffold(
-        appBar: EtAppBar(
-          height: 90,
-          addBackButton: true,
-          onBackPress: viewModel.onBackPressed,
-        ),
-        body: Column(
-          children: [
-            Container(
-              width: 393,
-              height: 155,
-              color: Styles.primaryColor,
-              child: Center(
-                child: Text(
-                  'Incoming Rides',
-                  style: Styles.displayXlBoldStyle.copyWith(
-                      color: Styles.transportSelectContainerColor,
-                      fontSize: 36),
-                ),
-              ),
-            ),
-            friendsList(viewModel),
-          ],
-        ),
+    return pv.Consumer(builder: (context, ThemeProvider provider, child) {
+      return IncomingRidesData(
+        viewModel: viewModel,
       );
     });
   }
@@ -49,7 +33,42 @@ class IncomingRides extends StackedView<IncomingRidesViewModel> {
   }
 }
 
-Widget friendsList(IncomingRidesViewModel incomingRidesViewModel) {
+class IncomingRidesData extends ConsumerWidget {
+  const IncomingRidesData({super.key, required this.viewModel});
+
+  final IncomingRidesViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: EtAppBar(
+        height: 90,
+        addBackButton: true,
+        onBackPress: viewModel.onBackPressed,
+      ),
+      body: Column(
+        children: [
+          Container(
+            width: 393,
+            height: 155,
+            color: Styles.primaryColor,
+            child: Center(
+              child: Text(
+                'Incoming Rides',
+                style: Styles.displayXlBoldStyle.copyWith(
+                    color: Styles.transportSelectContainerColor, fontSize: 36),
+              ),
+            ),
+          ),
+          friendsList(viewModel, ref),
+        ],
+      ),
+    );
+  }
+}
+
+Widget friendsList(
+    IncomingRidesViewModel incomingRidesViewModel, WidgetRef ref) {
   final ridesData = incomingRidesViewModel.ridesData;
 
   return Expanded(
@@ -72,6 +91,7 @@ Widget friendsList(IncomingRidesViewModel incomingRidesViewModel) {
               final bid = ridesData.values
                   .elementAt(index)["rides"]["bid_amount"]
                   .toString();
+              final userId = ridesData.keys.elementAt(index).toString();
               return Padding(
                 padding: const EdgeInsets.only(
                   top: 20.0,
@@ -139,13 +159,28 @@ Widget friendsList(IncomingRidesViewModel incomingRidesViewModel) {
                                 ),
                               ],
                             ),
-                            Container(
-                              width: 46.11199951171875,
-                              height: 31.154996871948242,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Styles.checkContainerColor),
-                              child: Image.asset('assets/icons/tick2.png'),
+                            GestureDetector(
+                              onTap: () {
+                                ref.read(userIdProvider.notifier).state =
+                                    userId;
+                                ref
+                                    .read(userDestinationProvider.notifier)
+                                    .state = userDestinationAddress;
+                                ref.read(userLocationProvider.notifier).state =
+                                    userAddress;
+                                ref.read(moneyProvider.notifier).state =
+                                    int.parse(bid);
+
+                                Get.toNamed('/driver_main_screen');
+                              },
+                              child: Container(
+                                width: 46.11199951171875,
+                                height: 31.154996871948242,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: Styles.checkContainerColor),
+                                child: Image.asset('assets/icons/tick2.png'),
+                              ),
                             ),
                           ],
                         ),
