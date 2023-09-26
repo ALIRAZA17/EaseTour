@@ -20,5 +20,6 @@ class TertiaryViewModel extends BaseViewModel {
         ].request();
       }
     }
+    Get.offAllNamed('/home');
   }
 }

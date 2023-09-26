@@ -78,38 +78,113 @@ class WillPop extends ConsumerWidget {
         ),
         drawer: SafeArea(
           child: Drawer(
+            backgroundColor: Styles.backgroundColor,
             // width: MediaQuery.of(context).size.width / 1.7,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40),
-                  bottomRight: Radius.circular(40)),
+                  topRight: Radius.circular(20),
+                  bottomRight: Radius.circular(80)),
             ),
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
+                const SizedBox(
+                  height: 20,
+                ),
                 DrawerHeader(
                   decoration: BoxDecoration(
-                    color: Styles.primaryColor,
+                    color: Styles.backgroundColor,
                   ),
-                  child: Center(
-                    child: Text(
-                      'Ease Tour',
-                      style: Styles.displayXlBoldStyle,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset('assets/images/userDefault.jpg'),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Nate Samson',
+                        style: Styles.displayLargeNormalStyle,
+                      ),
+                      Text(
+                        'nate@gmail.com',
+                        style: Styles.displayXSLightStyle,
+                      ),
+                    ],
                   ),
                 ),
                 ListTile(
-                  leading: const Icon(
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
+                  leading: Icon(
                     Icons.logout,
-                    size: 30,
+                    size: 25,
+                    color: Styles.primaryTextColor,
                   ),
                   title: Text(
                     'Logout',
-                    style: Styles.displayMedBoldStyle
+                    style: Styles.displayMedNormalStyle
                         .copyWith(color: Styles.primaryTextColor),
                   ),
                   onTap: viewModel.onLogout,
-                )
+                ),
+                Divider(
+                  color: Styles.primaryTextColor,
+                ),
+                ListTile(
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
+                  leading: Icon(
+                    Icons.logout,
+                    size: 25,
+                    color: Styles.primaryTextColor,
+                  ),
+                  title: Text(
+                    'Logout',
+                    style: Styles.displayMedNormalStyle
+                        .copyWith(color: Styles.primaryTextColor),
+                  ),
+                  onTap: viewModel.onLogout,
+                ),
+                Divider(
+                  color: Styles.primaryTextColor,
+                ),
+                ListTile(
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
+                  leading: Icon(
+                    Icons.logout,
+                    size: 25,
+                    color: Styles.primaryTextColor,
+                  ),
+                  title: Text(
+                    'Logout',
+                    style: Styles.displayMedNormalStyle
+                        .copyWith(color: Styles.primaryTextColor),
+                  ),
+                  onTap: viewModel.onLogout,
+                ),
+                Divider(
+                  color: Styles.primaryTextColor,
+                ),
+                ListTile(
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
+                  leading: Icon(
+                    Icons.logout,
+                    size: 25,
+                    color: Styles.primaryTextColor,
+                  ),
+                  title: Text(
+                    'Logout',
+                    style: Styles.displayMedNormalStyle
+                        .copyWith(color: Styles.primaryTextColor),
+                  ),
+                  onTap: viewModel.onLogout,
+                ),
+                Divider(
+                  color: Styles.primaryTextColor,
+                ),
               ],
             ),
           ),
