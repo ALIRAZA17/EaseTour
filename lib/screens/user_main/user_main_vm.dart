@@ -6,7 +6,6 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:firebase_database/firebase_database.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -371,6 +370,10 @@ class UserMainViewModel extends BaseViewModel {
 
   Future<void> saveUserDesAndBid(String userId, double latitude,
       double longitude, int bid, String desAddress) async {
+<<<<<<< HEAD
+=======
+    debugPrint('Updating User Selected Destination and Bid Amount');
+>>>>>>> d5347942dfded2199572f55aad17acfe0f420f91
     // Get a reference to the driver's location node in the database.
     final userLocationRef =
         FirebaseDatabase.instance.ref().child('/users/$userId/rides');

@@ -57,6 +57,10 @@ class Styles {
     fontSize: 20,
     fontWeight: FontWeight.w500,
   );
+  static TextStyle displayLargeBoldStyle = const TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w700,
+  );
 
   static TextStyle displaySmNormalStyle = const TextStyle(
     fontSize: 16,

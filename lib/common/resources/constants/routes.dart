@@ -1,11 +1,13 @@
 import 'package:ease_tour/screens/driver_home/ui_driver_home_screen.dart';
 import 'package:ease_tour/screens/driver_main/ui_driver_main_screen.dart';
 import 'package:ease_tour/screens/driver_main/widgets/incoming_rides/incoming_rides_screen.dart';
+import 'package:ease_tour/screens/history/history_vu.dart';
 import 'package:ease_tour/screens/login/ui_login_screen.dart';
 import 'package:ease_tour/screens/on_boarding/primary/primary_vu.dart';
 import 'package:ease_tour/screens/on_boarding/secondry/secondry_vu.dart';
 import 'package:ease_tour/screens/on_boarding/tertiary/tertiary_vu.dart';
 import 'package:ease_tour/screens/role/ui_roles_screen.dart';
+import 'package:ease_tour/screens/settings/settings_vu.dart';
 import 'package:ease_tour/screens/signup_user/ui_signup_screen.dart';
 import 'package:ease_tour/screens/signup_user/widgets/app_user_info_screen.dart';
 import 'package:ease_tour/screens/signup_user/widgets/otp_verification_screen.dart';
@@ -133,6 +135,18 @@ appRoutes() => [
       GetPage(
         name: '/app_user_info_screen',
         page: () => const AppUserInfoScreen(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+      GetPage(
+        name: '/history',
+        page: () => const HistroyView(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+      GetPage(
+        name: '/settings',
+        page: () => const SettingsView(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),
