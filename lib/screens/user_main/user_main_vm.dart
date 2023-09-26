@@ -370,10 +370,6 @@ class UserMainViewModel extends BaseViewModel {
 
   Future<void> saveUserDesAndBid(String userId, double latitude,
       double longitude, int bid, String desAddress) async {
-<<<<<<< HEAD
-=======
-    debugPrint('Updating User Selected Destination and Bid Amount');
->>>>>>> d5347942dfded2199572f55aad17acfe0f420f91
     // Get a reference to the driver's location node in the database.
     final userLocationRef =
         FirebaseDatabase.instance.ref().child('/users/$userId/rides');
