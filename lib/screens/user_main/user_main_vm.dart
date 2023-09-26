@@ -73,7 +73,6 @@ class UserMainViewModel extends BaseViewModel {
             )
         .listen(
       (position) {
-        debugPrint('THis is Latitude ${position.latitude}');
         position = position;
         currentLocation = LatLng(position.latitude, position.longitude);
         notifyListeners();
@@ -204,7 +203,6 @@ class UserMainViewModel extends BaseViewModel {
     //   currentAddress = '${place.subLocality}, ${place.subAdministrativeArea}';
     //   notifyListeners();
     // }).catchError((e) {
-    //   debugPrint(e);
     // });
     GeoData data = await Geocoder2.getDataFromCoordinates(
         latitude: location!.latitude,
@@ -245,17 +243,14 @@ class UserMainViewModel extends BaseViewModel {
     // }
 
     notifyListeners();
-    debugPrint('Drawer Pressed');
   }
 
   void onCrossTap() {
-    debugPrint('Crossed');
     showDes = false;
     notifyListeners();
   }
 
   void onConfirmTap(WidgetRef ref) {
-    debugPrint('Confirm Pressed, =========> ${ref.read(moneyProvider)}');
     confirmPressed = true;
     notifyListeners();
   }
@@ -368,8 +363,6 @@ class UserMainViewModel extends BaseViewModel {
 
   Future<void> updateUserLocation(
       String userId, double latitude, double longitude, String address) async {
-    debugPrint('Updating User Location');
-    // Get a reference to the driver's location node in the database.
     final userLocationRef =
         FirebaseDatabase.instance.ref().child('/users/$userId/location');
     await userLocationRef.update(
@@ -377,21 +370,18 @@ class UserMainViewModel extends BaseViewModel {
   }
 
   Future<void> saveUserDesAndBid(String userId, double latitude,
-      double longitude, int bid, String des_address) async {
-    debugPrint('Updating User Selected Destination and Bid Amount');
+      double longitude, int bid, String desAddress) async {
     // Get a reference to the driver's location node in the database.
     final userLocationRef =
         FirebaseDatabase.instance.ref().child('/users/$userId/rides');
     await userLocationRef.update({
       'des_latitude': latitude,
       'des_longitude': longitude,
-      'des_address': des_address,
+      'des_address': desAddress,
       'bid_amount': bid,
       'searching': true,
     });
   }
 
-  onLogout() {
-    debugPrint('Logout');
-  }
+  onLogout() {}
 }

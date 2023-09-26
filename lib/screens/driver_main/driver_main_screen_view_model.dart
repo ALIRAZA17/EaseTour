@@ -58,7 +58,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
   }
 
   void updateUserLocationLatLng(WidgetRef ref) async {
-    print('updateUserLocationLatLng $updateRequired');
     polylines.clear();
     markers.clear();
     polylinesPoints = [];
@@ -81,11 +80,8 @@ class DriverMainScreenViewModel extends BaseViewModel {
         icon: markerIcon,
       ),
     );
-    print('Function till polyline');
 
     await _getPolyline();
-
-    print('Function After polyline');
 
     if (allowAnimation) {
       mapController?.animateCamera(
@@ -102,7 +98,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
     }
     allowAnimation = false;
     updateRequired = false;
-    print('updateUserLocationLatLng After Deletion $updateRequired');
 
     totalDistance(ref);
     GeolocatorPlatform.instance
@@ -114,7 +109,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
             )
         .listen(
       (position) {
-        debugPrint('THis is Latitude ${position.latitude}');
         position = position;
         currentLocation = LatLng(position.latitude, position.longitude);
         // updateRequired = false;
@@ -147,7 +141,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
 
   onPlaceError(PlacesAutocompleteResponse error) {
     Get.snackbar('Error', error.errorMessage!);
-    debugPrint('Error in Places !!!!!!!!!!');
   }
 
   void getUserLocation() async {
@@ -213,15 +206,11 @@ class DriverMainScreenViewModel extends BaseViewModel {
       isCustomBidPressed = true;
     }
     notifyListeners();
-    debugPrint('Back Pressed');
   }
 
-  void onCrossTap() {
-    debugPrint('Crossed');
-  }
+  void onCrossTap() {}
 
   void onConfirmTap() {
-    debugPrint('Confirm Pressed');
     isCustomBidPressed = true;
     notifyListeners();
   }
@@ -265,8 +254,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
 
   Future<void> updateUserLocation(
       String driverId, double latitude, double longitude) async {
-    debugPrint('Updating Driver Location');
-    // Get a reference to the driver's location node in the database.
     final userLocationRef =
         FirebaseDatabase.instance.ref().child('/drivers/$driverId/location');
     await userLocationRef
