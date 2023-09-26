@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
+import 'package:ease_tour/screens/role/providers/role_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/email_text_controller_provider.dart';
 import 'package:ease_tour/screens/signup_user/providers/password_text_controller_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
@@ -85,7 +86,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       final role = ref.watch(roleProvider.notifier).state;
 
-      print("I am role: $role");
       if (role == "users") {
         Get.toNamed("/onBoarding/primary");
       } else {
