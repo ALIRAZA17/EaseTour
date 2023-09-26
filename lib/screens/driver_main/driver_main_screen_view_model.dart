@@ -34,6 +34,7 @@ class DriverMainScreenViewModel extends BaseViewModel {
   double pricePerKm = 200;
   bool allowAnimation = true;
   bool updateRequired = true;
+  Map<dynamic, dynamic> ridesData = {};
 
   addCustomIcon() async {
     final Uint8List marker =
@@ -258,5 +259,15 @@ class DriverMainScreenViewModel extends BaseViewModel {
         FirebaseDatabase.instance.ref().child('/drivers/$driverId/location');
     await userLocationRef
         .update({'latitude': latitude, 'longitude': longitude});
+  }
+
+  getUsersBidding(dynamic userId) async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("users/$userId");
+    Stream stream = ref.onValue;
+    stream.listen((event) {
+      final rides = event.snapshot.value;
+      ridesData = rides;
+      notifyListeners();
+    });
   }
 }

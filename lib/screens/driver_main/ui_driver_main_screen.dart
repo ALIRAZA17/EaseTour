@@ -7,11 +7,11 @@ import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
 import 'package:ease_tour/screens/driver_main/driver_main_screen_view_model.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
-import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:stacked/stacked.dart';
@@ -38,6 +38,7 @@ class DriverMainScreen extends StackedView<DriverMainScreenViewModel> {
     DriverMainScreenViewModel driverMainScreenModel =
         DriverMainScreenViewModel();
     driverMainScreenModel.getUserLocation();
+    driverMainScreenModel.getUsersBidding(Get.arguments[0]);
     return driverMainScreenModel;
   }
 }
@@ -48,7 +49,14 @@ class WillPop extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bid = ref.watch(moneyProvider);
+    final data = viewModel.ridesData;
+
+    int bid = 0;
+
+    if (data.isNotEmpty) {
+      bid = data["rides"]["bid_amount"];
+    }
+
     if (viewModel.currentLocation != null) {
       viewModel.updateUserLocation(
           ref.read(userIdProvider),
@@ -152,7 +160,7 @@ class WillPop extends ConsumerWidget {
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        showDestination(context, viewModel, ref),
+                        showDestination(context, viewModel, ref, bid),
                         const SizedBox(
                           height: 20,
                         ),
@@ -233,11 +241,10 @@ class WillPop extends ConsumerWidget {
   }
 }
 
-Container showDestination(
-    BuildContext context, DriverMainScreenViewModel viewModel, WidgetRef ref) {
+Container showDestination(BuildContext context,
+    DriverMainScreenViewModel viewModel, WidgetRef ref, int bid) {
   final userLocation = ref.read(userLocationProvider.notifier).state;
   final userDestination = ref.read(userDestinationProvider.notifier).state;
-  final bid = ref.watch(moneyProvider);
 
   return Container(
     width: MediaQuery.of(context).size.width,

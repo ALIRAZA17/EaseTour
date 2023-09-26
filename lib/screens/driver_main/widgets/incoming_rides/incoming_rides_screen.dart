@@ -5,7 +5,6 @@ import 'package:ease_tour/screens/driver_main/widgets/incoming_rides/incoming_ri
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_loc_latlng_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
-import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -95,14 +94,11 @@ Widget friendsList(
                   .toString();
               final userId = ridesData.keys.elementAt(index).toString();
 
+              final userIdToBeSent = ridesData.keys.elementAt(index);
+
               final userLocation = LatLng(
                   ridesData.values.elementAt(index)["rides"]["des_latitude"],
                   ridesData.values.elementAt(index)["rides"]["des_longitude"]);
-
-              Future.delayed(const Duration(seconds: 1), () {
-                ref.read(moneyProvider.notifier).state = int.parse(bid);
-              });
-
               return Padding(
                 padding: const EdgeInsets.only(
                   top: 20.0,
@@ -183,7 +179,8 @@ Widget friendsList(
                                 ref.read(userLocLatLngProvider.notifier).state =
                                     userLocation;
 
-                                Get.toNamed('/driver_main_screen');
+                                Get.toNamed('/driver_main_screen',
+                                    arguments: [userIdToBeSent]);
                               },
                               child: Container(
                                 width: 46.11199951171875,
