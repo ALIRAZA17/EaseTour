@@ -48,13 +48,20 @@ class WillPop extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bid = ref.read(moneyProvider.notifier).state;
+    final bid = ref.read(moneyProvider);
     if (viewModel.currentLocation != null) {
+      print('viewModel.currentLocation != null');
       viewModel.updateUserLocation(
           ref.read(userIdProvider),
           viewModel.currentLocation!.latitude,
           viewModel.currentLocation!.longitude);
+      print('Viemodel.updateRequired is : ${viewModel.updateRequired}');
+      if (viewModel.updateRequired) {
+        viewModel.updateUserLocationLatLng(ref);
+      }
     }
+
+    print('Rebuilding');
     return WillPopScope(
       onWillPop: () async => viewModel.onWillPop(),
       child: Scaffold(
@@ -80,7 +87,6 @@ class WillPop extends ConsumerWidget {
               onMapCreated: (controller) => viewModel.setController(controller),
               markers: viewModel.markers,
               polylines: viewModel.polylines,
-              onTap: (location) => viewModel.onMapTap(location),
             ),
             Positioned(
               bottom: viewModel.isCustomBidPressed ? 200 : 90,

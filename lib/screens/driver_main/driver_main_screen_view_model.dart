@@ -1,18 +1,18 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
+import 'package:ease_tour/screens/driver_main/widgets/providers/user_loc_latlng_provider.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart' as pp;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:stacked/stacked.dart';
-import 'package:geocoder2/geocoder2.dart';
 
 class DriverMainScreenViewModel extends BaseViewModel {
   LatLng? currentLocation;
@@ -30,6 +30,10 @@ class DriverMainScreenViewModel extends BaseViewModel {
   pp.PolylinePoints polylinePoints = pp.PolylinePoints();
   String destinationAddress = 'Enter Your Destination';
   final controller = TextEditingController();
+  double distanceInKiloMeters = 0;
+  double pricePerKm = 200;
+  bool allowAnimation = true;
+  bool updateRequired = true;
 
   addCustomIcon() async {
     final Uint8List marker =
@@ -53,53 +57,92 @@ class DriverMainScreenViewModel extends BaseViewModel {
     mapController = controller;
   }
 
-  void onGetDestinatation(
-    BuildContext context,
-  ) async {
+  void updateUserLocationLatLng(WidgetRef ref) async {
+    print('updateUserLocationLatLng $updateRequired');
     polylines.clear();
     markers.clear();
     polylinesPoints = [];
+    destinationAddress = 'Enter Your Destination';
+    distanceInKiloMeters = 0;
+    selectedLocation = ref.read(userLocLatLngProvider);
+    if (currentLocation != null) {
+      markers.add(
+        Marker(
+          markerId: const MarkerId('maker'),
+          position: currentLocation!,
+          icon: markerIcon,
+        ),
+      );
+    }
     markers.add(
       Marker(
-        markerId: const MarkerId('maker'),
-        position: currentLocation!,
-        draggable: true,
-        onDragEnd: (location) => onDragEnd(location),
+        markerId: const MarkerId('destination'),
+        position: selectedLocation!,
         icon: markerIcon,
       ),
     );
-    Prediction? p = await PlacesAutocomplete.show(
-      context: context,
-      apiKey: apiKey,
-      onError: (error) => onPlaceError(error),
-      mode: Mode.overlay,
-      language: 'en',
-      strictbounds: false,
-      types: [""],
-      decoration: InputDecoration(
-        fillColor: Styles.textFormFieldBackColor,
-        filled: true,
-        prefixIcon: Icon(
-          Icons.search,
-          color: Styles.primaryButtonTextColor,
+    print('Function till polyline');
+
+    await _getPolyline();
+
+    print('Function After polyline');
+
+    if (allowAnimation) {
+      mapController?.animateCamera(
+        CameraUpdate.newLatLngBounds(
+          LatLngBounds(
+            southwest: LatLng(currentLocation!.latitude - 0.05,
+                currentLocation!.longitude - 0.05),
+            northeast: LatLng(selectedLocation!.latitude + 0.05,
+                selectedLocation!.longitude + 0.05),
+          ),
+          0,
         ),
-        border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(8),
-            ),
-            borderSide: BorderSide.none),
-        isCollapsed: true,
-        label: Text(
-          'Search',
-          style: Styles.displaySmNormalStyle
-              .copyWith(color: Styles.primaryButtonTextColor),
-        ),
-      ),
-      components: [
-        Component(Component.country, 'pk'),
-      ],
+      );
+    }
+    allowAnimation = false;
+    updateRequired = false;
+    print('updateUserLocationLatLng After Deletion $updateRequired');
+
+    totalDistance(ref);
+    GeolocatorPlatform.instance
+        .getPositionStream(
+            //       locationSettings: const LocationSettings(
+            // accuracy: LocationAccuracy.bestForNavigation,
+            // distanceFilter: 4,
+            // )
+            )
+        .listen(
+      (position) {
+        debugPrint('THis is Latitude ${position.latitude}');
+        position = position;
+        currentLocation = LatLng(position.latitude, position.longitude);
+        // updateRequired = false;
+        notifyListeners();
+      },
     );
-    displayPredictions(p);
+
+    notifyListeners();
+  }
+
+  totalDistance(WidgetRef ref) {
+    for (var i = 0; i < polylinesPoints.length - 1; i++) {
+      distanceInKiloMeters += calculateDistance(
+          polylinesPoints[i].latitude,
+          polylinesPoints[i].longitude,
+          polylinesPoints[i + 1].latitude,
+          polylinesPoints[i + 1].longitude);
+    }
+
+    // notifyListeners();
+  }
+
+  double calculateDistance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var a = 0.5 -
+        cos((lat2 - lat1) * p) / 2 +
+        cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
   }
 
   onPlaceError(PlacesAutocompleteResponse error) {
@@ -122,30 +165,10 @@ class DriverMainScreenViewModel extends BaseViewModel {
           icon: markerIcon,
         ),
       );
-      mapController?.animateCamera(
-        CameraUpdate.newCameraPosition(
-            CameraPosition(target: currentLocation!, zoom: 17)
-            //17 is new zoom level
-            ),
-      );
-      currentAddress = await _getAddressFromLatLng(currentLocation);
     }
-    notifyListeners();
-    GeolocatorPlatform.instance
-        .getPositionStream(
-            // locationSettings: const LocationSettings(
-            //     accuracy: LocationAccuracy.bestForNavigation,
-            //     distanceFilter: 4,
-            //     timeLimit: Duration(seconds: 1))
-            )
-        .listen(
-      (position) {
-        debugPrint('${position.latitude}');
-        position = position;
-        currentLocation = LatLng(position.latitude, position.longitude);
-        notifyListeners();
-      },
-    );
+    // updateRequired = true;
+
+    // notifyListeners();
   }
 
   void resetCurrentLocation() async {
@@ -161,6 +184,7 @@ class DriverMainScreenViewModel extends BaseViewModel {
     polylinesPoints = [];
     polylines.clear();
     markers.clear();
+    // updateRequired = true;
     markers.add(
       Marker(
         markerId: const MarkerId('location'),
@@ -180,35 +204,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
     isCustomBidPressed = false;
     notifyListeners();
     return false;
-  }
-
-  Future<String> _getAddressFromLatLng(LatLng? location) async {
-    GeoData data = await Geocoder2.getDataFromCoordinates(
-        latitude: location!.latitude,
-        longitude: location.longitude,
-        googleMapApiKey: apiKey);
-    return '${data.address.split(',')[1]}, ${data.address.split(',')[2]}';
-  }
-
-  void onMapTap(LatLng location) {
-    currentLocation = location;
-    notifyListeners();
-    mapController?.animateCamera(
-      CameraUpdate.newCameraPosition(CameraPosition(target: location, zoom: 17)
-          //17 is new zoom level
-          ),
-    );
-
-    markers.clear();
-    markers.add(
-      Marker(
-        markerId: const MarkerId('location'),
-        position: currentLocation!,
-        draggable: true,
-        onDragEnd: (location) => onDragEnd(location),
-        icon: markerIcon,
-      ),
-    );
   }
 
   void onBackPressed() {
@@ -241,42 +236,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
   }
 
   Future<void> displayPredictions(Prediction? p) async {
-    GoogleMapsPlaces places = GoogleMapsPlaces(
-      apiKey: apiKey,
-      apiHeaders: await const GoogleApiHeaders().getHeaders(),
-    );
-    PlacesDetailsResponse detail =
-        await places.getDetailsByPlaceId(p!.placeId!);
-    selectedLocation = LatLng(detail.result.geometry!.location.lat,
-        detail.result.geometry!.location.lng);
-    markers.add(
-      Marker(
-        markerId: const MarkerId('destination'),
-        position: selectedLocation!,
-        draggable: true,
-        onDragEnd: (location) => onDragEnd(location),
-        icon: markerIcon,
-      ),
-    );
-
-    mapController?.animateCamera(
-      CameraUpdate.newCameraPosition(
-          CameraPosition(target: selectedLocation!, zoom: 17)),
-    );
-    destinationAddress = await _getAddressFromLatLng(selectedLocation);
-    await _getPolyline();
-    mapController?.animateCamera(
-      CameraUpdate.newLatLngBounds(
-        LatLngBounds(
-          southwest: LatLng(currentLocation!.latitude - 0.05,
-              currentLocation!.longitude - 0.05),
-          northeast: LatLng(selectedLocation!.latitude + 0.05,
-              selectedLocation!.longitude + 0.05),
-        ),
-        0,
-      ),
-    );
-
     notifyListeners();
   }
 

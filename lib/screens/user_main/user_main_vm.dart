@@ -73,7 +73,7 @@ class UserMainViewModel extends BaseViewModel {
             )
         .listen(
       (position) {
-        debugPrint('${position.latitude}');
+        debugPrint('THis is Latitude ${position.latitude}');
         position = position;
         currentLocation = LatLng(position.latitude, position.longitude);
         notifyListeners();

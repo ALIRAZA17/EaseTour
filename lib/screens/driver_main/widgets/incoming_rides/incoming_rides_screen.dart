@@ -3,12 +3,14 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/screens/driver_main/widgets/incoming_rides/incoming_rides_view_model.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination_provider.dart';
+import 'package:ease_tour/screens/driver_main/widgets/providers/user_loc_latlng_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:stacked/stacked.dart';
 
@@ -92,6 +94,11 @@ Widget friendsList(
                   .elementAt(index)["rides"]["bid_amount"]
                   .toString();
               final userId = ridesData.keys.elementAt(index).toString();
+
+              final userLocation = LatLng(
+                  ridesData.values.elementAt(index)["rides"]["des_latitude"],
+                  ridesData.values.elementAt(index)["rides"]["des_longitude"]);
+
               return Padding(
                 padding: const EdgeInsets.only(
                   top: 20.0,
@@ -170,6 +177,8 @@ Widget friendsList(
                                     userAddress;
                                 ref.read(moneyProvider.notifier).state =
                                     int.parse(bid);
+                                ref.read(userLocLatLngProvider.notifier).state =
+                                    userLocation;
 
                                 Get.toNamed('/driver_main_screen');
                               },
