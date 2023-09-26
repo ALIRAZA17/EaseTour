@@ -99,6 +99,10 @@ Widget friendsList(
                   ridesData.values.elementAt(index)["rides"]["des_latitude"],
                   ridesData.values.elementAt(index)["rides"]["des_longitude"]);
 
+              Future.delayed(const Duration(seconds: 1), () {
+                ref.read(moneyProvider.notifier).state = int.parse(bid);
+              });
+
               return Padding(
                 padding: const EdgeInsets.only(
                   top: 20.0,
@@ -175,8 +179,7 @@ Widget friendsList(
                                     .state = userDestinationAddress;
                                 ref.read(userLocationProvider.notifier).state =
                                     userAddress;
-                                ref.read(moneyProvider.notifier).state =
-                                    int.parse(bid);
+
                                 ref.read(userLocLatLngProvider.notifier).state =
                                     userLocation;
 

@@ -48,20 +48,17 @@ class WillPop extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bid = ref.read(moneyProvider);
+    final bid = ref.watch(moneyProvider);
     if (viewModel.currentLocation != null) {
-      print('viewModel.currentLocation != null');
       viewModel.updateUserLocation(
           ref.read(userIdProvider),
           viewModel.currentLocation!.latitude,
           viewModel.currentLocation!.longitude);
-      print('Viemodel.updateRequired is : ${viewModel.updateRequired}');
       if (viewModel.updateRequired) {
         viewModel.updateUserLocationLatLng(ref);
       }
     }
 
-    print('Rebuilding');
     return WillPopScope(
       onWillPop: () async => viewModel.onWillPop(),
       child: Scaffold(
@@ -240,7 +237,7 @@ Container showDestination(
     BuildContext context, DriverMainScreenViewModel viewModel, WidgetRef ref) {
   final userLocation = ref.read(userLocationProvider.notifier).state;
   final userDestination = ref.read(userDestinationProvider.notifier).state;
-  final bid = ref.read(moneyProvider.notifier).state;
+  final bid = ref.watch(moneyProvider);
 
   return Container(
     width: MediaQuery.of(context).size.width,
@@ -253,10 +250,14 @@ Container showDestination(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const Text("Total Distance: 2.1 km"),
-        Text(
-          "Offer: Rs $bid",
-          style: Styles.displaySmNormalStyle.copyWith(
-              color: const Color.fromRGBO(135, 6, 46, 100), fontSize: 14),
+        Consumer(
+          builder: (context, ref, child) {
+            return Text(
+              "Offer: Rs $bid",
+              style: Styles.displaySmNormalStyle.copyWith(
+                  color: const Color.fromRGBO(135, 6, 46, 100), fontSize: 14),
+            );
+          },
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

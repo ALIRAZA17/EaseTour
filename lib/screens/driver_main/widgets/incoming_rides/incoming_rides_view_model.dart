@@ -15,7 +15,6 @@ class IncomingRidesViewModel extends BaseViewModel {
     stream.listen((event) {
       final rides = event.snapshot.value;
       ridesData = rides;
-      print(ridesData);
       notifyListeners();
     });
   }
