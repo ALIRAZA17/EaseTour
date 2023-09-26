@@ -5,6 +5,7 @@ import 'package:ease_tour/common/widgets/button/app_small_text_button.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
 import 'package:ease_tour/screens/driver_main/driver_main_screen_view_model.dart';
+import 'package:ease_tour/screens/driver_main/providers/driver_id_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
@@ -62,10 +63,12 @@ class WillPop extends ConsumerWidget {
           ref.read(userIdProvider),
           viewModel.currentLocation!.latitude,
           viewModel.currentLocation!.longitude);
+      print("Value for updateRequired in Build: ${viewModel.updateRequired}");
       if (viewModel.updateRequired) {
         viewModel.updateUserLocationLatLng(ref);
       }
     }
+    print('Rebuilding');
 
     return WillPopScope(
       onWillPop: () async => viewModel.onWillPop(),
@@ -166,7 +169,10 @@ class WillPop extends ConsumerWidget {
                         ),
                         AppTextButton(
                           text: "Accept for $bid",
-                          onTap: () {},
+                          onTap: () => viewModel.addDriverToUserArray(
+                              Get.arguments[0],
+                              ref.read(driverIdProvider),
+                              bid),
                           color: Styles.primaryColor,
                         ),
                         const SizedBox(

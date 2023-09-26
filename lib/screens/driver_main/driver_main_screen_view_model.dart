@@ -81,6 +81,8 @@ class DriverMainScreenViewModel extends BaseViewModel {
         icon: markerIcon,
       ),
     );
+    print(
+        'Value of updateRequired inside updateUserLocationLatLng: ${updateRequired}');
 
     await _getPolyline();
 
@@ -178,7 +180,7 @@ class DriverMainScreenViewModel extends BaseViewModel {
     polylinesPoints = [];
     polylines.clear();
     markers.clear();
-    // updateRequired = true;
+// updateRequired = true;
     markers.add(
       Marker(
         markerId: const MarkerId('location'),
@@ -254,7 +256,10 @@ class DriverMainScreenViewModel extends BaseViewModel {
   //--------------->DataBase Operations<-----------------
 
   Future<void> updateUserLocation(
-      String driverId, double latitude, double longitude) async {
+      //Update Driver Location
+      String driverId,
+      double latitude,
+      double longitude) async {
     final userLocationRef =
         FirebaseDatabase.instance.ref().child('/drivers/$driverId/location');
     await userLocationRef
@@ -268,6 +273,15 @@ class DriverMainScreenViewModel extends BaseViewModel {
       final rides = event.snapshot.value;
       ridesData = rides;
       notifyListeners();
+    });
+  }
+
+  addDriverToUserArray(String userId, String driverId, int bid) async {
+    final userLocationRef = FirebaseDatabase.instance
+        .ref()
+        .child('/users/$userId/driversList/$driverId');
+    await userLocationRef.update({
+      'bid': bid,
     });
   }
 }

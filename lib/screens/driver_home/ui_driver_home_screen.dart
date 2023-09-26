@@ -41,7 +41,7 @@ class DriverHomeView extends StatelessWidget {
                             ].request();
                           }
                         }
-                        Get.toNamed('/driver_main_screen');
+                        Get.toNamed('/driver_incoming_rides');
                       },
                       color: Styles.buttonColorPrimary)
                 ],

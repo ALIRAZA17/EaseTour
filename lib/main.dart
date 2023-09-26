@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
             darkTheme: Themes.darkThemeData(),
             themeMode: themeProvider.themeMode,
             debugShowCheckedModeBanner: false,
-            initialRoute: '/driver_incoming_rides',
+            initialRoute: '/login',
             getPages: appRoutes(),
           );
         },
