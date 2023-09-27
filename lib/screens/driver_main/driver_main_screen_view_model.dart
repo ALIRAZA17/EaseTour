@@ -123,10 +123,11 @@ class DriverMainScreenViewModel extends BaseViewModel {
   totalDistance(WidgetRef ref) {
     for (var i = 0; i < polylinesPoints.length - 1; i++) {
       distanceInKiloMeters += calculateDistance(
-          polylinesPoints[i].latitude,
-          polylinesPoints[i].longitude,
-          polylinesPoints[i + 1].latitude,
-          polylinesPoints[i + 1].longitude);
+              polylinesPoints[i].latitude,
+              polylinesPoints[i].longitude,
+              polylinesPoints[i + 1].latitude,
+              polylinesPoints[i + 1].longitude)
+          .toInt();
     }
 
     // notifyListeners();
@@ -269,5 +270,16 @@ class DriverMainScreenViewModel extends BaseViewModel {
       ridesData = rides;
       notifyListeners();
     });
+  }
+
+  addDriverToUserArray(String userId, String driverId, int bid) async {
+    final userLocationRef = FirebaseDatabase.instance
+        .ref()
+        .child('/users/$userId/driversList/$driverId');
+    await userLocationRef.update(
+      {
+        'bid': bid,
+      },
+    );
   }
 }

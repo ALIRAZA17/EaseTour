@@ -7,13 +7,17 @@ import 'package:provider/provider.dart' as pv;
 import 'package:stacked/stacked.dart';
 
 class DriverSelectView extends StackedView<DriverSelectViewModel> {
-  const DriverSelectView({super.key});
+  const DriverSelectView({
+    super.key,
+    required this.driversList,
+  });
+  final Map<dynamic, dynamic> driversList;
 
   @override
   Widget builder(
       BuildContext context, DriverSelectViewModel viewModel, Widget? child) {
     return pv.Consumer(builder: (context, ThemeProvider provider, child) {
-      return MainWidget(viewModel: viewModel);
+      return MainWidget(viewModel: viewModel, driversList: driversList);
     });
   }
 
@@ -24,16 +28,15 @@ class DriverSelectView extends StackedView<DriverSelectViewModel> {
 }
 
 class MainWidget extends StatelessWidget {
-  const MainWidget({
-    super.key,
-    required this.viewModel,
-  });
+  const MainWidget(
+      {super.key, required this.viewModel, required this.driversList});
   final DriverSelectViewModel viewModel;
+  final Map<dynamic, dynamic> driversList;
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      container1(context, viewModel),
+      container1(context, viewModel, driversList),
       const SizedBox(
         height: 15,
       ),
@@ -144,7 +147,8 @@ Container container2(BuildContext context, DriverSelectViewModel viewModel) {
   );
 }
 
-Container container1(BuildContext context, DriverSelectViewModel viewModel) {
+Container container1(BuildContext context, DriverSelectViewModel viewModel,
+    Map<dynamic, dynamic> driversList) {
   return Container(
     height: MediaQuery.of(context).size.height / 3.8,
     width: MediaQuery.of(context).size.width,
@@ -160,11 +164,12 @@ Container container1(BuildContext context, DriverSelectViewModel viewModel) {
           SvgPicture.asset('assets/icons/rectangle.svg'),
           ListView.builder(
             padding: const EdgeInsets.only(top: 20),
-            itemCount: 5,
+            itemCount: driversList.keys.length,
             scrollDirection: Axis.vertical,
             physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
+              viewModel.getDriverData(driversList.keys.elementAt(index));
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Row(
@@ -185,15 +190,15 @@ Container container1(BuildContext context, DriverSelectViewModel viewModel) {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Driver Name',
+                          viewModel.driverName,
                           style: Styles.displayMedBoldStyle,
                         ),
                         Text(
-                          'Honda Civic',
+                          viewModel.driverCar,
                           style: Styles.displayXSLightStyle,
                         ),
                         Text(
-                          'LEA-231A',
+                          viewModel.vehicleNumber,
                           style: Styles.displayXXSLightStyle,
                         ),
                         Text(
@@ -205,7 +210,8 @@ Container container1(BuildContext context, DriverSelectViewModel viewModel) {
                     ),
                     const Spacer(),
                     Text(
-                      'Rs 290',
+                      driversList[driversList.keys.elementAt(index)]['bid']
+                          .toString(),
                       style: Styles.displayXSBoldStyle,
                     ),
                   ],

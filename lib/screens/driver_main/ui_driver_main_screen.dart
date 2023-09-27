@@ -8,6 +8,7 @@ import 'package:ease_tour/screens/driver_main/driver_main_screen_view_model.dart
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -166,7 +167,10 @@ class WillPop extends ConsumerWidget {
                         ),
                         AppTextButton(
                           text: "Accept for $bid",
-                          onTap: () {},
+                          onTap: () => viewModel.addDriverToUserArray(
+                              Get.arguments[0],
+                              FirebaseAuth.instance.currentUser!.uid,
+                              bid),
                           color: Styles.primaryColor,
                         ),
                         const SizedBox(
@@ -186,14 +190,26 @@ class WillPop extends ConsumerWidget {
                           children: [
                             AppSmallTextButton(
                               text: "Rs ${bid + 100}",
-                              onTap: () {},
+                              onTap: () {
+                                bid = bid + 100;
+                                viewModel.addDriverToUserArray(
+                                    Get.arguments[0],
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                    bid);
+                              },
                               color: Styles.primaryColor,
                               width: 77,
                               height: 41,
                             ),
                             AppSmallTextButton(
                               text: "Rs ${bid + 200}",
-                              onTap: () {},
+                              onTap: () {
+                                bid = bid + 200;
+                                viewModel.addDriverToUserArray(
+                                    Get.arguments[0],
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                    bid);
+                              },
                               color: Styles.primaryColor,
                               width: 77,
                               height: 41,
@@ -230,7 +246,9 @@ class WillPop extends ConsumerWidget {
                     left: 15,
                     child: AppTextButton(
                       text: "Close",
-                      onTap: () {},
+                      onTap: () {
+                        Get.toNamed('/driver_incoming_rides');
+                      },
                       color: Styles.primaryColor,
                     ),
                   )
@@ -256,7 +274,7 @@ Container showDestination(BuildContext context,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const Text("Total Distance: 2.1 km"),
+        Text("Total Distance: ${viewModel.distanceInKiloMeters} km"),
         Consumer(
           builder: (context, ref, child) {
             return Text(

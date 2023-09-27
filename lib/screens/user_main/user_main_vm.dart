@@ -5,6 +5,7 @@ import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,6 +39,7 @@ class UserMainViewModel extends BaseViewModel {
   int money = 0;
   double _distanceInKiloMeters = 0;
   double pricePerKm = 200;
+  Map<dynamic, dynamic> driversData = {};
 
   void getUserLocation() async {
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
@@ -249,8 +251,9 @@ class UserMainViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onConfirmTap(WidgetRef ref) {
+  void onConfirmTap(WidgetRef ref, UserMainViewModel userMainViewModel) {
     confirmPressed = true;
+    userMainViewModel.getUsersBidding(FirebaseAuth.instance.currentUser!.uid);
     notifyListeners();
   }
 
@@ -379,6 +382,18 @@ class UserMainViewModel extends BaseViewModel {
       'des_address': desAddress,
       'bid_amount': bid,
       'searching': true,
+    });
+  }
+
+  getUsersBidding(dynamic userId) async {
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref("users/$userId/driversList");
+    Stream stream = ref.onValue;
+    stream.listen((event) {
+      final rides = event.snapshot.value;
+      driversData = rides;
+      print('This is : $driversData');
+      notifyListeners();
     });
   }
 
