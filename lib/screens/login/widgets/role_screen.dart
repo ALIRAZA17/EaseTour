@@ -1,13 +1,13 @@
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
-import 'package:ease_tour/screens/role/providers/role_provider.dart';
+import 'package:ease_tour/screens/login/providers/login_screen_role_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-class RolesScreen extends ConsumerWidget {
-  const RolesScreen({super.key});
+class LoginRolesScreen extends ConsumerWidget {
+  const LoginRolesScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,10 +31,10 @@ class RolesScreen extends ConsumerWidget {
               ),
               Center(
                 child: AppTextButton(
-                  text: "Sign up as a user",
+                  text: "Continue as a user",
                   onTap: () {
-                    ref.read(roleProvider.notifier).state = 'users';
-                    Get.toNamed('/signup');
+                    ref.read(loginRoleProvider.notifier).state = 'users';
+                    Get.toNamed('/login');
                   },
                   color: Styles.primaryColor,
                   fontSize: 20,
@@ -61,10 +61,10 @@ class RolesScreen extends ConsumerWidget {
             right: 0,
             child: Center(
               child: AppTextButton(
-                text: "Sign up as a Driver",
+                text: "Continue as a Driver",
                 onTap: () {
-                  ref.read(roleProvider.notifier).state = 'drivers';
-                  Get.toNamed('/signup');
+                  ref.read(loginRoleProvider.notifier).state = 'drivers';
+                  Get.toNamed('/login');
                 },
                 color: Styles.primaryColor,
                 fontSize: 20,

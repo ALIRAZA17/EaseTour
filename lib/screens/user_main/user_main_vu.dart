@@ -3,8 +3,8 @@ import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/action_button.dart';
 import 'package:ease_tour/common/widgets/button/multi_button.dart';
 import 'package:ease_tour/screens/user_main/driver_select/driver_select_vu.dart';
-import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:ease_tour/screens/user_main/user_main_vm.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -47,7 +47,7 @@ class WillPop extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (viewModel.currentLocation != null) {
       viewModel.updateUserLocation(
-          ref.read(userIdProvider),
+          FirebaseAuth.instance.currentUser!.uid,
           viewModel.currentLocation!.latitude,
           viewModel.currentLocation!.longitude,
           viewModel.currentAddress);
@@ -232,7 +232,7 @@ class WillPop extends ConsumerWidget {
                         ),
                         viewModel.destinationAddress != 'Enter Your Destination'
                             ? MultiButton(
-                                btnLabel: 'Confirm',
+                                btnLabel: "Confirm",
                                 onTap: () =>
                                     viewModel.onConfirmTap(ref, viewModel),
                                 expanded: true,

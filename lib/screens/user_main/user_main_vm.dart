@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
-import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -296,7 +295,7 @@ class UserMainViewModel extends BaseViewModel {
     );
     totalDistance(ref);
     await saveUserDesAndBid(
-        ref.read(userIdProvider),
+        FirebaseAuth.instance.currentUser!.uid,
         selectedLocation!.latitude,
         selectedLocation!.longitude,
         money,
@@ -373,7 +372,6 @@ class UserMainViewModel extends BaseViewModel {
 
   Future<void> saveUserDesAndBid(String userId, double latitude,
       double longitude, int bid, String desAddress) async {
-    // Get a reference to the driver's location node in the database.
     final userLocationRef =
         FirebaseDatabase.instance.ref().child('/users/$userId/rides');
     await userLocationRef.update({
@@ -392,7 +390,6 @@ class UserMainViewModel extends BaseViewModel {
     stream.listen((event) {
       final rides = event.snapshot.value;
       driversData = rides;
-      print('This is : $driversData');
       notifyListeners();
     });
   }

@@ -63,8 +63,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           await FirebaseAuth.instance.signInWithCredential(credential);
 
       if (authResult.user != null) {
-        // final userExists = await doesUserExistInFirebase(authResult.user!.uid);
-
         ref.read(emailTextControllerProvider).text =
             authResult.user?.email ?? "";
         ref.read(nameTextControllerProvider).text =

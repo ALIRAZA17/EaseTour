@@ -1,4 +1,4 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
@@ -32,7 +32,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.initState();
     ref.read(passswordTextControllerProvider).clear();
     ref.read(emailTextControllerProvider).clear();
-    ref.read(roleProvider.notifier).state = "";
   }
 
   Future<void> signInWithGoogle() async {
@@ -52,13 +51,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
 
-      if (FirebaseAuth.instance.currentUser != null) {
-        final role = ref.watch(roleProvider.notifier).state;
-        if (role == "users") {
-          Get.toNamed("/onBoarding/primary");
-        } else {
-          Get.toNamed("/driver_welcome_screen");
-        }
+      final userUid = FirebaseAuth.instance.currentUser?.uid;
+      if (userUid == null) {
+        Get.snackbar("Sign in with Google failed", "User does not exist!");
+        return;
+      }
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userUid)
+          .get();
+      final driverDoc = await FirebaseFirestore.instance
+          .collection('drivers')
+          .doc(userUid)
+          .get();
+
+      if (ref.watch(roleProvider.notifier).state == "users" &&
+          !userDoc.exists) {
+        Get.snackbar("Sign in with Google failed", "User role is incorrect!");
+        return;
+      } else if (ref.watch(roleProvider.notifier).state == "drivers" &&
+          !driverDoc.exists) {
+        Get.snackbar("Sign in with Google failed", "User role is incorrect!");
+        return;
+      }
+
+      if (ref.watch(roleProvider.notifier).state == "users") {
+        Get.toNamed("/onBoarding/primary");
+      } else {
+        Get.toNamed("/driver_welcome_screen");
       }
     } catch (e) {
       Get.snackbar("Sign in with Google failed", "Please try again!");
@@ -75,7 +96,38 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         isLoading = true;
       });
 
+      final role = ref.read(roleProvider.notifier).state;
+
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+      final userUid = FirebaseAuth.instance.currentUser?.uid;
+      if (userUid == null) {
+        Get.snackbar("Sign in failed", "User does not exist!");
+        return;
+      }
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userUid)
+          .get();
+      final driverDoc = await FirebaseFirestore.instance
+          .collection('drivers')
+          .doc(userUid)
+          .get();
+
+      if (role == "users" && !userDoc.exists) {
+        Get.snackbar("Sign in failed", "User role is incorrect!");
+        return;
+      } else if (role == "drivers" && !driverDoc.exists) {
+        Get.snackbar("Sign in failed", "User role is incorrect!");
+        return;
+      }
+
+      if (role == "users") {
+        Get.toNamed("/onBoarding/primary");
+      } else {
+        Get.toNamed("/driver_welcome_screen");
+      }
     } catch (e) {
       Get.snackbar("Sign in failed",
           "Your password or email is wrong. Please try again!");
@@ -83,14 +135,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       setState(() {
         isLoading = false;
       });
-
-      final role = ref.watch(roleProvider.notifier).state;
-
-      if (role == "users") {
-        Get.toNamed("/onBoarding/primary");
-      } else {
-        Get.toNamed("/driver_welcome_screen");
-      }
     }
   }
 
@@ -98,13 +142,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final emailController = ref.watch(emailTextControllerProvider);
     final passwordController = ref.watch(passswordTextControllerProvider);
-
-    final List<String> roleItems = [
-      'User',
-      'Driver',
-    ];
-
-    String? selectedValue;
 
     return Scaffold(
       body: SafeArea(
@@ -158,69 +195,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           return null;
                         },
                         obscureText: true,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      DropdownButtonFormField2<String>(
-                        isExpanded: true,
-                        decoration: InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 16),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        hint: const Text(
-                          'Select Your Role',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        items: roleItems
-                            .map((item) => DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(
-                                    item,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ))
-                            .toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please select Role';
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          selectedValue = value;
-                          if (selectedValue == "User") {
-                            ref.read(roleProvider.notifier).state = "users";
-                          } else {
-                            ref.read(roleProvider.notifier).state = "drivers";
-                          }
-                        },
-                        onSaved: (value) {
-                          selectedValue = value.toString();
-                        },
-                        buttonStyleData: const ButtonStyleData(
-                          padding: EdgeInsets.only(right: 8),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black45,
-                          ),
-                          iconSize: 24,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                        ),
                       ),
                       const SizedBox(
                         height: 69,
