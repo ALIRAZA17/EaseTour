@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
@@ -43,7 +44,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     ref.read(cnicTextControllerProvider).clear();
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<void> signUpWithGoogle() async {
     setState(() {
       isGoogleSignInLoading = true;
     });
@@ -63,11 +64,24 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           await FirebaseAuth.instance.signInWithCredential(credential);
 
       if (authResult.user != null) {
-        ref.read(emailTextControllerProvider).text =
-            authResult.user?.email ?? "";
-        ref.read(nameTextControllerProvider).text =
-            authResult.user?.displayName ?? "";
-        Get.toNamed("/app_user_info_screen");
+        final user = authResult.user!;
+        final uid = user.uid;
+
+        final role = ref.watch(roleProvider.notifier).state;
+
+        final userExists = await doesUserExistInFirebase(uid, role);
+
+        if (userExists) {
+          if (role == "users") {
+            Get.toNamed("/onBoarding/primary");
+          } else {
+            Get.toNamed("/driver_welcome_screen");
+          }
+        } else {
+          ref.read(emailTextControllerProvider).text = user.email ?? "";
+          ref.read(nameTextControllerProvider).text = user.displayName ?? "";
+          Get.toNamed("/app_user_info_screen");
+        }
       }
     } catch (e) {
       Get.snackbar("Sign up with Google failed", "Please try again!");
@@ -78,13 +92,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     }
   }
 
-  Future<bool> doesUserExistInFirebase(String uid) async {
+  Future<bool> doesUserExistInFirebase(String uid, String role) async {
     try {
-      final user = await FirebaseAuth.instance
-          .userChanges()
-          .firstWhere((user) => user?.uid == uid);
-
-      return user != null;
+      final userDoc =
+          await FirebaseFirestore.instance.collection(role).doc(uid).get();
+      return userDoc.exists;
     } catch (e) {
       return false;
     }
@@ -421,7 +433,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                             text: "Sign up with Gmail",
                             onTap: () {
                               if (!isGoogleSignInLoading) {
-                                signInWithGoogle();
+                                signUpWithGoogle();
                               }
                             },
                             color: Styles.primaryButtonTextColor,

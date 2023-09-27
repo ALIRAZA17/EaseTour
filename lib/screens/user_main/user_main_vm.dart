@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:stacked/stacked.dart';
 import 'package:geocoder2/geocoder2.dart';
 
@@ -394,5 +395,13 @@ class UserMainViewModel extends BaseViewModel {
     });
   }
 
-  onLogout() {}
+  onLogout() async {
+    try {
+      await GoogleSignIn().signOut();
+      await FirebaseAuth.instance.signOut();
+      Get.toNamed("/role_screen");
+    } catch (e) {
+      print("Error logging out: $e");
+    }
+  }
 }
