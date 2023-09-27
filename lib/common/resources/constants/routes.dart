@@ -3,7 +3,6 @@ import 'package:ease_tour/screens/driver_main/ui_driver_main_screen.dart';
 import 'package:ease_tour/screens/driver_main/widgets/incoming_rides/incoming_rides_screen.dart';
 import 'package:ease_tour/screens/history/history_vu.dart';
 import 'package:ease_tour/screens/login/ui_login_screen.dart';
-import 'package:ease_tour/screens/login/widgets/role_screen.dart';
 import 'package:ease_tour/screens/on_boarding/primary/primary_vu.dart';
 import 'package:ease_tour/screens/on_boarding/secondry/secondry_vu.dart';
 import 'package:ease_tour/screens/on_boarding/tertiary/tertiary_vu.dart';
@@ -148,12 +147,6 @@ appRoutes() => [
       GetPage(
         name: '/settings',
         page: () => const SettingsView(),
-        transition: Transition.fadeIn,
-        transitionDuration: const Duration(milliseconds: 200),
-      ),
-      GetPage(
-        name: '/login_role_page',
-        page: () => const LoginRolesScreen(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),
