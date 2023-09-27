@@ -101,7 +101,7 @@ class WillPop extends ConsumerWidget {
               child: viewModel.isCustomBidPressed
                   ? Container(
                       width: double.infinity,
-                      color: Colors.grey,
+                      color: Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -142,7 +142,16 @@ class WillPop extends ConsumerWidget {
                             ),
                             AppTextButton(
                               text: "Offer",
-                              onTap: () {},
+                              onTap: () {
+                                if (viewModel.controller.text.isNotEmpty) {
+                                  bid = int.parse(viewModel.controller.text);
+                                  viewModel.addDriverToUserArray(
+                                    Get.arguments[0],
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                    bid,
+                                  );
+                                }
+                              },
                               color: Styles.primaryColor,
                             ),
                             const SizedBox(
