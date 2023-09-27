@@ -149,78 +149,96 @@ Container container2(BuildContext context, DriverSelectViewModel viewModel) {
 
 Container container1(BuildContext context, DriverSelectViewModel viewModel,
     Map<dynamic, dynamic> driversList) {
-  return Container(
-    height: MediaQuery.of(context).size.height / 3.8,
-    width: MediaQuery.of(context).size.width,
-    padding: const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
-    decoration: BoxDecoration(
-      color: Styles.backgroundColor,
-      border: Border.all(color: Styles.primaryColor),
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: SingleChildScrollView(
-      child: Column(
-        children: [
-          SvgPicture.asset('assets/icons/rectangle.svg'),
-          ListView.builder(
-            padding: const EdgeInsets.only(top: 20),
-            itemCount: driversList.keys.length,
-            scrollDirection: Axis.vertical,
-            physics: const BouncingScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              viewModel.getDriverData(driversList.keys.elementAt(index));
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 56,
-                      height: 75,
-                      decoration: BoxDecoration(
-                        color: Styles.primaryColor,
-                        border: Border.all(color: Styles.primaryColor),
-                        borderRadius: BorderRadius.circular(8),
+  return driversList.isEmpty
+      ? Container(
+          // height: MediaQuery.of(context).size.height / 5,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            color: Styles.backgroundColor,
+            border: Border.all(color: Styles.primaryColor, width: 2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            'Searching For A Driver...',
+            style: Styles.displayLargeNormalStyle,
+          ),
+        )
+      : Container(
+          height: MediaQuery.of(context).size.height / 3.8,
+          width: MediaQuery.of(context).size.width,
+          padding:
+              const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
+          decoration: BoxDecoration(
+            color: Styles.backgroundColor,
+            border: Border.all(color: Styles.primaryColor),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SvgPicture.asset('assets/icons/rectangle.svg'),
+                ListView.builder(
+                  padding: const EdgeInsets.only(top: 20),
+                  itemCount: driversList.keys.length,
+                  scrollDirection: Axis.vertical,
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    viewModel.getDriverData(driversList.keys.elementAt(index));
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 56,
+                            height: 75,
+                            decoration: BoxDecoration(
+                              color: Styles.primaryColor,
+                              border: Border.all(color: Styles.primaryColor),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                viewModel.driverName,
+                                style: Styles.displayMedBoldStyle,
+                              ),
+                              Text(
+                                viewModel.driverCar,
+                                style: Styles.displayXSLightStyle,
+                              ),
+                              Text(
+                                viewModel.vehicleNumber,
+                                style: Styles.displayXXSLightStyle,
+                              ),
+                              Text(
+                                '5 min',
+                                style: Styles.displayXSBoldStyle
+                                    .copyWith(color: Styles.secondryTextColor),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          Text(
+                            driversList[driversList.keys.elementAt(index)]
+                                    ['bid']
+                                .toString(),
+                            style: Styles.displayXSBoldStyle,
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          viewModel.driverName,
-                          style: Styles.displayMedBoldStyle,
-                        ),
-                        Text(
-                          viewModel.driverCar,
-                          style: Styles.displayXSLightStyle,
-                        ),
-                        Text(
-                          viewModel.vehicleNumber,
-                          style: Styles.displayXXSLightStyle,
-                        ),
-                        Text(
-                          '5 min',
-                          style: Styles.displayXSBoldStyle
-                              .copyWith(color: Styles.secondryTextColor),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Text(
-                      driversList[driversList.keys.elementAt(index)]['bid']
-                          .toString(),
-                      style: Styles.displayXSBoldStyle,
-                    ),
-                  ],
-                ),
-              );
-            },
-          )
-        ],
-      ),
-    ),
-  );
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+        );
 }

@@ -78,117 +78,7 @@ class WillPop extends ConsumerWidget {
           ],
         ),
         drawer: SafeArea(
-          child: Drawer(
-            backgroundColor: Styles.backgroundColor,
-            // width: MediaQuery.of(context).size.width / 1.7,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  bottomRight: Radius.circular(80)),
-            ),
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Styles.backgroundColor,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.asset('assets/images/userDefault.jpg'),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Nate Samson',
-                        style: Styles.displayLargeNormalStyle,
-                      ),
-                      Text(
-                        'nate@gmail.com',
-                        style: Styles.displayXSLightStyle,
-                      ),
-                    ],
-                  ),
-                ),
-                ListTile(
-                  visualDensity:
-                      const VisualDensity(horizontal: 0, vertical: -4),
-                  leading: Icon(
-                    Icons.logout,
-                    size: 25,
-                    color: Styles.primaryTextColor,
-                  ),
-                  title: Text(
-                    'Logout',
-                    style: Styles.displayMedNormalStyle
-                        .copyWith(color: Styles.primaryTextColor),
-                  ),
-                  onTap: viewModel.onLogout,
-                ),
-                Divider(
-                  color: Styles.primaryTextColor,
-                ),
-                ListTile(
-                  visualDensity:
-                      const VisualDensity(horizontal: 0, vertical: -4),
-                  leading: Icon(
-                    Icons.logout,
-                    size: 25,
-                    color: Styles.primaryTextColor,
-                  ),
-                  title: Text(
-                    'Logout',
-                    style: Styles.displayMedNormalStyle
-                        .copyWith(color: Styles.primaryTextColor),
-                  ),
-                  onTap: viewModel.onLogout,
-                ),
-                Divider(
-                  color: Styles.primaryTextColor,
-                ),
-                ListTile(
-                  visualDensity:
-                      const VisualDensity(horizontal: 0, vertical: -4),
-                  leading: Icon(
-                    Icons.logout,
-                    size: 25,
-                    color: Styles.primaryTextColor,
-                  ),
-                  title: Text(
-                    'Logout',
-                    style: Styles.displayMedNormalStyle
-                        .copyWith(color: Styles.primaryTextColor),
-                  ),
-                  onTap: viewModel.onLogout,
-                ),
-                Divider(
-                  color: Styles.primaryTextColor,
-                ),
-                ListTile(
-                  visualDensity:
-                      const VisualDensity(horizontal: 0, vertical: -4),
-                  leading: Icon(
-                    Icons.logout,
-                    size: 25,
-                    color: Styles.primaryTextColor,
-                  ),
-                  title: Text(
-                    'Logout',
-                    style: Styles.displayMedNormalStyle
-                        .copyWith(color: Styles.primaryTextColor),
-                  ),
-                  onTap: viewModel.onLogout,
-                ),
-                Divider(
-                  color: Styles.primaryTextColor,
-                ),
-              ],
-            ),
-          ),
+          child: drawerElement(),
         ),
         body: Stack(
           children: [
@@ -232,7 +122,7 @@ class WillPop extends ConsumerWidget {
                         ),
                         viewModel.destinationAddress != 'Enter Your Destination'
                             ? MultiButton(
-                                btnLabel: "Confirm",
+                                btnLabel: 'Confirm',
                                 onTap: () =>
                                     viewModel.onConfirmTap(ref, viewModel),
                                 expanded: true,
@@ -244,6 +134,115 @@ class WillPop extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Drawer drawerElement() {
+    return Drawer(
+      backgroundColor: Styles.backgroundColor,
+      // width: MediaQuery.of(context).size.width / 1.7,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20), bottomRight: Radius.circular(80)),
+      ),
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Styles.backgroundColor,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.asset('assets/images/userDefault.jpg'),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Nate Samson',
+                  style: Styles.displayLargeNormalStyle,
+                ),
+                Text(
+                  'nate@gmail.com',
+                  style: Styles.displayXSLightStyle,
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+            leading: Icon(
+              Icons.logout,
+              size: 25,
+              color: Styles.primaryTextColor,
+            ),
+            title: Text(
+              'Logout',
+              style: Styles.displayMedNormalStyle
+                  .copyWith(color: Styles.primaryTextColor),
+            ),
+            onTap: viewModel.onLogout,
+          ),
+          Divider(
+            color: Styles.primaryTextColor,
+          ),
+          ListTile(
+            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+            leading: Icon(
+              Icons.logout,
+              size: 25,
+              color: Styles.primaryTextColor,
+            ),
+            title: Text(
+              'Logout',
+              style: Styles.displayMedNormalStyle
+                  .copyWith(color: Styles.primaryTextColor),
+            ),
+            onTap: viewModel.onLogout,
+          ),
+          Divider(
+            color: Styles.primaryTextColor,
+          ),
+          ListTile(
+            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+            leading: Icon(
+              Icons.logout,
+              size: 25,
+              color: Styles.primaryTextColor,
+            ),
+            title: Text(
+              'Logout',
+              style: Styles.displayMedNormalStyle
+                  .copyWith(color: Styles.primaryTextColor),
+            ),
+            onTap: viewModel.onLogout,
+          ),
+          Divider(
+            color: Styles.primaryTextColor,
+          ),
+          ListTile(
+            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+            leading: Icon(
+              Icons.logout,
+              size: 25,
+              color: Styles.primaryTextColor,
+            ),
+            title: Text(
+              'Logout',
+              style: Styles.displayMedNormalStyle
+                  .copyWith(color: Styles.primaryTextColor),
+            ),
+            onTap: viewModel.onLogout,
+          ),
+          Divider(
+            color: Styles.primaryTextColor,
+          ),
+        ],
       ),
     );
   }

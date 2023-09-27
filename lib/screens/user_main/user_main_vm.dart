@@ -39,6 +39,7 @@ class UserMainViewModel extends BaseViewModel {
   double _distanceInKiloMeters = 0;
   double pricePerKm = 200;
   Map<dynamic, dynamic> driversData = {};
+  bool allowMapClick = true;
 
   void getUserLocation() async {
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
@@ -150,6 +151,8 @@ class UserMainViewModel extends BaseViewModel {
       ],
     );
     displayPredictions(p, ref);
+    allowMapClick = false;
+    notifyListeners();
   }
 
   onPlaceError(PlacesAutocompleteResponse error) {
@@ -159,6 +162,7 @@ class UserMainViewModel extends BaseViewModel {
 
   void resetCurrentLocation() async {
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
+    allowMapClick = true;
 
     currentLocation = LatLng(position.latitude, position.longitude);
     mapController?.animateCamera(
@@ -212,13 +216,16 @@ class UserMainViewModel extends BaseViewModel {
   }
 
   void onMapTap(LatLng location) {
-    currentLocation = location;
-    notifyListeners();
-    mapController?.animateCamera(
-      CameraUpdate.newCameraPosition(CameraPosition(target: location, zoom: 17)
-          //17 is new zoom level
-          ),
-    );
+    if (allowMapClick) {
+      currentLocation = location;
+      notifyListeners();
+      mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+            CameraPosition(target: location, zoom: 17)
+            //17 is new zoom level
+            ),
+      );
+    }
 
     markers.clear();
     markers.add(
@@ -250,56 +257,59 @@ class UserMainViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onConfirmTap(WidgetRef ref, UserMainViewModel userMainViewModel) {
+  void onConfirmTap(WidgetRef ref, UserMainViewModel userMainViewModel) async {
     confirmPressed = true;
     userMainViewModel.getUsersBidding(FirebaseAuth.instance.currentUser!.uid);
-    notifyListeners();
-  }
-
-  Future<void> displayPredictions(Prediction? p, WidgetRef ref) async {
-    GoogleMapsPlaces places = GoogleMapsPlaces(
-      apiKey: apiKey,
-      apiHeaders: await const GoogleApiHeaders().getHeaders(),
-    );
-    PlacesDetailsResponse detail =
-        await places.getDetailsByPlaceId(p!.placeId!);
-    selectedLocation = LatLng(detail.result.geometry!.location.lat,
-        detail.result.geometry!.location.lng);
-    markers.add(
-      Marker(
-        markerId: const MarkerId('destination'),
-        position: selectedLocation!,
-        draggable: true,
-        onDragEnd: (location) => onDragEnd(location),
-        icon: markerIcon,
-      ),
-    );
-
-    mapController?.animateCamera(
-      CameraUpdate.newCameraPosition(
-          CameraPosition(target: selectedLocation!, zoom: 17)),
-    );
-    destinationAddress = await _getAddressFromLatLng(selectedLocation);
-    await _getPolyline();
-
-    mapController?.animateCamera(
-      CameraUpdate.newLatLngBounds(
-        LatLngBounds(
-          southwest: LatLng(currentLocation!.latitude - 0.05,
-              currentLocation!.longitude - 0.05),
-          northeast: LatLng(selectedLocation!.latitude + 0.05,
-              selectedLocation!.longitude + 0.05),
-        ),
-        0,
-      ),
-    );
-    totalDistance(ref);
     await saveUserDesAndBid(
         FirebaseAuth.instance.currentUser!.uid,
         selectedLocation!.latitude,
         selectedLocation!.longitude,
         money,
         destinationAddress);
+    notifyListeners();
+  }
+
+  Future<void> displayPredictions(Prediction? p, WidgetRef ref) async {
+    if (p != null) {
+      GoogleMapsPlaces places = GoogleMapsPlaces(
+        apiKey: apiKey,
+        apiHeaders: await const GoogleApiHeaders().getHeaders(),
+      );
+
+      PlacesDetailsResponse detail =
+          await places.getDetailsByPlaceId(p.placeId!);
+      selectedLocation = LatLng(detail.result.geometry!.location.lat,
+          detail.result.geometry!.location.lng);
+      markers.add(
+        Marker(
+          markerId: const MarkerId('destination'),
+          position: selectedLocation!,
+          draggable: true,
+          onDragEnd: (location) => onDragEnd(location),
+          icon: markerIcon,
+        ),
+      );
+
+      mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+            CameraPosition(target: selectedLocation!, zoom: 17)),
+      );
+      destinationAddress = await _getAddressFromLatLng(selectedLocation);
+      await _getPolyline();
+
+      mapController?.animateCamera(
+        CameraUpdate.newLatLngBounds(
+          LatLngBounds(
+            southwest: LatLng(currentLocation!.latitude - 0.05,
+                currentLocation!.longitude - 0.05),
+            northeast: LatLng(selectedLocation!.latitude + 0.05,
+                selectedLocation!.longitude + 0.05),
+          ),
+          0,
+        ),
+      );
+      totalDistance(ref);
+    }
 
     notifyListeners();
   }
@@ -327,7 +337,8 @@ class UserMainViewModel extends BaseViewModel {
   }
 
   onPlusClicked() {
-    money++;
+    money = money + 1;
+
     notifyListeners();
   }
 
@@ -372,6 +383,7 @@ class UserMainViewModel extends BaseViewModel {
 
   Future<void> saveUserDesAndBid(String userId, double latitude,
       double longitude, int bid, String desAddress) async {
+    // Get a reference to the driver's location node in the database.
     final userLocationRef =
         FirebaseDatabase.instance.ref().child('/users/$userId/rides');
     await userLocationRef.update({
@@ -391,6 +403,14 @@ class UserMainViewModel extends BaseViewModel {
       final rides = event.snapshot.value;
       driversData = rides;
       notifyListeners();
+    });
+  }
+
+  Future<void> updateUserBid(String userId, int bid) async {
+    final userLocationRef =
+        FirebaseDatabase.instance.ref().child('/users/$userId/rides');
+    await userLocationRef.update({
+      'bid_amount': bid,
     });
   }
 
