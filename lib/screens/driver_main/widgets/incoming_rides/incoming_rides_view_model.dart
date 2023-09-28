@@ -11,10 +11,16 @@ class IncomingRidesViewModel extends BaseViewModel {
 
   getUsersBidding() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref("users");
-    Stream stream = ref.onValue;
+    Query query = ref.orderByChild('rides/searching').equalTo(true);
+    Stream stream = query.onValue;
     stream.listen((event) {
       final rides = event.snapshot.value;
-      ridesData = rides;
+      if (rides == null) {
+        ridesData = {};
+      } else {
+        ridesData = rides;
+      }
+      print(rides);
       notifyListeners();
     });
   }

@@ -46,11 +46,13 @@ class WillPop extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (viewModel.currentLocation != null) {
-      viewModel.updateUserLocation(
-          FirebaseAuth.instance.currentUser!.uid,
-          viewModel.currentLocation!.latitude,
-          viewModel.currentLocation!.longitude,
-          viewModel.currentAddress);
+      if (viewModel.updateLocation) {
+        viewModel.updateUserLocation(
+            FirebaseAuth.instance.currentUser!.uid,
+            viewModel.currentLocation!.latitude,
+            viewModel.currentLocation!.longitude,
+            viewModel.currentAddress);
+      }
     }
 
     return WillPopScope(
@@ -99,6 +101,10 @@ class WillPop extends ConsumerWidget {
               child: viewModel.confirmPressed
                   ? DriverSelectView(
                       driversList: viewModel.driversData,
+                      bid: viewModel.money,
+                      destinationAddress: viewModel.destinationAddress,
+                      latitude: viewModel.selectedLocation!.latitude,
+                      longitude: viewModel.selectedLocation!.longitude,
                     )
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

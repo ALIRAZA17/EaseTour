@@ -10,14 +10,33 @@ class DriverSelectView extends StackedView<DriverSelectViewModel> {
   const DriverSelectView({
     super.key,
     required this.driversList,
+    required this.bid,
+    required this.destinationAddress,
+    required this.latitude,
+    required this.longitude,
   });
   final Map<dynamic, dynamic> driversList;
+  final int bid;
+  final String destinationAddress;
+  final double latitude;
+  final double longitude;
 
   @override
   Widget builder(
       BuildContext context, DriverSelectViewModel viewModel, Widget? child) {
     return pv.Consumer(builder: (context, ThemeProvider provider, child) {
-      return MainWidget(viewModel: viewModel, driversList: driversList);
+      if (viewModel.changeBid) {
+        viewModel.setBid(bid);
+      }
+
+      return MainWidget(
+        viewModel: viewModel,
+        driversList: driversList,
+        bid: bid,
+        destinationAddress: destinationAddress,
+        latitude: latitude,
+        longitude: longitude,
+      );
     });
   }
 
@@ -28,10 +47,21 @@ class DriverSelectView extends StackedView<DriverSelectViewModel> {
 }
 
 class MainWidget extends StatelessWidget {
-  const MainWidget(
-      {super.key, required this.viewModel, required this.driversList});
+  const MainWidget({
+    super.key,
+    required this.viewModel,
+    required this.driversList,
+    required this.bid,
+    required this.destinationAddress,
+    required this.latitude,
+    required this.longitude,
+  });
   final DriverSelectViewModel viewModel;
   final Map<dynamic, dynamic> driversList;
+  final int bid;
+  final String destinationAddress;
+  final double latitude;
+  final double longitude;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +75,12 @@ class MainWidget extends StatelessWidget {
         height: 15,
       ),
       GestureDetector(
-        onTap: viewModel.onBookTap,
+        onTap: () => viewModel.initiateRide(
+          latitude,
+          longitude,
+          viewModel.bid,
+          destinationAddress,
+        ),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
           // height: 48,
@@ -66,7 +101,7 @@ class MainWidget extends StatelessWidget {
                       // textAlign: TextAlign.center,
                     ),
                     Text(
-                      'Rs 290',
+                      viewModel.bid.toString(),
                       style: Styles.displaySmBoldStyle
                           .copyWith(color: Styles.primaryButtonTextColor),
                       // textAlign: TextAlign.center,
@@ -169,7 +204,7 @@ Container container1(BuildContext context, DriverSelectViewModel viewModel,
           height: MediaQuery.of(context).size.height / 3.8,
           width: MediaQuery.of(context).size.width,
           padding:
-              const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
+              const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
           decoration: BoxDecoration(
             color: Styles.backgroundColor,
             border: Border.all(color: Styles.primaryColor),
@@ -187,52 +222,70 @@ Container container1(BuildContext context, DriverSelectViewModel viewModel,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     viewModel.getDriverData(driversList.keys.elementAt(index));
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 56,
-                            height: 75,
-                            decoration: BoxDecoration(
-                              color: Styles.primaryColor,
-                              border: Border.all(color: Styles.primaryColor),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+
+                    return GestureDetector(
+                      onTap: () {
+                        viewModel.onDriverSelect(
+                            driversList.keys.elementAt(index), driversList);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          decoration: viewModel.elementSelected
+                              ? BoxDecoration(
+                                  border: Border.all(
+                                      color: Styles.primaryColor, width: 1),
+                                  borderRadius: BorderRadius.circular(8))
+                              : const BoxDecoration(),
+                          child: Row(
                             children: [
-                              Text(
-                                viewModel.driverName,
-                                style: Styles.displayMedBoldStyle,
+                              Container(
+                                width: 56,
+                                height: 75,
+                                decoration: BoxDecoration(
+                                  color: Styles.primaryColor,
+                                  border:
+                                      Border.all(color: Styles.primaryColor),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
-                              Text(
-                                viewModel.driverCar,
-                                style: Styles.displayXSLightStyle,
+                              const SizedBox(
+                                width: 20,
                               ),
-                              Text(
-                                viewModel.vehicleNumber,
-                                style: Styles.displayXXSLightStyle,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    viewModel.driverName,
+                                    style: Styles.displayMedBoldStyle,
+                                  ),
+                                  Text(
+                                    viewModel.driverCar,
+                                    style: Styles.displayXSLightStyle,
+                                  ),
+                                  Text(
+                                    viewModel.vehicleNumber,
+                                    style: Styles.displayXXSLightStyle,
+                                  ),
+                                  Text(
+                                    '5 min',
+                                    style: Styles.displayXSBoldStyle.copyWith(
+                                        color: Styles.secondryTextColor),
+                                  ),
+                                ],
                               ),
+                              const Spacer(),
                               Text(
-                                '5 min',
-                                style: Styles.displayXSBoldStyle
-                                    .copyWith(color: Styles.secondryTextColor),
+                                driversList[driversList.keys.elementAt(index)]
+                                        ['bid']
+                                    .toString(),
+                                style: Styles.displayXSBoldStyle,
                               ),
                             ],
                           ),
-                          const Spacer(),
-                          Text(
-                            driversList[driversList.keys.elementAt(index)]
-                                    ['bid']
-                                .toString(),
-                            style: Styles.displayXSBoldStyle,
-                          ),
-                        ],
+                        ),
                       ),
                     );
                   },

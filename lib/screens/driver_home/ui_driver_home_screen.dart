@@ -32,6 +32,7 @@ class DriverHomeView extends StatelessWidget {
                       text: 'Take a Ride',
                       onTap: () async {
                         if (await Permission.location.serviceStatus.isEnabled) {
+                          print('Enabled');
                           var status = await Permission.location.status;
                           if (status.isGranted) {
                             Get.offAllNamed('/driver_incoming_rides');
@@ -39,9 +40,16 @@ class DriverHomeView extends StatelessWidget {
                             await [
                               Permission.location,
                             ].request();
+                            status = await Permission.location.status;
                           }
+                          if (status.isGranted) {
+                            Get.toNamed('/driver_incoming_rides');
+                          }
+                        } else {
+                          Get.snackbar('Enable Location',
+                              'You Have Locaton Turned off Kindly Enable it');
+                          await openAppSettings();
                         }
-                        Get.toNamed('/driver_incoming_rides');
                       },
                       color: Styles.buttonColorPrimary)
                 ],

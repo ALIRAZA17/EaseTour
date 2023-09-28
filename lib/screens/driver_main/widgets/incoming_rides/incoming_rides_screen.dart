@@ -86,6 +86,7 @@ Widget friendsList(
               final userAddress = ridesData.values
                   .elementAt(index)["location"]["address"]
                   .toString();
+
               final userDestinationAddress = ridesData.values
                   .elementAt(index)["rides"]["des_address"]
                   .toString();

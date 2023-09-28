@@ -41,6 +41,7 @@ class UserMainViewModel extends BaseViewModel {
   double pricePerKm = 200;
   Map<dynamic, dynamic> driversData = {};
   bool allowMapClick = true;
+  bool updateLocation = true;
 
   void getUserLocation() async {
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
@@ -380,6 +381,7 @@ class UserMainViewModel extends BaseViewModel {
         FirebaseDatabase.instance.ref().child('/users/$userId/location');
     await userLocationRef.update(
         {'latitude': latitude, 'longitude': longitude, 'address': address});
+    updateLocation = false;
   }
 
   Future<void> saveUserDesAndBid(String userId, double latitude,
@@ -402,7 +404,12 @@ class UserMainViewModel extends BaseViewModel {
     Stream stream = ref.onValue;
     stream.listen((event) {
       final rides = event.snapshot.value;
-      driversData = rides;
+      if (rides == null) {
+        driversData = {};
+      } else {
+        driversData = rides;
+      }
+
       notifyListeners();
     });
   }
@@ -421,7 +428,7 @@ class UserMainViewModel extends BaseViewModel {
       await FirebaseAuth.instance.signOut();
       Get.toNamed("/role_screen");
     } catch (e) {
-      print("Error logging out: $e");
+      debugPrint("Error logging out: $e");
     }
   }
 }

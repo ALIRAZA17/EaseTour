@@ -65,7 +65,13 @@ class DriverMainScreenViewModel extends BaseViewModel {
     destinationAddress = 'Enter Your Destination';
     distanceInKiloMeters = 0;
     selectedLocation = ref.read(userLocLatLngProvider);
+    var position = await GeolocatorPlatform.instance.getCurrentPosition();
+    print('Awaited Position');
+
+    currentLocation = LatLng(position.latitude, position.longitude);
+    print('Next Step : $currentLocation');
     if (currentLocation != null) {
+      print('Current Location Marker Added');
       markers.add(
         Marker(
           markerId: const MarkerId('maker'),
@@ -74,6 +80,7 @@ class DriverMainScreenViewModel extends BaseViewModel {
         ),
       );
     }
+    print('Destinatation Marker Added');
     markers.add(
       Marker(
         markerId: const MarkerId('destination'),
@@ -82,7 +89,11 @@ class DriverMainScreenViewModel extends BaseViewModel {
       ),
     );
 
+    print('Adding PolyLInes');
+
     await _getPolyline();
+
+    print('PolyLInes Added');
 
     if (allowAnimation) {
       mapController?.animateCamera(
@@ -96,23 +107,25 @@ class DriverMainScreenViewModel extends BaseViewModel {
           0,
         ),
       );
+      print('Animated');
     }
     allowAnimation = false;
     updateRequired = false;
 
-    totalDistance(ref);
+    await totalDistance();
+    distanceInKiloMeters = distanceInKiloMeters.toPrecision(2);
     GeolocatorPlatform.instance
         .getPositionStream(
-            //       locationSettings: const LocationSettings(
-            // accuracy: LocationAccuracy.bestForNavigation,
-            // distanceFilter: 4,
-            // )
-            )
+            locationSettings: const LocationSettings(
+      accuracy: LocationAccuracy.bestForNavigation,
+      distanceFilter: 4,
+    ))
         .listen(
       (position) {
+        print('Updated Position');
         position = position;
         currentLocation = LatLng(position.latitude, position.longitude);
-        // updateRequired = false;
+        // updateRequired = true;
         notifyListeners();
       },
     );
@@ -120,15 +133,19 @@ class DriverMainScreenViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  totalDistance(WidgetRef ref) {
+  totalDistance() {
+    print(polylinesPoints);
     for (var i = 0; i < polylinesPoints.length - 1; i++) {
-      distanceInKiloMeters += calculateDistance(
+      distanceInKiloMeters = distanceInKiloMeters +
+          calculateDistance(
               polylinesPoints[i].latitude,
               polylinesPoints[i].longitude,
               polylinesPoints[i + 1].latitude,
-              polylinesPoints[i + 1].longitude)
-          .toInt();
+              polylinesPoints[i + 1].longitude);
+      print('Inside For: $distanceInKiloMeters');
     }
+
+    print('This is Distance : $distanceInKiloMeters');
 
     // notifyListeners();
   }
@@ -146,9 +163,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
   }
 
   void getUserLocation() async {
-    var position = await GeolocatorPlatform.instance.getCurrentPosition();
-
-    currentLocation = LatLng(position.latitude, position.longitude);
     await addCustomIcon();
     if (currentLocation != null) {
       markers.add(
@@ -264,11 +278,14 @@ class DriverMainScreenViewModel extends BaseViewModel {
 
   getUsersBidding(dynamic userId) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref("users/$userId");
+
     Stream stream = ref.onValue;
     stream.listen((event) {
       final rides = event.snapshot.value;
       ridesData = rides;
+
       notifyListeners();
+      updateRequired = false;
     });
   }
 

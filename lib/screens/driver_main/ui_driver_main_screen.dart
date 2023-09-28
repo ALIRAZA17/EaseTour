@@ -58,13 +58,13 @@ class WillPop extends ConsumerWidget {
       bid = data["rides"]["bid_amount"];
     }
 
-    if (viewModel.currentLocation != null) {
-      viewModel.updateUserLocation(
-          ref.read(userIdProvider),
-          viewModel.currentLocation!.latitude,
-          viewModel.currentLocation!.longitude);
-      if (viewModel.updateRequired) {
-        viewModel.updateUserLocationLatLng(ref);
+    if (viewModel.updateRequired) {
+      viewModel.updateUserLocationLatLng(ref);
+      if (viewModel.currentLocation != null) {
+        viewModel.updateUserLocation(
+            ref.read(userIdProvider),
+            viewModel.currentLocation!.latitude,
+            viewModel.currentLocation!.longitude);
       }
     }
 
