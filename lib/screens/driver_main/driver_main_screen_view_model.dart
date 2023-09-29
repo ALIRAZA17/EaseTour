@@ -66,12 +66,9 @@ class DriverMainScreenViewModel extends BaseViewModel {
     distanceInKiloMeters = 0;
     selectedLocation = ref.read(userLocLatLngProvider);
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
-    print('Awaited Position');
 
     currentLocation = LatLng(position.latitude, position.longitude);
-    print('Next Step : $currentLocation');
     if (currentLocation != null) {
-      print('Current Location Marker Added');
       markers.add(
         Marker(
           markerId: const MarkerId('maker'),
@@ -80,7 +77,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
         ),
       );
     }
-    print('Destinatation Marker Added');
     markers.add(
       Marker(
         markerId: const MarkerId('destination'),
@@ -89,11 +85,7 @@ class DriverMainScreenViewModel extends BaseViewModel {
       ),
     );
 
-    print('Adding PolyLInes');
-
     await _getPolyline();
-
-    print('PolyLInes Added');
 
     if (allowAnimation) {
       mapController?.animateCamera(
@@ -107,7 +99,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
           0,
         ),
       );
-      print('Animated');
     }
     allowAnimation = false;
     updateRequired = false;
@@ -122,7 +113,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
     ))
         .listen(
       (position) {
-        print('Updated Position');
         position = position;
         currentLocation = LatLng(position.latitude, position.longitude);
         // updateRequired = true;
@@ -134,7 +124,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
   }
 
   totalDistance() {
-    print(polylinesPoints);
     for (var i = 0; i < polylinesPoints.length - 1; i++) {
       distanceInKiloMeters = distanceInKiloMeters +
           calculateDistance(
@@ -142,10 +131,7 @@ class DriverMainScreenViewModel extends BaseViewModel {
               polylinesPoints[i].longitude,
               polylinesPoints[i + 1].latitude,
               polylinesPoints[i + 1].longitude);
-      print('Inside For: $distanceInKiloMeters');
     }
-
-    print('This is Distance : $distanceInKiloMeters');
 
     // notifyListeners();
   }
