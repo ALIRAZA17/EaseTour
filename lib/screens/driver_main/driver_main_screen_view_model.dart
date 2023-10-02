@@ -65,6 +65,8 @@ class DriverMainScreenViewModel extends BaseViewModel {
     destinationAddress = 'Enter Your Destination';
     distanceInKiloMeters = 0;
     selectedLocation = ref.read(userLocLatLngProvider);
+    await addCustomIcon();
+    print('Awaited Add Custom Icon');
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
     print('Awaited Position');
 
@@ -122,7 +124,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
     ))
         .listen(
       (position) {
-        print('Updated Position');
         position = position;
         currentLocation = LatLng(position.latitude, position.longitude);
         // updateRequired = true;
@@ -134,7 +135,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
   }
 
   totalDistance() {
-    print(polylinesPoints);
     for (var i = 0; i < polylinesPoints.length - 1; i++) {
       distanceInKiloMeters = distanceInKiloMeters +
           calculateDistance(
@@ -142,12 +142,7 @@ class DriverMainScreenViewModel extends BaseViewModel {
               polylinesPoints[i].longitude,
               polylinesPoints[i + 1].latitude,
               polylinesPoints[i + 1].longitude);
-      print('Inside For: $distanceInKiloMeters');
     }
-
-    print('This is Distance : $distanceInKiloMeters');
-
-    // notifyListeners();
   }
 
   double calculateDistance(lat1, lon1, lat2, lon2) {

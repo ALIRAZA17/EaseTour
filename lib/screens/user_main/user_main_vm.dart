@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
+import 'package:ease_tour/screens/user_main/providers/driver_location.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,7 @@ class UserMainViewModel extends BaseViewModel {
   Map<dynamic, dynamic> driversData = {};
   bool allowMapClick = true;
   bool updateLocation = true;
+  int counter = 0;
 
   void getUserLocation() async {
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
@@ -430,5 +432,50 @@ class UserMainViewModel extends BaseViewModel {
     } catch (e) {
       debugPrint("Error logging out: $e");
     }
+  }
+
+  void updatedSelectedLocation(WidgetRef ref) async {
+    selectedLocation = ref.read(driversLocationProvider);
+    print('This iS Selected Location: $selectedLocation');
+    polylines.clear();
+    markers.clear();
+    polylinesPoints = [];
+    if (currentLocation != null) {
+      markers.add(
+        Marker(
+          markerId: const MarkerId('maker'),
+          position: currentLocation!,
+          draggable: true,
+          onDragEnd: (location) => onDragEnd(location),
+          icon: markerIcon,
+        ),
+      );
+      markers.add(
+        Marker(
+          markerId: const MarkerId('destination'),
+          position: selectedLocation!,
+          icon: markerIcon,
+        ),
+      );
+      print('Adding PolyLInes');
+
+      await _getPolyline();
+
+      print('PolyLInes Added');
+
+      mapController?.animateCamera(
+        CameraUpdate.newLatLngBounds(
+          LatLngBounds(
+            southwest: LatLng(currentLocation!.latitude - 0.05,
+                currentLocation!.longitude - 0.05),
+            northeast: LatLng(selectedLocation!.latitude + 0.05,
+                selectedLocation!.longitude + 0.05),
+          ),
+          0,
+        ),
+      );
+    }
+    counter++;
+    notifyListeners();
   }
 }

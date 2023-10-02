@@ -3,6 +3,7 @@ import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/action_button.dart';
 import 'package:ease_tour/common/widgets/button/multi_button.dart';
 import 'package:ease_tour/screens/user_main/driver_select/driver_select_vu.dart';
+import 'package:ease_tour/screens/user_main/providers/driver_location.dart';
 import 'package:ease_tour/screens/user_main/user_main_vm.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,12 @@ class WillPop extends ConsumerWidget {
             viewModel.currentLocation!.longitude,
             viewModel.currentAddress);
       }
+    }
+    if (ref.read(driversLocationProvider) != null && viewModel.counter == 0) {
+      print(viewModel.counter);
+      print(ref.read(driversLocationProvider));
+      print('I am now going Inside');
+      viewModel.updatedSelectedLocation(ref);
     }
 
     return WillPopScope(

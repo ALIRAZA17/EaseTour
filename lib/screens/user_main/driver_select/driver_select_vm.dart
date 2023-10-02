@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ease_tour/screens/user_main/providers/driver_location.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 
 class DriverSelectViewModel extends BaseViewModel {
@@ -12,6 +15,8 @@ class DriverSelectViewModel extends BaseViewModel {
   int bid = 0;
   bool changeBid = true;
   String? selectedDriverId;
+
+  LatLng? driversLocation;
 
   void onBackPressed() {
     debugPrint('Back Pressed');
@@ -55,13 +60,22 @@ class DriverSelectViewModel extends BaseViewModel {
     elementSelected = true;
     bid = driversList[driverId]['bid'];
     selectedDriverId = driverId;
+    print('Selected Driver Id: $driverId');
     notifyListeners();
   }
 
-  void initiateRide(
-      double latitude, double longitude, int bid, String desAddress) {
+  void initiateRide(double latitude, double longitude, int bid,
+      String desAddress, WidgetRef ref) {
     createHistory(FirebaseAuth.instance.currentUser!.uid, latitude, longitude,
         bid, desAddress, selectedDriverId!);
+    final userRef =
+        FirebaseDatabase.instance.ref().child('/drivers/$selectedDriverId');
+    userRef.update(
+      {
+        'rideConfirmed': true,
+      },
+    );
+    getDriverLocation(selectedDriverId!, ref);
     resetBid(FirebaseAuth.instance.currentUser!.uid);
     removeDriversList(FirebaseAuth.instance.currentUser!.uid);
   }
@@ -96,6 +110,22 @@ class DriverSelectViewModel extends BaseViewModel {
       'des_address': 'desAddress',
       'bid_amount': 0,
       'searching': false,
+    });
+  }
+
+  void getDriverLocation(String driverId, WidgetRef reference) {
+    print('tHis is Driver ID $driverId');
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref("drivers/$driverId/location");
+
+    Stream stream = ref.onValue;
+    stream.listen((event) {
+      final loactionsData = event.snapshot.value;
+      driversLocation =
+          LatLng(loactionsData['latitude'], loactionsData['longitude']);
+      reference.watch(driversLocationProvider.notifier).state = driversLocation;
+
+      // notifyListeners();
     });
   }
 }

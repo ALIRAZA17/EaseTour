@@ -2,6 +2,7 @@ import 'package:ease_tour/common/resources/app_theme/theme_provider.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/screens/user_main/driver_select/driver_select_vm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:stacked/stacked.dart';
@@ -46,7 +47,7 @@ class DriverSelectView extends StackedView<DriverSelectViewModel> {
   }
 }
 
-class MainWidget extends StatelessWidget {
+class MainWidget extends ConsumerWidget {
   const MainWidget({
     super.key,
     required this.viewModel,
@@ -64,7 +65,7 @@ class MainWidget extends StatelessWidget {
   final double longitude;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       container1(context, viewModel, driversList),
       const SizedBox(
@@ -76,11 +77,7 @@ class MainWidget extends StatelessWidget {
       ),
       GestureDetector(
         onTap: () => viewModel.initiateRide(
-          latitude,
-          longitude,
-          viewModel.bid,
-          destinationAddress,
-        ),
+            latitude, longitude, viewModel.bid, destinationAddress, ref),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
           // height: 48,
