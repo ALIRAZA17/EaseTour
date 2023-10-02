@@ -68,12 +68,9 @@ class DriverMainScreenViewModel extends BaseViewModel {
     await addCustomIcon();
     print('Awaited Add Custom Icon');
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
-    print('Awaited Position');
 
     currentLocation = LatLng(position.latitude, position.longitude);
-    print('Next Step : $currentLocation');
     if (currentLocation != null) {
-      print('Current Location Marker Added');
       markers.add(
         Marker(
           markerId: const MarkerId('maker'),
@@ -82,7 +79,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
         ),
       );
     }
-    print('Destinatation Marker Added');
     markers.add(
       Marker(
         markerId: const MarkerId('destination'),
@@ -91,11 +87,7 @@ class DriverMainScreenViewModel extends BaseViewModel {
       ),
     );
 
-    print('Adding PolyLInes');
-
     await _getPolyline();
-
-    print('PolyLInes Added');
 
     if (allowAnimation) {
       mapController?.animateCamera(
@@ -109,7 +101,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
           0,
         ),
       );
-      print('Animated');
     }
     allowAnimation = false;
     updateRequired = false;

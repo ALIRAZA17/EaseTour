@@ -29,39 +29,51 @@ class RolesScreen extends ConsumerWidget {
               const SizedBox(
                 height: 182,
               ),
-              Center(
-                child: AppTextButton(
-                  text: "Sign up as a user",
-                  onTap: () {
-                    ref.read(roleProvider.notifier).state = 'users';
-                    Get.toNamed('/signup');
-                  },
-                  color: Styles.primaryColor,
-                  fontSize: 20,
-                ),
+            ],
+          ),
+          Positioned(
+            bottom: 170,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: AppTextButton(
+                text: "Continue as a user",
+                onTap: () {
+                  ref.read(roleProvider.notifier).state = 'users';
+                  Get.toNamed('/signup');
+                },
+                color: Styles.primaryColor,
+                fontSize: 20,
               ),
-              const SizedBox(
-                height: 24,
-              ),
-              Text(
+            ),
+          ),
+          const SizedBox(
+            height: 24,
+          ),
+          Positioned(
+            bottom: 105,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Text(
                 "OR",
                 style: Styles.displayLargeNormalStyle.copyWith(
                   fontSize: 24,
                   color: Styles.lightGrayTextColor,
                 ),
               ),
-              const SizedBox(
-                height: 16,
-              ),
-            ],
+            ),
+          ),
+          const SizedBox(
+            height: 16,
           ),
           Positioned(
-            bottom: 0,
+            bottom: 20,
             left: 0,
             right: 0,
             child: Center(
               child: AppTextButton(
-                text: "Sign up as a Driver",
+                text: "Continue as a Driver",
                 onTap: () {
                   ref.read(roleProvider.notifier).state = 'drivers';
                   Get.toNamed('/signup');

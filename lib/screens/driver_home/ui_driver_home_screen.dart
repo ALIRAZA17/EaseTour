@@ -32,7 +32,6 @@ class DriverHomeView extends StatelessWidget {
                       text: 'Take a Ride',
                       onTap: () async {
                         if (await Permission.location.serviceStatus.isEnabled) {
-                          print('Enabled');
                           var status = await Permission.location.status;
                           if (status.isGranted) {
                             Get.offAllNamed('/driver_incoming_rides');

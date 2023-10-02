@@ -15,6 +15,7 @@ import 'package:ease_tour/screens/signup_user/widgets/set_password_screen.dart';
 import 'package:ease_tour/screens/signup_user/widgets/transport_details.dart';
 import 'package:ease_tour/screens/transport/transport_selection/ui_select_transport_screen.dart';
 import 'package:ease_tour/screens/user_home/home_vu.dart';
+import 'package:ease_tour/screens/user_main/invite_friend/invite_friend_screen.dart';
 import 'package:ease_tour/screens/welcome/ui_welcome_screen.dart';
 import 'package:ease_tour/screens/pickup/pickup_vu.dart';
 import 'package:ease_tour/screens/user_main/user_main_vu.dart';
@@ -147,6 +148,12 @@ appRoutes() => [
       GetPage(
         name: '/settings',
         page: () => const SettingsView(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+      GetPage(
+        name: '/invite_friends',
+        page: () => const InviteFriendScreen(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),
