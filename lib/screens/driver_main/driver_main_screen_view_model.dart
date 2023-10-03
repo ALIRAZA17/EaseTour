@@ -35,6 +35,12 @@ class DriverMainScreenViewModel extends BaseViewModel {
   bool allowAnimation = true;
   bool updateRequired = true;
   Map<dynamic, dynamic> ridesData = {};
+  bool rideToStart = false;
+
+  ridetoStart(bool rideStarted) async {
+    rideToStart = rideStarted;
+    notifyListeners();
+  }
 
   addCustomIcon() async {
     final Uint8List marker =

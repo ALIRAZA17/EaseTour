@@ -94,173 +94,217 @@ class WillPop extends ConsumerWidget {
               markers: viewModel.markers,
               polylines: viewModel.polylines,
             ),
-            Positioned(
-              bottom: viewModel.isCustomBidPressed ? 200 : 90,
-              left: viewModel.isCustomBidPressed ? 0 : 15,
-              right: viewModel.isCustomBidPressed ? 0 : 15,
-              child: viewModel.isCustomBidPressed
-                  ? Container(
-                      width: double.infinity,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            AppTextField(
-                              label: "Your Bid",
-                              keyboardType: TextInputType.number,
-                              controller: viewModel.controller,
-                              validator: (value) {
-                                if (value != null) {
-                                  return "Please provide your bid";
-                                }
-                                return "";
-                              },
-                            ),
-                            const SizedBox(
-                              height: 25,
-                            ),
-                            const Divider(
-                              color: Colors.white,
-                              thickness: 0.5,
-                            ),
-                            const SizedBox(
-                              height: 13,
-                            ),
-                            Center(
-                              child: Text(
-                                "Offer a Reasonable Price",
-                                style: Styles.displayXXSLightStyle.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 14,
-                            ),
-                            AppTextButton(
-                              text: "Offer",
-                              onTap: () {
-                                if (viewModel.controller.text.isNotEmpty) {
-                                  bid = int.parse(viewModel.controller.text);
-                                  viewModel.addDriverToUserArray(
-                                    Get.arguments[0],
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                    bid,
-                                  );
-                                }
-                              },
-                              color: Styles.primaryColor,
-                            ),
-                            const SizedBox(
-                              height: 14,
-                            ),
-                            AppTextButton(
-                              text: "Close",
-                              onTap: () {},
-                              color: Colors.grey,
-                              borderColor: Styles.primaryColor,
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        showDestination(context, viewModel, ref, bid),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        AppTextButton(
-                          text: "Accept for $bid",
-                          onTap: () => viewModel.addDriverToUserArray(
-                              Get.arguments[0],
-                              FirebaseAuth.instance.currentUser!.uid,
-                              bid),
-                          color: Styles.primaryColor,
-                        ),
-                        const SizedBox(
-                          height: 11,
-                        ),
-                        Center(
-                          child: Text(
-                            "Offer your fare",
-                            style: Styles.displaySmBoldStyle,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 17,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            AppSmallTextButton(
-                              text: "Rs ${bid + 100}",
-                              onTap: () {
-                                bid = bid + 100;
-                                viewModel.addDriverToUserArray(
-                                    Get.arguments[0],
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                    bid);
-                              },
-                              color: Styles.primaryColor,
-                              width: 77,
-                              height: 41,
-                            ),
-                            AppSmallTextButton(
-                              text: "Rs ${bid + 200}",
-                              onTap: () {
-                                bid = bid + 200;
-                                viewModel.addDriverToUserArray(
-                                    Get.arguments[0],
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                    bid);
-                              },
-                              color: Styles.primaryColor,
-                              width: 77,
-                              height: 41,
-                            ),
-                            Container(
-                              width: 77,
-                              height: 41,
-                              decoration: BoxDecoration(
-                                color: Styles.primaryColor,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 0.5,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: AppIconButton(
-                                onTap: viewModel.customBid,
-                                color: Styles.primaryColor,
-                                icon: const Icon(
-                                  Icons.create_outlined,
-                                ),
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-            ),
-            viewModel.isCustomBidPressed
-                ? Container()
+            viewModel.rideToStart
+                ? const SizedBox()
                 : Positioned(
+                    bottom: viewModel.isCustomBidPressed ? 200 : 90,
+                    left: viewModel.isCustomBidPressed ? 0 : 15,
+                    right: viewModel.isCustomBidPressed ? 0 : 15,
+                    child: viewModel.isCustomBidPressed
+                        ? Container(
+                            width: double.infinity,
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  AppTextField(
+                                    label: "Your Bid",
+                                    keyboardType: TextInputType.number,
+                                    controller: viewModel.controller,
+                                    validator: (value) {
+                                      if (value != null) {
+                                        return "Please provide your bid";
+                                      }
+                                      return "";
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 25,
+                                  ),
+                                  const Divider(
+                                    color: Colors.white,
+                                    thickness: 0.5,
+                                  ),
+                                  const SizedBox(
+                                    height: 13,
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      "Offer a Reasonable Price",
+                                      style:
+                                          Styles.displayXXSLightStyle.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 14,
+                                  ),
+                                  AppTextButton(
+                                    text: "Offer",
+                                    onTap: () {
+                                      if (viewModel
+                                          .controller.text.isNotEmpty) {
+                                        bid = int.parse(
+                                            viewModel.controller.text);
+                                        viewModel.addDriverToUserArray(
+                                          Get.arguments[0],
+                                          FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                          bid,
+                                        );
+                                      }
+                                    },
+                                    color: Styles.primaryColor,
+                                  ),
+                                  const SizedBox(
+                                    height: 14,
+                                  ),
+                                  AppTextButton(
+                                    text: "Close",
+                                    onTap: () {},
+                                    color: Colors.grey,
+                                    borderColor: Styles.primaryColor,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              showDestination(context, viewModel, ref, bid),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              AppTextButton(
+                                text: "Accept for $bid",
+                                onTap: () async {
+                                  viewModel.addDriverToUserArray(
+                                      Get.arguments[0],
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                      bid);
+
+                                  final rideStarted = await Get.toNamed(
+                                      '/ride_processing_screen',
+                                      arguments: [
+                                        FirebaseAuth.instance.currentUser!.uid
+                                      ]);
+                                  viewModel.ridetoStart(rideStarted);
+                                },
+                                color: Styles.primaryColor,
+                              ),
+                              const SizedBox(
+                                height: 11,
+                              ),
+                              Center(
+                                child: Text(
+                                  "Offer your fare",
+                                  style: Styles.displaySmBoldStyle,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 17,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  AppSmallTextButton(
+                                    text: "Rs ${bid + 100}",
+                                    onTap: () async {
+                                      bid = bid + 100;
+                                      viewModel.addDriverToUserArray(
+                                          Get.arguments[0],
+                                          FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                          bid);
+
+                                      final rideStarted = await Get.toNamed(
+                                          '/ride_processing_screen',
+                                          arguments: [
+                                            FirebaseAuth
+                                                .instance.currentUser!.uid
+                                          ]);
+                                      viewModel.ridetoStart(rideStarted);
+                                    },
+                                    color: Styles.primaryColor,
+                                    width: 77,
+                                    height: 41,
+                                  ),
+                                  AppSmallTextButton(
+                                    text: "Rs ${bid + 200}",
+                                    onTap: () async {
+                                      bid = bid + 200;
+                                      viewModel.addDriverToUserArray(
+                                          Get.arguments[0],
+                                          FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                          bid);
+                                      final rideStarted = await Get.toNamed(
+                                          '/ride_processing_screen',
+                                          arguments: [
+                                            FirebaseAuth
+                                                .instance.currentUser!.uid
+                                          ]);
+                                      viewModel.ridetoStart(rideStarted);
+                                    },
+                                    color: Styles.primaryColor,
+                                    width: 77,
+                                    height: 41,
+                                  ),
+                                  Container(
+                                    width: 77,
+                                    height: 41,
+                                    decoration: BoxDecoration(
+                                      color: Styles.primaryColor,
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 0.5,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: AppIconButton(
+                                      onTap: viewModel.customBid,
+                                      color: Styles.primaryColor,
+                                      icon: const Icon(
+                                        Icons.create_outlined,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                  ),
+            viewModel.rideToStart
+                ? Positioned(
                     bottom: 10,
                     right: 15,
                     left: 15,
                     child: AppTextButton(
-                      text: "Close",
-                      onTap: () {
-                        Get.toNamed('/driver_incoming_rides');
-                      },
+                      text: "End Ride",
+                      onTap: () {},
                       color: Styles.primaryColor,
                     ),
                   )
+                : viewModel.isCustomBidPressed
+                    ? Container()
+                    : Positioned(
+                        bottom: 10,
+                        right: 15,
+                        left: 15,
+                        child: AppTextButton(
+                          text: "Close",
+                          onTap: () {
+                            Get.toNamed('/driver_incoming_rides');
+                          },
+                          color: Styles.primaryColor,
+                        ),
+                      )
           ],
         ),
       ),

@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
             darkTheme: Themes.darkThemeData(),
             themeMode: themeProvider.themeMode,
             debugShowCheckedModeBanner: false,
-            initialRoute: '/invite_friends',
+            initialRoute: '/role_screen',
             getPages: appRoutes(),
           );
         },

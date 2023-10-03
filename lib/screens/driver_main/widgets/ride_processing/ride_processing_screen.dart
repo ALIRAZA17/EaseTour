@@ -1,25 +1,51 @@
 import 'package:ease_tour/common/resources/constants/styles.dart';
+import 'package:ease_tour/common/widgets/button/app_text_button.dart';
+import 'package:ease_tour/screens/driver_main/widgets/ride_processing/ride_processing_screen_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:stacked/stacked.dart';
 
-class RideProcessingScreen extends StatelessWidget {
+class RideProcessingScreen extends StackedView<RideProcessingScreenViewModel> {
   const RideProcessingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget builder(BuildContext context, RideProcessingScreenViewModel viewModel,
+      Widget? child) {
     return Scaffold(
-      body: Column(
-        children: [
-          Center(
-            child: Text(
-              "Waiting for User",
-              style: Styles.displayLargeBoldStyle,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            viewModel.userConfirmation
+                ? Text(
+                    "The User Has Confirme your ride",
+                    style: Styles.displayLargeBoldStyle,
+                  )
+                : Text(
+                    "Waiting For User",
+                    style: Styles.displayLargeBoldStyle,
+                  ),
+            const SizedBox(
+              height: 20,
             ),
-          ),
-          const Center(
-            child: CircularProgressIndicator(),
-          ),
-        ],
+            viewModel.userConfirmation
+                ? AppTextButton(
+                    text: "Start Ride",
+                    onTap: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    color: Styles.primaryColor)
+                : const CircularProgressIndicator(),
+          ],
+        ),
       ),
     );
+  }
+
+  @override
+  RideProcessingScreenViewModel viewModelBuilder(BuildContext context) {
+    RideProcessingScreenViewModel viewmodel = RideProcessingScreenViewModel();
+    viewmodel.driverConfirmation(Get.arguments[0]);
+    return viewmodel;
   }
 }

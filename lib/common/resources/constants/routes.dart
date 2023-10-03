@@ -1,6 +1,7 @@
 import 'package:ease_tour/screens/driver_home/ui_driver_home_screen.dart';
 import 'package:ease_tour/screens/driver_main/ui_driver_main_screen.dart';
 import 'package:ease_tour/screens/driver_main/widgets/incoming_rides/incoming_rides_screen.dart';
+import 'package:ease_tour/screens/driver_main/widgets/ride_processing/ride_processing_screen.dart';
 import 'package:ease_tour/screens/history/history_vu.dart';
 import 'package:ease_tour/screens/login/ui_login_screen.dart';
 import 'package:ease_tour/screens/on_boarding/primary/primary_vu.dart';
@@ -154,6 +155,12 @@ appRoutes() => [
       GetPage(
         name: '/invite_friends',
         page: () => const InviteFriendScreen(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+      GetPage(
+        name: '/ride_processing_screen',
+        page: () => const RideProcessingScreen(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),
