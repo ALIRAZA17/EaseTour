@@ -32,7 +32,8 @@ class UserMainView extends StackedView<UserMainViewModel> {
   UserMainViewModel viewModelBuilder(BuildContext context) {
     UserMainViewModel userMainViewModel = UserMainViewModel();
     userMainViewModel.getUserLocation();
-    userMainViewModel.getInvites(FirebaseAuth.instance.currentUser!.uid);
+    userMainViewModel.getInvites(FirebaseAuth.instance.currentUser!.uid,
+        context, 'Invite From Friend', 'Press Accept to Start Ride');
 
     return userMainViewModel;
   }
@@ -85,7 +86,7 @@ class WillPop extends ConsumerWidget {
           ],
         ),
         drawer: SafeArea(
-          child: drawerElement(),
+          child: drawerElement(context),
         ),
         body: Stack(
           children: [
@@ -149,7 +150,7 @@ class WillPop extends ConsumerWidget {
     );
   }
 
-  Drawer drawerElement() {
+  Drawer drawerElement(BuildContext context) {
     return Drawer(
       backgroundColor: Styles.backgroundColor,
       // width: MediaQuery.of(context).size.width / 1.7,
@@ -214,7 +215,8 @@ class WillPop extends ConsumerWidget {
               style: Styles.displayMedNormalStyle
                   .copyWith(color: Styles.primaryTextColor),
             ),
-            onTap: viewModel.showInvites,
+            onTap: () => viewModel.showInvites(
+                context, 'Invite From Friend', 'Press Accept to accept Ride'),
           ),
           Divider(
             color: Styles.primaryTextColor,

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
+import 'package:ease_tour/common/widgets/button/multi_button.dart';
 import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/driver_location.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -44,6 +45,13 @@ class UserMainViewModel extends BaseViewModel {
   bool allowMapClick = true;
   bool updateLocation = true;
   int counter = 0;
+
+  dynamic inviteeId;
+
+  LatLng? friendLocation;
+  LatLng? driverLocation;
+
+  int count = 0;
 
   void getUserLocation() async {
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
@@ -340,6 +348,21 @@ class UserMainViewModel extends BaseViewModel {
     _addPolyLine();
   }
 
+  _getPolylineInvite(LatLng? currentLocation, LatLng? selectedLocation) async {
+    pp.PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      apiKey,
+      pp.PointLatLng(currentLocation!.latitude, currentLocation.longitude),
+      pp.PointLatLng(selectedLocation!.latitude, selectedLocation.longitude),
+      travelMode: pp.TravelMode.driving,
+    );
+    if (result.points.isNotEmpty) {
+      for (var point in result.points) {
+        polylinesPoints.add(LatLng(point.latitude, point.longitude));
+      }
+    }
+    _addPolyLine();
+  }
+
   onPlusClicked() {
     money = money + 1;
 
@@ -416,7 +439,7 @@ class UserMainViewModel extends BaseViewModel {
     });
   }
 
-  getInvites(dynamic userId) async {
+  getInvites(dynamic userId, context, title, message) async {
     DatabaseReference ref =
         FirebaseDatabase.instance.ref("users/$userId/invites");
     Stream stream = ref.onValue;
@@ -424,7 +447,73 @@ class UserMainViewModel extends BaseViewModel {
       final invites = event.snapshot.value;
       if (invites == null) {
       } else {
-        print('These Are Invites =======> $invites');
+        inviteeId = invites['requested_by'];
+        print(inviteeId);
+        if (count == 0) {
+          showWarningAlert(context,
+              title: title,
+              message: message,
+              enableCancelButton: true,
+              okButtonLabel: 'Accept', onConfirm: () async {
+            DatabaseReference ref =
+                FirebaseDatabase.instance.ref("users/$inviteeId/location");
+            Stream stream = ref.onValue;
+            stream.listen((event) async {
+              final locations = event.snapshot.value;
+              friendLocation =
+                  LatLng(locations['latitude'], locations['longitude']);
+              driverLocation =
+                  LatLng(locations['driver_lat'], locations['driver_long']);
+              print('This is Friend Location : $friendLocation');
+              print('This is Driver Location : $driverLocation');
+
+              polylines.clear();
+              markers.clear();
+              polylinesPoints = [];
+              Get.back();
+
+              print('cleared');
+              if (currentLocation != null) {
+                print('Not Null');
+                markers.add(
+                  Marker(
+                    markerId: const MarkerId('maker'),
+                    position: friendLocation!,
+                    draggable: true,
+                    onDragEnd: (location) => onDragEnd(location),
+                    icon: markerIcon,
+                  ),
+                );
+                markers.add(
+                  Marker(
+                    markerId: const MarkerId('destination'),
+                    position: driverLocation!,
+                    icon: markerIcon,
+                  ),
+                );
+                print('Adding PolyLInes');
+
+                await _getPolylineInvite(friendLocation, driverLocation);
+
+                print('PolyLInes Added');
+
+                mapController?.animateCamera(
+                  CameraUpdate.newLatLngBounds(
+                    LatLngBounds(
+                      southwest: LatLng(currentLocation!.latitude - 0.05,
+                          currentLocation!.longitude - 0.05),
+                      northeast: LatLng(selectedLocation!.latitude + 0.05,
+                          selectedLocation!.longitude + 0.05),
+                    ),
+                    0,
+                  ),
+                );
+              }
+              count++;
+              notifyListeners();
+            });
+          });
+        }
       }
 
       notifyListeners();
@@ -498,5 +587,99 @@ class UserMainViewModel extends BaseViewModel {
     Get.toNamed('/invite_friends');
   }
 
-  void showInvites() {}
+  void showInvites(BuildContext context, title, message) {}
+
+  showWarningAlert(BuildContext context,
+      {required String title,
+      required String message,
+      String? okButtonLabel,
+      VoidCallback? onCancel,
+      bool enableCancelButton = false,
+      VoidCallback? onConfirm}) {
+    return _showCustomAlert(
+      context,
+      title: title,
+      message: message,
+      okButtonLabel: okButtonLabel ?? 'Yes',
+      onCancel: onCancel,
+      enableCancelButton: enableCancelButton,
+      onConfirm: onConfirm,
+    );
+  }
+
+  _showCustomAlert(
+    context, {
+    required String title,
+    required String message,
+    String? icon,
+    bool enableCancelButton = false,
+    Color? okButtonColor,
+    String okButtonLabel = 'Ok',
+    String cancelButtonLabel = 'Cancel',
+    VoidCallback? onConfirm,
+    VoidCallback? onCancel,
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        insetPadding: const EdgeInsets.all(16),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            icon != null ? const Icon(Icons.abc_sharp) : const SizedBox(),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              //     style: CHIStyles.lgMediumStyle)
+              // .tr(),
+            )
+          ],
+        ),
+        content: Builder(builder: (context) {
+          return SizedBox(
+              width: MediaQuery.of(context).size.shortestSide,
+              child: Text(
+                message,
+                textAlign: TextAlign.center,
+                // style: CHIStyles.smNormalStyle
+                // .copyWith(color: const Color(0xff667085))
+              )
+              // .tr(),
+              );
+        }),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: MultiButton(
+              verticalPad: 20,
+              btnLabel: okButtonLabel,
+              expanded: true,
+              color: okButtonColor,
+              onTap: onConfirm ?? () => Navigator.pop(context),
+            ),
+          ),
+          SizedBox(height: enableCancelButton ? 12 : 16),
+          Visibility(
+            visible: enableCancelButton,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: GestureDetector(
+                onTap: onCancel ?? () => Navigator.pop(context),
+                child: SizedBox(
+                    height: 48,
+                    child: Text(
+                      cancelButtonLabel,
+                      // style: CHIStyles.mdMediumStyle,
+                    )),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

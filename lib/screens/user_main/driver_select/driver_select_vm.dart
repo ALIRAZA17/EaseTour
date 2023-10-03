@@ -76,7 +76,9 @@ class DriverSelectViewModel extends BaseViewModel {
         'rideConfirmed': true,
       },
     );
+
     getDriverLocation(selectedDriverId!, ref);
+
     resetBid(FirebaseAuth.instance.currentUser!.uid);
     removeDriversList(FirebaseAuth.instance.currentUser!.uid);
   }
@@ -130,6 +132,15 @@ class DriverSelectViewModel extends BaseViewModel {
       driversLocation =
           LatLng(loactionsData['latitude'], loactionsData['longitude']);
       reference.watch(driversLocationProvider.notifier).state = driversLocation;
+      final refer = FirebaseDatabase.instance
+          .ref()
+          .child('/users/${FirebaseAuth.instance.currentUser!.uid}/location');
+      refer.update(
+        {
+          'driver_lat': driversLocation!.latitude,
+          'driver_long': driversLocation!.longitude,
+        },
+      );
 
       // notifyListeners();
     });
