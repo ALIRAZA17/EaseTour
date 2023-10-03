@@ -56,9 +56,7 @@ class WillPop extends ConsumerWidget {
       }
     }
     if (ref.read(driversLocationProvider) != null && viewModel.counter == 0) {
-      print(viewModel.counter);
-      print(ref.read(driversLocationProvider));
-      print('I am now going Inside');
+      
       viewModel.updatedSelectedLocation(ref);
     }
 

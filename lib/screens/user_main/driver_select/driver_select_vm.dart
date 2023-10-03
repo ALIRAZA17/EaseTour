@@ -15,7 +15,7 @@ class DriverSelectViewModel extends BaseViewModel {
   int bid = 0;
   bool changeBid = true;
   String? selectedDriverId;
-
+  bool changeScreenBool = false;
   LatLng? driversLocation;
 
   void onBackPressed() {
@@ -66,6 +66,7 @@ class DriverSelectViewModel extends BaseViewModel {
 
   void initiateRide(double latitude, double longitude, int bid,
       String desAddress, WidgetRef ref) {
+    updateScreen();
     createHistory(FirebaseAuth.instance.currentUser!.uid, latitude, longitude,
         bid, desAddress, selectedDriverId!);
     final userRef =
@@ -78,6 +79,11 @@ class DriverSelectViewModel extends BaseViewModel {
     getDriverLocation(selectedDriverId!, ref);
     resetBid(FirebaseAuth.instance.currentUser!.uid);
     removeDriversList(FirebaseAuth.instance.currentUser!.uid);
+  }
+
+  updateScreen() {
+    changeScreenBool = true;
+    notifyListeners();
   }
 
   Future<void> createHistory(String userId, double latitude, double longitude,

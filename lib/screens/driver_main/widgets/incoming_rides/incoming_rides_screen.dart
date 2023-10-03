@@ -98,8 +98,8 @@ Widget friendsList(
               final userIdToBeSent = ridesData.keys.elementAt(index);
 
               final userLocation = LatLng(
-                  ridesData.values.elementAt(index)["rides"]["des_latitude"],
-                  ridesData.values.elementAt(index)["rides"]["des_longitude"]);
+                  ridesData.values.elementAt(index)["location"]["latitude"],
+                  ridesData.values.elementAt(index)["location"]["longitude"]);
               return Padding(
                 padding: const EdgeInsets.only(
                   top: 20.0,

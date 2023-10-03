@@ -67,7 +67,9 @@ class MainWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      container1(context, viewModel, driversList),
+      viewModel.changeScreenBool
+          ? const SizedBox()
+          : container1(context, viewModel, driversList),
       const SizedBox(
         height: 15,
       ),
@@ -75,62 +77,65 @@ class MainWidget extends ConsumerWidget {
       const SizedBox(
         height: 15,
       ),
-      GestureDetector(
-        onTap: () => viewModel.initiateRide(
-            latitude, longitude, viewModel.bid, destinationAddress, ref),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
-          // height: 48,
-          decoration: BoxDecoration(
-            color: Styles.buttonColorPrimary,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 3.5,
-                child: Column(
+      viewModel.changeScreenBool
+          ? const SizedBox()
+          : GestureDetector(
+              onTap: () => viewModel.initiateRide(
+                  latitude, longitude, viewModel.bid, destinationAddress, ref),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
+                // height: 48,
+                decoration: BoxDecoration(
+                  color: Styles.buttonColorPrimary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
                   children: [
-                    Text(
-                      'Total',
-                      style: Styles.displayXXXSLightStyle
-                          .copyWith(color: Styles.primaryButtonTextColor),
-                      // textAlign: TextAlign.center,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3.5,
+                      child: Column(
+                        children: [
+                          Text(
+                            'Total',
+                            style: Styles.displayXXXSLightStyle
+                                .copyWith(color: Styles.primaryButtonTextColor),
+                            // textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            viewModel.bid.toString(),
+                            style: Styles.displaySmBoldStyle
+                                .copyWith(color: Styles.primaryButtonTextColor),
+                            // textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
-                    Text(
-                      viewModel.bid.toString(),
-                      style: Styles.displaySmBoldStyle
-                          .copyWith(color: Styles.primaryButtonTextColor),
-                      // textAlign: TextAlign.center,
+                    Container(
+                      width: 1,
+                      height: 35,
+                      color: Styles.primaryTextColor,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Book Now',
+                              style: Styles.displayXMBoldStyle.copyWith(
+                                  color: Styles.primaryButtonTextColor),
+                            ),
+                            SvgPicture.asset('assets/icons/for_arrow.svg'),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-              Container(
-                width: 1,
-                height: 35,
-                color: Styles.primaryTextColor,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Book Now',
-                        style: Styles.displayXMBoldStyle
-                            .copyWith(color: Styles.primaryButtonTextColor),
-                      ),
-                      SvgPicture.asset('assets/icons/for_arrow.svg'),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      )
+            )
     ]);
   }
 }
