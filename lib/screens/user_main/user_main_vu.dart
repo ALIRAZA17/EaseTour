@@ -32,6 +32,7 @@ class UserMainView extends StackedView<UserMainViewModel> {
   UserMainViewModel viewModelBuilder(BuildContext context) {
     UserMainViewModel userMainViewModel = UserMainViewModel();
     userMainViewModel.getUserLocation();
+    userMainViewModel.getInvites(FirebaseAuth.instance.currentUser!.uid);
 
     return userMainViewModel;
   }
@@ -56,7 +57,6 @@ class WillPop extends ConsumerWidget {
       }
     }
     if (ref.read(driversLocationProvider) != null && viewModel.counter == 0) {
-      
       viewModel.updatedSelectedLocation(ref);
     }
 
@@ -188,16 +188,16 @@ class WillPop extends ConsumerWidget {
           ListTile(
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
             leading: Icon(
-              Icons.logout,
+              Icons.person,
               size: 25,
               color: Styles.primaryTextColor,
             ),
             title: Text(
-              'Logout',
+              'Invite Friend',
               style: Styles.displayMedNormalStyle
                   .copyWith(color: Styles.primaryTextColor),
             ),
-            onTap: viewModel.onLogout,
+            onTap: viewModel.onInviteFriend,
           ),
           Divider(
             color: Styles.primaryTextColor,
@@ -210,11 +210,11 @@ class WillPop extends ConsumerWidget {
               color: Styles.primaryTextColor,
             ),
             title: Text(
-              'Logout',
+              'Invites',
               style: Styles.displayMedNormalStyle
                   .copyWith(color: Styles.primaryTextColor),
             ),
-            onTap: viewModel.onLogout,
+            onTap: viewModel.showInvites,
           ),
           Divider(
             color: Styles.primaryTextColor,

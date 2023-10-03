@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
+import 'package:ease_tour/screens/user_main/invite_friend/invite_friend_screen_view_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
-class InviteFriendScreen extends StatelessWidget {
+class InviteFriendScreen extends StackedView<InviteFriendsViewModel> {
   const InviteFriendScreen({super.key});
 
   Future<List<DocumentSnapshot>> fetchDocuments() async {
@@ -16,7 +18,8 @@ class InviteFriendScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget builder(
+      BuildContext context, InviteFriendsViewModel viewModel, Widget? child) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Invite Friends'),
@@ -81,7 +84,8 @@ class InviteFriendScreen extends StatelessWidget {
                                 ],
                               ),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () =>
+                                    viewModel.friendData(documents![index].id),
                                 child: Container(
                                   width: 46.11199951171875,
                                   height: 31.154996871948242,
@@ -104,5 +108,10 @@ class InviteFriendScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  @override
+  InviteFriendsViewModel viewModelBuilder(BuildContext context) {
+    return InviteFriendsViewModel();
   }
 }

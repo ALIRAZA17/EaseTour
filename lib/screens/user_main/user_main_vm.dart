@@ -416,6 +416,21 @@ class UserMainViewModel extends BaseViewModel {
     });
   }
 
+  getInvites(dynamic userId) async {
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref("users/$userId/invites");
+    Stream stream = ref.onValue;
+    stream.listen((event) {
+      final invites = event.snapshot.value;
+      if (invites == null) {
+      } else {
+        print('These Are Invites =======> $invites');
+      }
+
+      notifyListeners();
+    });
+  }
+
   Future<void> updateUserBid(String userId, int bid) async {
     final userLocationRef =
         FirebaseDatabase.instance.ref().child('/users/$userId/rides');
@@ -478,4 +493,10 @@ class UserMainViewModel extends BaseViewModel {
     counter++;
     notifyListeners();
   }
+
+  void onInviteFriend() {
+    Get.toNamed('/invite_friends');
+  }
+
+  void showInvites() {}
 }
