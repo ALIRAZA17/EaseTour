@@ -9,6 +9,7 @@ import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -287,7 +288,32 @@ class WillPop extends ConsumerWidget {
                     left: 15,
                     child: AppTextButton(
                       text: "End Ride",
-                      onTap: () {},
+                      onTap: () {
+                        final userRef = FirebaseDatabase.instance.ref().child(
+                            '/drivers/${FirebaseAuth.instance.currentUser!.uid}');
+                        userRef.update(
+                          {
+                            'rideConfirmed': false,
+                          },
+                        );
+                        final userReference =
+                            FirebaseDatabase.instance.ref().child('/drivers');
+                        Stream stream = userReference.onValue;
+                        stream.listen((event) {
+                          final driverList = event.snapshot.value;
+                          for (int i = 0; i < driverList.length; i++) {
+                            final userRef = FirebaseDatabase.instance
+                                .ref()
+                                .child(
+                                    '/drivers/${driverList.keys.elementAt(i)}');
+                            userRef.update(
+                              {
+                                'noLuck': false,
+                              },
+                            );
+                          }
+                        });
+                      },
                       color: Styles.primaryColor,
                     ),
                   )

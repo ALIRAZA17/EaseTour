@@ -512,6 +512,9 @@ class UserMainViewModel extends BaseViewModel {
               count++;
               notifyListeners();
             });
+            final userLocationRef = FirebaseDatabase.instance.ref().child(
+                '/users/${FirebaseAuth.instance.currentUser!.uid}/invites');
+            userLocationRef.remove();
           });
         }
       }

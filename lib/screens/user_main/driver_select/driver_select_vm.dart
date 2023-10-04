@@ -65,7 +65,7 @@ class DriverSelectViewModel extends BaseViewModel {
   }
 
   void initiateRide(double latitude, double longitude, int bid,
-      String desAddress, WidgetRef ref) {
+      String desAddress, WidgetRef ref, Map<dynamic, dynamic> driverList) {
     updateScreen();
     createHistory(FirebaseAuth.instance.currentUser!.uid, latitude, longitude,
         bid, desAddress, selectedDriverId!);
@@ -81,6 +81,21 @@ class DriverSelectViewModel extends BaseViewModel {
 
     resetBid(FirebaseAuth.instance.currentUser!.uid);
     removeDriversList(FirebaseAuth.instance.currentUser!.uid);
+    print(driverList);
+    for (int i = 0; i < driverList.length; i++) {
+      print('Inside For');
+      if (driverList.keys.elementAt(i) != selectedDriverId) {
+        print('Ohh Yeah');
+        final userRef = FirebaseDatabase.instance
+            .ref()
+            .child('/drivers/${driverList.keys.elementAt(i)}');
+        userRef.update(
+          {
+            'noLuck': true,
+          },
+        );
+      }
+    }
   }
 
   updateScreen() {

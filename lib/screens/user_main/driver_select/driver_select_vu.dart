@@ -80,8 +80,8 @@ class MainWidget extends ConsumerWidget {
       viewModel.changeScreenBool
           ? const SizedBox()
           : GestureDetector(
-              onTap: () => viewModel.initiateRide(
-                  latitude, longitude, viewModel.bid, destinationAddress, ref),
+              onTap: () => viewModel.initiateRide(latitude, longitude,
+                  viewModel.bid, destinationAddress, ref, driversList),
               child: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
