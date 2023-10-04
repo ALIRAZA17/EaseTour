@@ -69,10 +69,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (ref.watch(roleProvider.notifier).state == "users" &&
           !userDoc.exists) {
         Get.snackbar("Sign in with Google failed", "User role is incorrect!");
+        GoogleSignIn().signOut();
         return;
       } else if (ref.watch(roleProvider.notifier).state == "drivers" &&
           !driverDoc.exists) {
         Get.snackbar("Sign in with Google failed", "User role is incorrect!");
+        GoogleSignIn().signOut();
+
         return;
       }
 
