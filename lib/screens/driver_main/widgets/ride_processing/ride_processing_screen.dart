@@ -11,35 +11,41 @@ class RideProcessingScreen extends StackedView<RideProcessingScreenViewModel> {
   @override
   Widget builder(BuildContext context, RideProcessingScreenViewModel viewModel,
       Widget? child) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            viewModel.userConfirmation
-                ? Text(
-                    "The User Has Confirme your ride",
-                    style: Styles.displayLargeBoldStyle,
-                  )
-                : Text(
-                    "Waiting For User",
-                    style: Styles.displayLargeBoldStyle,
-                  ),
-            const SizedBox(
-              height: 20,
-            ),
-            viewModel.userConfirmation
-                ? AppTextButton(
-                    text: "Start Ride",
-                    onTap: () {
-                      Navigator.of(context).pop(true);
-                    },
-                    color: Styles.primaryColor)
-                : const CircularProgressIndicator(),
-          ],
+    if (viewModel.noUserConfirmation) {
+      Get.back();
+    } else {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              viewModel.userConfirmation
+                  ? Text(
+                      "The User Has Confirmed your ride",
+                      style: Styles.displayLargeBoldStyle,
+                    )
+                  : Text(
+                      "Waiting For User",
+                      style: Styles.displayLargeBoldStyle,
+                    ),
+              const SizedBox(
+                height: 20,
+              ),
+              viewModel.userConfirmation
+                  ? AppTextButton(
+                      text: "Start Ride",
+                      onTap: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      color: Styles.primaryColor)
+                  : const CircularProgressIndicator(),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
+
+    return Container();
   }
 
   @override
