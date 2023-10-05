@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ease_tour/common/resources/app_theme/theme_provider.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/app_icon_button.dart';
@@ -7,6 +8,7 @@ import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
 import 'package:ease_tour/screens/driver_main/driver_main_screen_view_model.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
+import 'package:ease_tour/screens/role/providers/role_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -83,6 +85,9 @@ class WillPop extends ConsumerWidget {
         appBar: EtAppBar(
           height: 90,
           color: Styles.trans,
+        ),
+        drawer: SafeArea(
+          child: drawerElement(context, ref),
         ),
         body: Stack(
           children: [
@@ -337,7 +342,8 @@ class WillPop extends ConsumerWidget {
     );
   }
 
-  Drawer drawerElement(BuildContext context) {
+  Drawer drawerElement(BuildContext context, WidgetRef ref) {
+    final role = ref.read(roleProvider.notifier).state;
     return Drawer(
       backgroundColor: Styles.backgroundColor,
       // width: MediaQuery.of(context).size.width / 1.7,
@@ -345,52 +351,71 @@ class WillPop extends ConsumerWidget {
         borderRadius: BorderRadius.only(
             topRight: Radius.circular(20), bottomRight: Radius.circular(80)),
       ),
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Styles.backgroundColor,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: FutureBuilder<DocumentSnapshot>(
+        future: FirebaseFirestore.instance
+            .collection(role)
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator(); // Show loading indicator while fetching data.
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            final userData = snapshot.data?.data() as Map<String, dynamic>;
+
+            return ListView(
+              padding: EdgeInsets.zero,
               children: [
-                Image.asset('assets/images/userDefault.jpg'),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
-                Text(
-                  'Nate Samson',
-                  style: Styles.displayLargeNormalStyle,
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Styles.backgroundColor,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset('assets/images/userDefault.jpg'),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        userData['full_name'],
+                        style: Styles.displayLargeNormalStyle,
+                      ),
+                      Text(
+                        userData['email'],
+                        style: Styles.displayXSLightStyle,
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  'nate@gmail.com',
-                  style: Styles.displayXSLightStyle,
+                ListTile(
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
+                  leading: Icon(
+                    Icons.logout,
+                    size: 25,
+                    color: Styles.primaryTextColor,
+                  ),
+                  title: Text(
+                    'Logout',
+                    style: Styles.displayMedNormalStyle
+                        .copyWith(color: Styles.primaryTextColor),
+                  ),
+                  onTap: viewModel.onLogout,
+                ),
+                Divider(
+                  color: Styles.primaryTextColor,
                 ),
               ],
-            ),
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: Icon(
-              Icons.logout,
-              size: 25,
-              color: Styles.primaryTextColor,
-            ),
-            title: Text(
-              'Logout',
-              style: Styles.displayMedNormalStyle
-                  .copyWith(color: Styles.primaryTextColor),
-            ),
-            onTap: viewModel.onLogout,
-          ),
-          Divider(
-            color: Styles.primaryTextColor,
-          ),
-        ],
+            );
+          } else {
+            return const Text('No data available');
+          }
+        },
       ),
     );
   }
