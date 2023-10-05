@@ -543,7 +543,6 @@ class UserMainViewModel extends BaseViewModel {
 
   void updatedSelectedLocation(WidgetRef ref) async {
     selectedLocation = ref.read(driversLocationProvider);
-    print('This iS Selected Location: $selectedLocation');
     polylines.clear();
     markers.clear();
     polylinesPoints = [];
