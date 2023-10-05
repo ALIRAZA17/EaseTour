@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:stacked/stacked.dart';
@@ -189,6 +190,25 @@ class WillPop extends ConsumerWidget {
           ListTile(
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
             leading: Icon(
+              Icons.logout,
+              size: 25,
+              color: Styles.primaryTextColor,
+            ),
+            title: Text(
+              'History',
+              style: Styles.displayMedNormalStyle
+                  .copyWith(color: Styles.primaryTextColor),
+            ),
+            onTap: () {
+              Get.toNamed('/history');
+            },
+          ),
+          Divider(
+            color: Styles.primaryTextColor,
+          ),
+          ListTile(
+            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+            leading: Icon(
               Icons.person,
               size: 25,
               color: Styles.primaryTextColor,
@@ -217,23 +237,6 @@ class WillPop extends ConsumerWidget {
             ),
             onTap: () => viewModel.showInvites(
                 context, 'Invite From Friend', 'Press Accept to accept Ride'),
-          ),
-          Divider(
-            color: Styles.primaryTextColor,
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: Icon(
-              Icons.logout,
-              size: 25,
-              color: Styles.primaryTextColor,
-            ),
-            title: Text(
-              'Logout',
-              style: Styles.displayMedNormalStyle
-                  .copyWith(color: Styles.primaryTextColor),
-            ),
-            onTap: viewModel.onLogout,
           ),
           Divider(
             color: Styles.primaryTextColor,
