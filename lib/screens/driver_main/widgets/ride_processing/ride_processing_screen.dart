@@ -12,7 +12,7 @@ class RideProcessingScreen extends StackedView<RideProcessingScreenViewModel> {
   Widget builder(BuildContext context, RideProcessingScreenViewModel viewModel,
       Widget? child) {
     if (viewModel.noUserConfirmation) {
-      Get.back();
+      Get.offAllNamed('/driver_incoming_rides');
     } else {
       return Scaffold(
         body: Center(

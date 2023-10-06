@@ -223,23 +223,52 @@ Container container1(BuildContext context, DriverSelectViewModel viewModel,
                   physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    viewModel.getDriverData(driversList.keys.elementAt(index));
+                    // String driverName = '';
+                    // String driverCar = '';
+                    // String vehicleNumber = '';
+
+                    // Future.delayed(Duration(milliseconds: 10000), () async {
+                    //   final DocumentSnapshot<Map<String, dynamic>> doc =
+                    //       await FirebaseFirestore.instance
+                    //           .collection('drivers')
+                    //           .doc(driversList.keys.elementAt(index))
+                    //           .get();
+                    //   final docData = doc.data();
+                    //   driverName = docData!['full_name'];
+                    //   driverCar = docData['vehicleName'];
+                    //   vehicleNumber = docData['vehicalNumber'];
+                    // });
+                    print(
+                        'These are the 2 Lists: $driversList, <=====> ${viewModel.listDriver}');
+                    if (driversList != viewModel.listDriver) {
+                      print('Inside If ==========>');
+                      viewModel.getDriverData(
+                          driversList.keys
+                              .elementAt(driversList.keys.length - 1),
+                          driversList);
+                    }
+
+                    print(driversList);
 
                     return GestureDetector(
                       onTap: () {
                         viewModel.onDriverSelect(
-                            driversList.keys.elementAt(index), driversList);
+                            driversList.keys.elementAt(index),
+                            driversList,
+                            index);
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 10),
-                          decoration: viewModel.elementSelected
-                              ? BoxDecoration(
-                                  border: Border.all(
-                                      color: Styles.primaryColor, width: 1),
-                                  borderRadius: BorderRadius.circular(8))
+                          decoration: viewModel.selectedIndex != null
+                              ? index == viewModel.selectedIndex
+                                  ? BoxDecoration(
+                                      border: Border.all(
+                                          color: Styles.primaryColor, width: 1),
+                                      borderRadius: BorderRadius.circular(8))
+                                  : const BoxDecoration()
                               : const BoxDecoration(),
                           child: Row(
                             children: [
@@ -260,15 +289,27 @@ Container container1(BuildContext context, DriverSelectViewModel viewModel,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    viewModel.driverName,
+                                    viewModel.driverData.length !=
+                                            driversList.length
+                                        ? 'Name'
+                                        : viewModel.driverData[index]
+                                            ['driverName'],
                                     style: Styles.displayMedBoldStyle,
                                   ),
                                   Text(
-                                    viewModel.driverCar,
+                                    viewModel.driverData.length !=
+                                            driversList.length
+                                        ? 'Model'
+                                        : viewModel.driverData[index]
+                                            ['driverCar'],
                                     style: Styles.displayXSLightStyle,
                                   ),
                                   Text(
-                                    viewModel.vehicleNumber,
+                                    viewModel.driverData.length !=
+                                            driversList.keys.length
+                                        ? 'Number'
+                                        : viewModel.driverData[index]
+                                            ['vehicleNumber'],
                                     style: Styles.displayXXSLightStyle,
                                   ),
                                   Text(

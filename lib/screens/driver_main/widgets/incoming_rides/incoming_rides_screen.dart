@@ -138,12 +138,14 @@ Widget friendsList(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  userDestinationAddress,
+                                  // userDestinationAddress,
+                                  '',
                                   style: Styles.displayXMxtrLightStyle
                                       .copyWith(fontSize: 14),
                                 ),
                                 Text(
-                                  userAddress,
+                                  // userAddress,
+                                  '',
                                   style: Styles.displayXXXSLightStyle.copyWith(
                                     color: Styles.lightGrayTextColor,
                                     fontSize: 14,

@@ -9,6 +9,7 @@ import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,12 +62,12 @@ class WillPop extends ConsumerWidget {
 
     if (viewModel.updateRequired) {
       viewModel.updateUserLocationLatLng(ref);
-      if (viewModel.currentLocation != null) {
-        viewModel.updateUserLocation(
-            ref.read(userIdProvider),
-            viewModel.currentLocation!.latitude,
-            viewModel.currentLocation!.longitude);
-      }
+    }
+    if (viewModel.currentLocation != null) {
+      viewModel.updateUserLocation(
+          FirebaseAuth.instance.currentUser!.uid,
+          viewModel.currentLocation!.latitude,
+          viewModel.currentLocation!.longitude);
     }
 
     return WillPopScope(

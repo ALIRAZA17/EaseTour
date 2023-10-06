@@ -7,13 +7,21 @@ class RideProcessingScreenViewModel extends BaseViewModel {
   bool userConfirmation = false;
   bool noUserConfirmation = false;
   driverConfirmation(dynamic driverId) async {
+    print('Driver Confirmation');
     DatabaseReference ref = FirebaseDatabase.instance.ref("drivers/$driverId");
 
     Stream stream = ref.onValue;
     stream.listen((event) {
       final rides = event.snapshot.value;
-      userConfirmation = rides['rideConfirmed'];
-      noUserConfirmation = rides['noLuck'];
+      if (rides['rideConfirmed'] != null) {
+        userConfirmation = rides['rideConfirmed'];
+      }
+      if (rides['noLuck'] != null) {
+        noUserConfirmation = rides['noLuck'];
+      }
+
+      print('userConfirmation : $userConfirmation');
+      print('userConfirmation : $noUserConfirmation');
       notifyListeners();
     });
   }

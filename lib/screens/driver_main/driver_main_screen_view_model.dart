@@ -109,7 +109,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
       );
     }
     allowAnimation = false;
-    updateRequired = false;
 
     await totalDistance();
     distanceInKiloMeters = distanceInKiloMeters.toPrecision(2);
@@ -117,7 +116,8 @@ class DriverMainScreenViewModel extends BaseViewModel {
         .getPositionStream(
             locationSettings: const LocationSettings(
       accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: 4,
+      distanceFilter: 8,
+      timeLimit: Duration(minutes: 5),
     ))
         .listen(
       (position) {

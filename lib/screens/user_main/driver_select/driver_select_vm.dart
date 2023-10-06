@@ -17,6 +17,10 @@ class DriverSelectViewModel extends BaseViewModel {
   String? selectedDriverId;
   bool changeScreenBool = false;
   LatLng? driversLocation;
+  var driverData = [];
+  var listDriver = {};
+
+  int? selectedIndex;
 
   void onBackPressed() {
     debugPrint('Back Pressed');
@@ -27,7 +31,9 @@ class DriverSelectViewModel extends BaseViewModel {
     bid = money;
   }
 
-  getDriverData(String driverId) async {
+  getDriverData(String driverId, driversList) async {
+    listDriver = driversList;
+    print('Drivers List Inside Function: $listDriver');
     final DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
         .instance
         .collection('drivers')
@@ -37,6 +43,13 @@ class DriverSelectViewModel extends BaseViewModel {
     driverName = docData!['full_name'];
     driverCar = docData['vehicleName'];
     vehicleNumber = docData['vehicalNumber'];
+    driverData.add({
+      'driverName': driverName,
+      'driverCar': driverCar,
+      'vehicleNumber': vehicleNumber,
+    });
+    print(driverData);
+
     notifyListeners();
   }
 
@@ -56,8 +69,10 @@ class DriverSelectViewModel extends BaseViewModel {
     debugPrint('Share Clicked');
   }
 
-  void onDriverSelect(String driverId, Map<dynamic, dynamic> driversList) {
+  void onDriverSelect(
+      String driverId, Map<dynamic, dynamic> driversList, int index) {
     elementSelected = true;
+    selectedIndex = index;
     bid = driversList[driverId]['bid'];
     selectedDriverId = driverId;
     print('Selected Driver Id: $driverId');
@@ -96,6 +111,7 @@ class DriverSelectViewModel extends BaseViewModel {
         );
       }
     }
+    notifyListeners();
   }
 
   updateScreen() {
@@ -147,6 +163,7 @@ class DriverSelectViewModel extends BaseViewModel {
       driversLocation =
           LatLng(loactionsData['latitude'], loactionsData['longitude']);
       reference.watch(driversLocationProvider.notifier).state = driversLocation;
+      print('Drivers Location: $driversLocation');
       final refer = FirebaseDatabase.instance
           .ref()
           .child('/users/${FirebaseAuth.instance.currentUser!.uid}/location');
@@ -156,8 +173,7 @@ class DriverSelectViewModel extends BaseViewModel {
           'driver_long': driversLocation!.longitude,
         },
       );
-
-      // notifyListeners();
     });
+    // notifyListeners();
   }
 }

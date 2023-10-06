@@ -54,6 +54,7 @@ class UserMainViewModel extends BaseViewModel {
   int count = 0;
 
   void getUserLocation() async {
+    print('Get User Recalled');
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
 
     currentLocation = LatLng(position.latitude, position.longitude);
@@ -77,20 +78,27 @@ class UserMainViewModel extends BaseViewModel {
       currentAddress = await _getAddressFromLatLng(currentLocation);
     }
     notifyListeners();
-    GeolocatorPlatform.instance
-        .getPositionStream(
-            // locationSettings: const LocationSettings(
-            //     accuracy: LocationAccuracy.bestForNavigation,
-            //     distanceFilter: 4,
-            //     timeLimit: Duration(seconds: 1))
-            )
-        .listen(
-      (position) {
-        position = position;
-        currentLocation = LatLng(position.latitude, position.longitude);
-        notifyListeners();
-      },
-    );
+    try {
+      GeolocatorPlatform.instance
+          .getPositionStream(
+              locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 8,
+        timeLimit: Duration(seconds: 10),
+      ))
+          .listen(
+        (position) {
+          position = position;
+          print('Position');
+          currentLocation = LatLng(position.latitude, position.longitude);
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      updateLocation = false;
+      print(updateLocation);
+      debugPrint('$e');
+    }
   }
 
   addCustomIcon() async {
@@ -278,7 +286,7 @@ class UserMainViewModel extends BaseViewModel {
         selectedLocation!.longitude,
         money,
         destinationAddress);
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> displayPredictions(Prediction? p, WidgetRef ref) async {
@@ -406,7 +414,7 @@ class UserMainViewModel extends BaseViewModel {
         FirebaseDatabase.instance.ref().child('/users/$userId/location');
     await userLocationRef.update(
         {'latitude': latitude, 'longitude': longitude, 'address': address});
-    updateLocation = false;
+    // updateLocation = false;
   }
 
   Future<void> saveUserDesAndBid(String userId, double latitude,
@@ -429,9 +437,11 @@ class UserMainViewModel extends BaseViewModel {
     Stream stream = ref.onValue;
     stream.listen((event) {
       final rides = event.snapshot.value;
+      print('Drivers Data is updated');
       if (rides == null) {
         driversData = {};
       } else {
+        print('Recall Drivers Data');
         driversData = rides;
       }
 
@@ -440,6 +450,7 @@ class UserMainViewModel extends BaseViewModel {
   }
 
   getInvites(dynamic userId, context, title, message) async {
+    print('Invitesss Recalled');
     DatabaseReference ref =
         FirebaseDatabase.instance.ref("users/$userId/invites");
     Stream stream = ref.onValue;
@@ -500,10 +511,10 @@ class UserMainViewModel extends BaseViewModel {
                 mapController?.animateCamera(
                   CameraUpdate.newLatLngBounds(
                     LatLngBounds(
-                      southwest: LatLng(currentLocation!.latitude - 0.05,
-                          currentLocation!.longitude - 0.05),
-                      northeast: LatLng(selectedLocation!.latitude + 0.05,
-                          selectedLocation!.longitude + 0.05),
+                      southwest: LatLng(friendLocation!.latitude - 0.05,
+                          friendLocation!.longitude - 0.05),
+                      northeast: LatLng(driverLocation!.latitude + 0.05,
+                          driverLocation!.longitude + 0.05),
                     ),
                     0,
                   ),
@@ -541,8 +552,10 @@ class UserMainViewModel extends BaseViewModel {
     }
   }
 
-  void updatedSelectedLocation(WidgetRef ref) async {
-    selectedLocation = ref.read(driversLocationProvider);
+  void updatedSelectedLocation(
+    WidgetRef ref,
+  ) async {
+    selectedLocation = ref.watch(driversLocationProvider);
     print('This iS Selected Location: $selectedLocation');
     polylines.clear();
     markers.clear();

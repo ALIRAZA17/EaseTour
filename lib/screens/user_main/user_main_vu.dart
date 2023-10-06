@@ -48,16 +48,17 @@ class WillPop extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print('Being Rebuilt');
     if (viewModel.currentLocation != null) {
-      if (viewModel.updateLocation) {
-        viewModel.updateUserLocation(
-            FirebaseAuth.instance.currentUser!.uid,
-            viewModel.currentLocation!.latitude,
-            viewModel.currentLocation!.longitude,
-            viewModel.currentAddress);
-      }
+      viewModel.updateUserLocation(
+          FirebaseAuth.instance.currentUser!.uid,
+          viewModel.currentLocation!.latitude,
+          viewModel.currentLocation!.longitude,
+          viewModel.currentAddress);
     }
-    if (ref.read(driversLocationProvider) != null && viewModel.counter == 0) {
+    print('Drivers Location Provider: ${ref.read(driversLocationProvider)}');
+    if (ref.watch(driversLocationProvider) != null && viewModel.counter == 0) {
+      print('Updating Selected Location');
       viewModel.updatedSelectedLocation(ref);
     }
 
