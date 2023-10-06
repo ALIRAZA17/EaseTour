@@ -75,7 +75,6 @@ class DriverSelectViewModel extends BaseViewModel {
     selectedIndex = index;
     bid = driversList[driverId]['bid'];
     selectedDriverId = driverId;
-    print('Selected Driver Id: $driverId');
     notifyListeners();
   }
 

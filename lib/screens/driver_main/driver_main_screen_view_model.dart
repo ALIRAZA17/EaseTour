@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_loc_latlng_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:stacked/stacked.dart';
 
 class DriverMainScreenViewModel extends BaseViewModel {
@@ -152,6 +154,16 @@ class DriverMainScreenViewModel extends BaseViewModel {
 
   onPlaceError(PlacesAutocompleteResponse error) {
     Get.snackbar('Error', error.errorMessage!);
+  }
+
+  onLogout() async {
+    try {
+      await GoogleSignIn().signOut();
+      await FirebaseAuth.instance.signOut();
+      Get.toNamed("/role_screen");
+    } catch (e) {
+      debugPrint("Error logging out: $e");
+    }
   }
 
   void getUserLocation() async {
