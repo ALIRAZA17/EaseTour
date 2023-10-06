@@ -317,6 +317,8 @@ class WillPop extends ConsumerWidget {
                             );
                           }
                         });
+
+                        Get.toNamed('/driver_incoming_rides');
                       },
                       color: Styles.primaryColor,
                     ),
