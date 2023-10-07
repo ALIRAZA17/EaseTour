@@ -1,8 +1,10 @@
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/screens/transport/transport_selection/widgets/transport_options_container.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SelectTransportScreen extends StatelessWidget {
   const SelectTransportScreen({super.key});
@@ -11,8 +13,8 @@ class SelectTransportScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const EtAppBar(
-        title: "Select transport",
         height: 90,
+        addBackButton: false,
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 26, right: 26),
@@ -78,8 +80,16 @@ class SelectTransportScreen extends StatelessWidget {
                 ),
                 TransportOptionsContainer(
                   image: "car.png",
-                  title: "Car AC",
-                  onTap: () {},
+                  title: "logOut",
+                  onTap: () async {
+                    try {
+                      await GoogleSignIn().signOut();
+                      await FirebaseAuth.instance.signOut();
+                      Get.toNamed("/role_screen");
+                    } catch (e) {
+                      debugPrint("Error logging out: $e");
+                    }
+                  },
                 ),
               ],
             ),

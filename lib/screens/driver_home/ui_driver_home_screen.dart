@@ -12,7 +12,10 @@ class DriverHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const EtAppBar(height: 90),
+      appBar: const EtAppBar(
+        height: 90,
+        addBackButton: false,
+      ),
       body: SafeArea(
         child: Stack(
           children: [

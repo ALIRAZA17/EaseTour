@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ease_tour/common/resources/app_theme/theme_provider.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/common/widgets/button/action_button.dart';
 import 'package:ease_tour/common/widgets/button/multi_button.dart';
+import 'package:ease_tour/screens/role/providers/role_provider.dart';
 import 'package:ease_tour/screens/user_main/driver_select/driver_select_vu.dart';
 import 'package:ease_tour/screens/user_main/providers/driver_location.dart';
 import 'package:ease_tour/screens/user_main/user_main_vm.dart';
@@ -85,7 +87,7 @@ class WillPop extends ConsumerWidget {
           ],
         ),
         drawer: SafeArea(
-          child: drawerElement(context),
+          child: drawerElement(context, ref),
         ),
         body: Stack(
           children: [
@@ -149,132 +151,157 @@ class WillPop extends ConsumerWidget {
     );
   }
 
-  Drawer drawerElement(BuildContext context) {
+  Drawer drawerElement(BuildContext context, WidgetRef ref) {
+    final role = ref.read(roleProvider.notifier).state;
+
     return Drawer(
       backgroundColor: Styles.backgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             topRight: Radius.circular(20), bottomRight: Radius.circular(80)),
       ),
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Styles.backgroundColor,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: FutureBuilder<DocumentSnapshot>(
+        future: FirebaseFirestore.instance
+            .collection(role)
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container(); // Show loading indicator while fetching data.
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            final userData = snapshot.data?.data() as Map<String, dynamic>;
+
+            return ListView(
+              padding: EdgeInsets.zero,
               children: [
-                Image.asset('assets/images/userDefault.jpg'),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
-                Text(
-                  'Nate Samson',
-                  style: Styles.displayLargeNormalStyle,
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Styles.backgroundColor,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset('assets/images/userDefault.jpg'),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        userData['full_name'],
+                        style: Styles.displayLargeNormalStyle,
+                      ),
+                      Text(
+                        userData['email'],
+                        style: Styles.displayXSLightStyle,
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  'nate@gmail.com',
-                  style: Styles.displayXSLightStyle,
+                ListTile(
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
+                  leading: Icon(
+                    Icons.logout,
+                    size: 25,
+                    color: Styles.primaryTextColor,
+                  ),
+                  title: Text(
+                    'Home',
+                    style: Styles.displayMedNormalStyle
+                        .copyWith(color: Styles.primaryTextColor),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                Divider(
+                  color: Styles.primaryTextColor,
+                ),
+                ListTile(
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
+                  leading: Icon(
+                    Icons.logout,
+                    size: 25,
+                    color: Styles.primaryTextColor,
+                  ),
+                  title: Text(
+                    'History',
+                    style: Styles.displayMedNormalStyle
+                        .copyWith(color: Styles.primaryTextColor),
+                  ),
+                  onTap: () {
+                    Get.toNamed('/history');
+                  },
+                ),
+                Divider(
+                  color: Styles.primaryTextColor,
+                ),
+                ListTile(
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
+                  leading: Icon(
+                    Icons.person,
+                    size: 25,
+                    color: Styles.primaryTextColor,
+                  ),
+                  title: Text(
+                    'Invite Friend',
+                    style: Styles.displayMedNormalStyle
+                        .copyWith(color: Styles.primaryTextColor),
+                  ),
+                  onTap: viewModel.onInviteFriend,
+                ),
+                Divider(
+                  color: Styles.primaryTextColor,
+                ),
+                ListTile(
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
+                  leading: Icon(
+                    Icons.logout,
+                    size: 25,
+                    color: Styles.primaryTextColor,
+                  ),
+                  title: Text(
+                    'Invites',
+                    style: Styles.displayMedNormalStyle
+                        .copyWith(color: Styles.primaryTextColor),
+                  ),
+                  onTap: () => viewModel.showInvites(context,
+                      'Invite From Friend', 'Press Accept to accept Ride'),
+                ),
+                Divider(
+                  color: Styles.primaryTextColor,
+                ),
+                ListTile(
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
+                  leading: Icon(
+                    Icons.logout,
+                    size: 25,
+                    color: Styles.primaryTextColor,
+                  ),
+                  title: Text(
+                    'Logout',
+                    style: Styles.displayMedNormalStyle
+                        .copyWith(color: Styles.primaryTextColor),
+                  ),
+                  onTap: viewModel.onLogout,
+                ),
+                Divider(
+                  color: Styles.primaryTextColor,
                 ),
               ],
-            ),
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: Icon(
-              Icons.logout,
-              size: 25,
-              color: Styles.primaryTextColor,
-            ),
-            title: Text(
-              'Home',
-              style: Styles.displayMedNormalStyle
-                  .copyWith(color: Styles.primaryTextColor),
-            ),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          Divider(
-            color: Styles.primaryTextColor,
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: Icon(
-              Icons.logout,
-              size: 25,
-              color: Styles.primaryTextColor,
-            ),
-            title: Text(
-              'History',
-              style: Styles.displayMedNormalStyle
-                  .copyWith(color: Styles.primaryTextColor),
-            ),
-            onTap: () {
-              Get.toNamed('/history');
-            },
-          ),
-          Divider(
-            color: Styles.primaryTextColor,
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: Icon(
-              Icons.person,
-              size: 25,
-              color: Styles.primaryTextColor,
-            ),
-            title: Text(
-              'Invite Friend',
-              style: Styles.displayMedNormalStyle
-                  .copyWith(color: Styles.primaryTextColor),
-            ),
-            onTap: viewModel.onInviteFriend,
-          ),
-          Divider(
-            color: Styles.primaryTextColor,
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: Icon(
-              Icons.logout,
-              size: 25,
-              color: Styles.primaryTextColor,
-            ),
-            title: Text(
-              'Invites',
-              style: Styles.displayMedNormalStyle
-                  .copyWith(color: Styles.primaryTextColor),
-            ),
-            onTap: () => viewModel.showInvites(
-                context, 'Invite From Friend', 'Press Accept to accept Ride'),
-          ),
-          Divider(
-            color: Styles.primaryTextColor,
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: Icon(
-              Icons.logout,
-              size: 25,
-              color: Styles.primaryTextColor,
-            ),
-            title: Text(
-              'Logout',
-              style: Styles.displayMedNormalStyle
-                  .copyWith(color: Styles.primaryTextColor),
-            ),
-            onTap: viewModel.onLogout,
-          ),
-          Divider(
-            color: Styles.primaryTextColor,
-          ),
-        ],
+            );
+          } else {
+            return const Text('No data available');
+          }
+        },
       ),
     );
   }
