@@ -8,6 +8,7 @@ import 'package:ease_tour/screens/on_boarding/primary/primary_vu.dart';
 import 'package:ease_tour/screens/on_boarding/secondry/secondry_vu.dart';
 import 'package:ease_tour/screens/on_boarding/tertiary/tertiary_vu.dart';
 import 'package:ease_tour/screens/role/ui_roles_screen.dart';
+import 'package:ease_tour/screens/role/widgets/signing_in_options.dart/sign_in_options.dart';
 import 'package:ease_tour/screens/settings/settings_vu.dart';
 import 'package:ease_tour/screens/signup_user/ui_signup_screen.dart';
 import 'package:ease_tour/screens/signup_user/widgets/app_user_info_screen.dart';
@@ -161,6 +162,12 @@ appRoutes() => [
       GetPage(
         name: '/ride_processing_screen',
         page: () => const RideProcessingScreen(),
+        transition: Transition.fadeIn,
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+      GetPage(
+        name: '/sign_in_options',
+        page: () => const SignInOptionsScreen(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),

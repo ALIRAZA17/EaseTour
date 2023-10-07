@@ -49,7 +49,6 @@ class WillPop extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('Being Rebuilt');
     if (viewModel.currentLocation != null) {
       viewModel.updateUserLocation(
           FirebaseAuth.instance.currentUser!.uid,
@@ -57,9 +56,7 @@ class WillPop extends ConsumerWidget {
           viewModel.currentLocation!.longitude,
           viewModel.currentAddress);
     }
-    print('Drivers Location Provider: ${ref.read(driversLocationProvider)}');
     if (ref.watch(driversLocationProvider) != null && viewModel.counter == 0) {
-      print('Updating Selected Location');
       viewModel.updatedSelectedLocation(ref);
     }
 
@@ -155,7 +152,6 @@ class WillPop extends ConsumerWidget {
   Drawer drawerElement(BuildContext context) {
     return Drawer(
       backgroundColor: Styles.backgroundColor,
-      // width: MediaQuery.of(context).size.width / 1.7,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             topRight: Radius.circular(20), bottomRight: Radius.circular(80)),
@@ -187,6 +183,25 @@ class WillPop extends ConsumerWidget {
                 ),
               ],
             ),
+          ),
+          ListTile(
+            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+            leading: Icon(
+              Icons.logout,
+              size: 25,
+              color: Styles.primaryTextColor,
+            ),
+            title: Text(
+              'Home',
+              style: Styles.displayMedNormalStyle
+                  .copyWith(color: Styles.primaryTextColor),
+            ),
+            onTap: () {
+              Get.toNamed('/main_screen');
+            },
+          ),
+          Divider(
+            color: Styles.primaryTextColor,
           ),
           ListTile(
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),

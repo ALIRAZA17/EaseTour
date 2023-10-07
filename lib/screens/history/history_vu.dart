@@ -17,11 +17,9 @@ class HistroyView extends StackedView<HistoryViewModel> {
       builder: (builder, ThemeProvider provider, child) {
         return Scaffold(
           backgroundColor: Styles.backgroundColor,
-          appBar: EtAppBar(
+          appBar: const EtAppBar(
             height: 90,
-            title: 'Setting',
-            addBackButton: true,
-            onBackPress: viewModel.onBackPressed,
+            addBackButton: false,
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

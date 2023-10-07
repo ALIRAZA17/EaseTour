@@ -13,8 +13,8 @@ class RolesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: const EtAppBar(
-        addLeadingButton: true,
         height: 90,
+        addBackButton: false,
       ),
       body: Stack(
         children: [
@@ -40,7 +40,7 @@ class RolesScreen extends ConsumerWidget {
                 text: "Continue as a user",
                 onTap: () {
                   ref.read(roleProvider.notifier).state = 'users';
-                  Get.toNamed('/signup');
+                  Get.toNamed('/sign_in_options');
                 },
                 color: Styles.primaryColor,
                 fontSize: 20,
@@ -76,7 +76,7 @@ class RolesScreen extends ConsumerWidget {
                 text: "Continue as a Driver",
                 onTap: () {
                   ref.read(roleProvider.notifier).state = 'drivers';
-                  Get.toNamed('/signup');
+                  Get.toNamed('/sign_in_options');
                 },
                 color: Styles.primaryColor,
                 fontSize: 20,

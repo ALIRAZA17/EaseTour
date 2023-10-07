@@ -4,14 +4,13 @@ import 'package:ease_tour/screens/transport/transport_selection/widgets/transpor
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SelectTransportScreen extends StatelessWidget {
-  const SelectTransportScreen({super.key});
+class SignInOptionsScreen extends StatelessWidget {
+  const SignInOptionsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const EtAppBar(
-        title: "Select transport",
         height: 90,
       ),
       body: Container(
@@ -68,9 +67,9 @@ class SelectTransportScreen extends StatelessWidget {
               children: [
                 TransportOptionsContainer(
                   image: "car.png",
-                  title: "Incoming Rides",
+                  title: "Sign In",
                   onTap: () {
-                    Get.toNamed('/driver_incoming_rides');
+                    Get.toNamed('/login');
                   },
                 ),
                 const SizedBox(
@@ -78,8 +77,10 @@ class SelectTransportScreen extends StatelessWidget {
                 ),
                 TransportOptionsContainer(
                   image: "car.png",
-                  title: "Car AC",
-                  onTap: () {},
+                  title: "Sign Up",
+                  onTap: () {
+                    Get.toNamed('/signup');
+                  },
                 ),
               ],
             ),
