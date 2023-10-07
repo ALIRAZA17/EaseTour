@@ -19,7 +19,7 @@ class HistroyView extends StackedView<HistoryViewModel> {
           backgroundColor: Styles.backgroundColor,
           appBar: const EtAppBar(
             height: 90,
-            addBackButton: false,
+            addBackButton: true,
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

@@ -197,7 +197,7 @@ class WillPop extends ConsumerWidget {
                   .copyWith(color: Styles.primaryTextColor),
             ),
             onTap: () {
-              Get.toNamed('/main_screen');
+              Navigator.of(context).pop();
             },
           ),
           Divider(
