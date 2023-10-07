@@ -51,6 +51,8 @@ class UserMainViewModel extends BaseViewModel {
   LatLng? friendLocation;
   LatLng? driverLocation;
 
+  bool rideFinished = false;
+
   int count = 0;
 
   void getUserLocation() async {
@@ -99,6 +101,54 @@ class UserMainViewModel extends BaseViewModel {
       print(updateLocation);
       debugPrint('$e');
     }
+  }
+
+  getToPreviousScreen() {
+    final userRef = FirebaseDatabase.instance
+        .ref("users/${FirebaseAuth.instance.currentUser!.uid}");
+    Stream stream = userRef.onValue;
+    stream.listen((event) async {
+      final rideIsCompleted = event.snapshot.value;
+      if (rideIsCompleted['rideFinished'] != null) {
+        rideFinished = rideIsCompleted['rideFinished'];
+        print('$rideFinished');
+        if (rideFinished) {
+          selectedLocation = null;
+          confirmPressed = false;
+          counter = 0;
+
+          destinationAddress = 'Enter Your Destination';
+          print('This iS rideFinished Location: $rideFinished');
+          polylines.clear();
+          markers.clear();
+          polylinesPoints = [];
+          if (currentLocation != null) {
+            markers.add(
+              Marker(
+                markerId: const MarkerId('maker'),
+                position: currentLocation!,
+                draggable: true,
+                onDragEnd: (location) => onDragEnd(location),
+                icon: markerIcon,
+              ),
+            );
+            mapController?.animateCamera(
+              CameraUpdate.newCameraPosition(
+                  CameraPosition(target: currentLocation!, zoom: 17)
+                  //17 is new zoom level
+                  ),
+            );
+            currentAddress = await _getAddressFromLatLng(currentLocation);
+          }
+          Future(() {
+            notifyListeners();
+          });
+          userRef.update({
+            "rideFinished": false,
+          });
+        }
+      }
+    });
   }
 
   addCustomIcon() async {

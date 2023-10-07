@@ -7,6 +7,7 @@ import 'package:ease_tour/screens/user_main/providers/driver_location.dart';
 import 'package:ease_tour/screens/user_main/user_main_vm.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -36,6 +37,8 @@ class UserMainView extends StackedView<UserMainViewModel> {
     userMainViewModel.getInvites(FirebaseAuth.instance.currentUser!.uid,
         context, 'Invite From Friend', 'Press Accept to Start Ride');
 
+    userMainViewModel.getToPreviousScreen();
+
     return userMainViewModel;
   }
 }
@@ -61,6 +64,9 @@ class WillPop extends ConsumerWidget {
     if (ref.watch(driversLocationProvider) != null && viewModel.counter == 0) {
       print('Updating Selected Location');
       viewModel.updatedSelectedLocation(ref);
+    }
+    if (viewModel.rideFinished) {
+      ref.read(driversLocationProvider.notifier).state = null;
     }
 
     return WillPopScope(
