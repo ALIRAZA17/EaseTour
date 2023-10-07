@@ -1,20 +1,17 @@
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/screens/transport/transport_selection/widgets/transport_options_container.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
-class SelectTransportScreen extends StatelessWidget {
-  const SelectTransportScreen({super.key});
+class SignInOptionsScreen extends StatelessWidget {
+  const SignInOptionsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const EtAppBar(
         height: 90,
-        addBackButton: false,
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 26, right: 26),
@@ -70,9 +67,9 @@ class SelectTransportScreen extends StatelessWidget {
               children: [
                 TransportOptionsContainer(
                   image: "car.png",
-                  title: "Incoming Rides",
+                  title: "Sign In",
                   onTap: () {
-                    Get.toNamed('/driver_incoming_rides');
+                    Get.toNamed('/login');
                   },
                 ),
                 const SizedBox(
@@ -80,15 +77,9 @@ class SelectTransportScreen extends StatelessWidget {
                 ),
                 TransportOptionsContainer(
                   image: "car.png",
-                  title: "logOut",
-                  onTap: () async {
-                    try {
-                      await GoogleSignIn().signOut();
-                      await FirebaseAuth.instance.signOut();
-                      Get.toNamed("/role_screen");
-                    } catch (e) {
-                      debugPrint("Error logging out: $e");
-                    }
+                  title: "Sign Up",
+                  onTap: () {
+                    Get.toNamed('/signup');
                   },
                 ),
               ],

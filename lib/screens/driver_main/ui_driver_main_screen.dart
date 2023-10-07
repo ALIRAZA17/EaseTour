@@ -9,9 +9,7 @@ import 'package:ease_tour/screens/driver_main/driver_main_screen_view_model.dart
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
 import 'package:ease_tour/screens/role/providers/role_provider.dart';
-import 'package:ease_tour/screens/user_main/providers/user_uid_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

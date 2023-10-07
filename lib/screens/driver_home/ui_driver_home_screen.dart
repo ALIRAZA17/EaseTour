@@ -12,7 +12,10 @@ class DriverHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const EtAppBar(height: 90),
+      appBar: const EtAppBar(
+        height: 90,
+        addBackButton: false,
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -34,7 +37,7 @@ class DriverHomeView extends StatelessWidget {
                         if (await Permission.location.serviceStatus.isEnabled) {
                           var status = await Permission.location.status;
                           if (status.isGranted) {
-                            Get.offAllNamed('/driver_incoming_rides');
+                            Get.offAllNamed('/home/transport_selection');
                           } else if (status.isDenied) {
                             await [
                               Permission.location,
@@ -42,7 +45,7 @@ class DriverHomeView extends StatelessWidget {
                             status = await Permission.location.status;
                           }
                           if (status.isGranted) {
-                            Get.toNamed('/driver_incoming_rides');
+                            Get.toNamed('/home/transport_selection');
                           }
                         } else {
                           Get.snackbar('Enable Location',

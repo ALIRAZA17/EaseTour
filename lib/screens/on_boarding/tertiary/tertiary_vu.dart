@@ -16,16 +16,6 @@ class TertiaryView extends StackedView<TertiaryViewModel> {
       appBar: EtAppBar(
         color: Styles.backgroundColor,
         addBackButton: false,
-        actions: [
-          GestureDetector(
-            onTap: viewModel.onSkipTap,
-            child: Text(
-              'Skip',
-              style: Styles.displayMedNormalStyle
-                  .copyWith(color: Styles.primaryTextColor),
-            ),
-          )
-        ],
         height: 90,
       ),
       body: Padding(
