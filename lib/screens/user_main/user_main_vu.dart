@@ -9,7 +9,6 @@ import 'package:ease_tour/screens/user_main/providers/driver_location.dart';
 import 'package:ease_tour/screens/user_main/user_main_vm.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';

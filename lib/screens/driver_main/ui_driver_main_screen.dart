@@ -317,12 +317,13 @@ class WillPop extends ConsumerWidget {
                             );
                           }
                         });
-                        print(Get.arguments[0]);
                         final usersRef = FirebaseDatabase.instance
                             .ref()
                             .child('/users/${Get.arguments[0]}');
 
                         usersRef.update({'rideFinished': true});
+
+                        Get.toNamed('/driver_incoming_rides');
                       },
                       color: Styles.primaryColor,
                     ),
