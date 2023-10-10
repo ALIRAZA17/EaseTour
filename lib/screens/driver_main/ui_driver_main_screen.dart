@@ -322,6 +322,8 @@ class WillPop extends ConsumerWidget {
                             .child('/users/${Get.arguments[0]}');
 
                         usersRef.update({'rideFinished': true});
+
+                        Get.toNamed('/driver_incoming_rides');
                       },
                       color: Styles.primaryColor,
                     ),
