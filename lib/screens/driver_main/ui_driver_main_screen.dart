@@ -317,7 +317,6 @@ class WillPop extends ConsumerWidget {
                             );
                           }
                         });
-                        print(Get.arguments[0]);
                         final usersRef = FirebaseDatabase.instance
                             .ref()
                             .child('/users/${Get.arguments[0]}');

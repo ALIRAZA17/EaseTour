@@ -20,7 +20,6 @@ class IncomingRidesViewModel extends BaseViewModel {
       } else {
         ridesData = rides;
       }
-      print(rides);
       notifyListeners();
     });
   }

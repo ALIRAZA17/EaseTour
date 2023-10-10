@@ -56,7 +56,6 @@ class UserMainViewModel extends BaseViewModel {
   int count = 0;
 
   void getUserLocation() async {
-    print('Get User Recalled');
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
 
     currentLocation = LatLng(position.latitude, position.longitude);
@@ -91,14 +90,12 @@ class UserMainViewModel extends BaseViewModel {
           .listen(
         (position) {
           position = position;
-          print('Position');
           currentLocation = LatLng(position.latitude, position.longitude);
           notifyListeners();
         },
       );
     } catch (e) {
       updateLocation = false;
-      print(updateLocation);
       debugPrint('$e');
     }
   }
@@ -111,14 +108,12 @@ class UserMainViewModel extends BaseViewModel {
       final rideIsCompleted = event.snapshot.value;
       if (rideIsCompleted['rideFinished'] != null) {
         rideFinished = rideIsCompleted['rideFinished'];
-        print('$rideFinished');
         if (rideFinished) {
           selectedLocation = null;
           confirmPressed = false;
           counter = 0;
 
           destinationAddress = 'Enter Your Destination';
-          print('This iS rideFinished Location: $rideFinished');
           polylines.clear();
           markers.clear();
           polylinesPoints = [];
@@ -197,31 +192,37 @@ class UserMainViewModel extends BaseViewModel {
       language: 'en',
       strictbounds: false,
       types: [""],
-      // decoration: InputDecoration(
-      //   fillColor: Styles.textFormFieldBackColor,
-      //   filled: true,
-      //   prefixIcon: Icon(
-      //     Icons.search,
-      //     color: Styles.primaryButtonTextColor,
-      //   ),
-      //   border: const OutlineInputBorder(
-      //       borderRadius: BorderRadius.all(
-      //         Radius.circular(8),
-      //       ),
-      //       borderSide: BorderSide.none),
-      //   isCollapsed: true,
-      //   label: Text(
-      //     'Search',
-      //     style: Styles.displaySmNormalStyle
-      //         .copyWith(color: Styles.primaryButtonTextColor),
-      //   ),
-      // ),
       components: [
         Component(Component.country, 'pk'),
       ],
     );
     displayPredictions(p, ref);
     allowMapClick = false;
+    notifyListeners();
+  }
+
+  setCurrentLocation(BuildContext context, WidgetRef ref) async {
+    polylines.clear();
+    markers.clear();
+    polylinesPoints = [];
+    currentAddress = 'Your Location';
+    _distanceInKiloMeters = 0;
+    money = 0;
+
+    Prediction? p = await PlacesAutocomplete.show(
+      context: context,
+      apiKey: apiKey,
+      onError: (error) => onPlaceError(error),
+      mode: Mode.overlay,
+      language: 'en',
+      strictbounds: false,
+      types: [""],
+      components: [
+        Component(Component.country, 'pk'),
+      ],
+    );
+
+    userDisplayPredictions(p, ref);
     notifyListeners();
   }
 
@@ -269,15 +270,6 @@ class UserMainViewModel extends BaseViewModel {
   }
 
   Future<String> _getAddressFromLatLng(LatLng? location) async {
-    // await placemarkFromCoordinates(
-    //         currentLocation!.latitude, currentLocation!.longitude)
-    //     .then((List<Placemark> placemarks) {
-    //   Placemark place = placemarks[0];
-
-    //   currentAddress = '${place.subLocality}, ${place.subAdministrativeArea}';
-    //   notifyListeners();
-    // }).catchError((e) {
-    // });
     GeoData data = await Geocoder2.getDataFromCoordinates(
         latitude: location!.latitude,
         longitude: location.longitude,
@@ -291,9 +283,7 @@ class UserMainViewModel extends BaseViewModel {
       notifyListeners();
       mapController?.animateCamera(
         CameraUpdate.newCameraPosition(
-            CameraPosition(target: location, zoom: 17)
-            //17 is new zoom level
-            ),
+            CameraPosition(target: location, zoom: 17)),
       );
     }
 
@@ -313,11 +303,6 @@ class UserMainViewModel extends BaseViewModel {
     {
       Scaffold.of(context).openDrawer();
     }
-    // if (confirmPressed) {
-    //   confirmPressed = false;
-    // } else {
-    //   confirmPressed = true;
-    // }
 
     notifyListeners();
   }
@@ -336,7 +321,6 @@ class UserMainViewModel extends BaseViewModel {
         selectedLocation!.longitude,
         money,
         destinationAddress);
-    // notifyListeners();
   }
 
   Future<void> displayPredictions(Prediction? p, WidgetRef ref) async {
@@ -379,6 +363,37 @@ class UserMainViewModel extends BaseViewModel {
         ),
       );
       totalDistance(ref);
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> userDisplayPredictions(Prediction? p, WidgetRef ref) async {
+    if (p != null) {
+      GoogleMapsPlaces places = GoogleMapsPlaces(
+        apiKey: apiKey,
+        apiHeaders: await const GoogleApiHeaders().getHeaders(),
+      );
+
+      PlacesDetailsResponse detail =
+          await places.getDetailsByPlaceId(p.placeId!);
+      currentLocation = LatLng(detail.result.geometry!.location.lat,
+          detail.result.geometry!.location.lng);
+      markers.add(
+        Marker(
+          markerId: const MarkerId('destination'),
+          position: currentLocation!,
+          draggable: true,
+          onDragEnd: (location) => onDragEnd(location),
+          icon: markerIcon,
+        ),
+      );
+
+      mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+            CameraPosition(target: currentLocation!, zoom: 17)),
+      );
+      currentAddress = await _getAddressFromLatLng(currentLocation);
     }
 
     notifyListeners();
@@ -487,11 +502,9 @@ class UserMainViewModel extends BaseViewModel {
     Stream stream = ref.onValue;
     stream.listen((event) {
       final rides = event.snapshot.value;
-      print('Drivers Data is updated');
       if (rides == null) {
         driversData = {};
       } else {
-        print('Recall Drivers Data');
         driversData = rides;
       }
 
@@ -500,7 +513,6 @@ class UserMainViewModel extends BaseViewModel {
   }
 
   getInvites(dynamic userId, context, title, message) async {
-    print('Invitesss Recalled');
     DatabaseReference ref =
         FirebaseDatabase.instance.ref("users/$userId/invites");
     Stream stream = ref.onValue;
@@ -509,7 +521,6 @@ class UserMainViewModel extends BaseViewModel {
       if (invites == null) {
       } else {
         inviteeId = invites['requested_by'];
-        print(inviteeId);
         if (count == 0) {
           showWarningAlert(context,
               title: title,
@@ -525,17 +536,13 @@ class UserMainViewModel extends BaseViewModel {
                   LatLng(locations['latitude'], locations['longitude']);
               driverLocation =
                   LatLng(locations['driver_lat'], locations['driver_long']);
-              print('This is Friend Location : $friendLocation');
-              print('This is Driver Location : $driverLocation');
 
               polylines.clear();
               markers.clear();
               polylinesPoints = [];
               Get.back();
 
-              print('cleared');
               if (currentLocation != null) {
-                print('Not Null');
                 markers.add(
                   Marker(
                     markerId: const MarkerId('maker'),
@@ -552,11 +559,8 @@ class UserMainViewModel extends BaseViewModel {
                     icon: markerIcon,
                   ),
                 );
-                print('Adding PolyLInes');
 
                 await _getPolylineInvite(friendLocation, driverLocation);
-
-                print('PolyLInes Added');
 
                 mapController?.animateCamera(
                   CameraUpdate.newLatLngBounds(
@@ -606,7 +610,6 @@ class UserMainViewModel extends BaseViewModel {
     WidgetRef ref,
   ) async {
     selectedLocation = ref.watch(driversLocationProvider);
-    print('This iS Selected Location: $selectedLocation');
     polylines.clear();
     markers.clear();
     polylinesPoints = [];
@@ -627,11 +630,8 @@ class UserMainViewModel extends BaseViewModel {
           icon: markerIcon,
         ),
       );
-      print('Adding PolyLInes');
 
       await _getPolyline();
-
-      print('PolyLInes Added');
 
       mapController?.animateCamera(
         CameraUpdate.newLatLngBounds(

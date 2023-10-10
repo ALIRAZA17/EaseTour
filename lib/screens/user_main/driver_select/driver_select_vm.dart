@@ -33,7 +33,6 @@ class DriverSelectViewModel extends BaseViewModel {
 
   getDriverData(String driverId, driversList) async {
     listDriver = driversList;
-    print('Drivers List Inside Function: $listDriver');
     final DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
         .instance
         .collection('drivers')
@@ -48,7 +47,6 @@ class DriverSelectViewModel extends BaseViewModel {
       'driverCar': driverCar,
       'vehicleNumber': vehicleNumber,
     });
-    print(driverData);
 
     notifyListeners();
   }
@@ -95,11 +93,8 @@ class DriverSelectViewModel extends BaseViewModel {
 
     resetBid(FirebaseAuth.instance.currentUser!.uid);
     removeDriversList(FirebaseAuth.instance.currentUser!.uid);
-    print(driverList);
     for (int i = 0; i < driverList.length; i++) {
-      print('Inside For');
       if (driverList.keys.elementAt(i) != selectedDriverId) {
-        print('Ohh Yeah');
         final userRef = FirebaseDatabase.instance
             .ref()
             .child('/drivers/${driverList.keys.elementAt(i)}');
@@ -152,7 +147,6 @@ class DriverSelectViewModel extends BaseViewModel {
   }
 
   void getDriverLocation(String driverId, WidgetRef reference) {
-    print('tHis is Driver ID $driverId');
     DatabaseReference ref =
         FirebaseDatabase.instance.ref("drivers/$driverId/location");
 
@@ -162,7 +156,6 @@ class DriverSelectViewModel extends BaseViewModel {
       driversLocation =
           LatLng(loactionsData['latitude'], loactionsData['longitude']);
       reference.watch(driversLocationProvider.notifier).state = driversLocation;
-      print('Drivers Location: $driversLocation');
       final refer = FirebaseDatabase.instance
           .ref()
           .child('/users/${FirebaseAuth.instance.currentUser!.uid}/location');
