@@ -137,16 +137,23 @@ Widget friendsList(
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  userDestinationAddress,
-                                  style: Styles.displayXMxtrLightStyle
-                                      .copyWith(fontSize: 14),
+                                FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: Text(
+                                    userDestinationAddress,
+                                    style: Styles.displayXMxtrLightStyle
+                                        .copyWith(fontSize: 14),
+                                  ),
                                 ),
-                                Text(
-                                  userAddress,
-                                  style: Styles.displayXXXSLightStyle.copyWith(
-                                    color: Styles.lightGrayTextColor,
-                                    fontSize: 14,
+                                FittedBox(
+                                  fit: BoxFit.fitWidth,
+                                  child: Text(
+                                    userAddress,
+                                    style:
+                                        Styles.displayXXXSLightStyle.copyWith(
+                                      color: Styles.lightGrayTextColor,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ),
                                 Row(
