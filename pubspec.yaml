@@ -57,7 +57,7 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   google_maps_utils: ^1.5.1+0
   firebase_database: ^10.2.6
-
+  firebase_messaging: ^14.7.2
 
 
 dev_dependencies:
