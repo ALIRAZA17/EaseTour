@@ -43,6 +43,8 @@ class ChatScreen extends StatelessWidget {
               const Positioned.fill(child: Text("Messages")),
               Positioned(
                 bottom: 0,
+                left: 0,
+                right: 0,
                 child: AppTextField(
                   label: "Add Message",
                   keyboardType: TextInputType.text,
