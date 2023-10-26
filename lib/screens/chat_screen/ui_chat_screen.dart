@@ -44,7 +44,7 @@ class ChatScreen extends StatelessWidget {
               Positioned(
                 bottom: 0,
                 left: 0,
-                right: 0,
+                right: 60,
                 child: AppTextField(
                   label: "Add Message",
                   keyboardType: TextInputType.text,
@@ -53,7 +53,19 @@ class ChatScreen extends StatelessWidget {
                     return null;
                   },
                 ),
-              )
+              ),
+              Positioned(
+                  bottom: 20,
+                  left: 320,
+                  right: 0,
+                  child: GestureDetector(
+                    child: Text(
+                      "Send",
+                      style: Styles.displaySmNormalStyle
+                          .copyWith(color: Colors.green),
+                    ),
+                    onTap: () {},
+                  )),
             ],
           ),
         ));
