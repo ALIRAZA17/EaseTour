@@ -1,5 +1,6 @@
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
+import 'package:ease_tour/screens/chat_screen/widgets/chat_messages.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -40,7 +41,6 @@ class ChatScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Stack(
             children: [
-              const Positioned.fill(child: Text("Messages")),
               Positioned(
                 bottom: 0,
                 left: 0,
