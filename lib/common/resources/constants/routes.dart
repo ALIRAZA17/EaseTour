@@ -174,7 +174,7 @@ appRoutes() => [
       ),
       GetPage(
         name: '/chat_screen',
-        page: () => ChatScreen(),
+        page: () => const ChatRoom(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),

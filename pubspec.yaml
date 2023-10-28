@@ -59,6 +59,7 @@ dependencies:
   firebase_database: ^10.2.6
   firebase_messaging: ^14.7.2
   timeago: ^3.5.0
+  uuid: ^4.1.0
 
 
 dev_dependencies:
