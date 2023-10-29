@@ -286,48 +286,60 @@ class WillPop extends ConsumerWidget {
                           ),
                   ),
             viewModel.rideToStart
-                ? Positioned(
-                    bottom: 10,
-                    right: 15,
-                    left: 15,
-                    child: AppTextButton(
-                      text: "End Ride",
-                      onTap: () {
-                        final userRef = FirebaseDatabase.instance.ref().child(
-                            '/drivers/${FirebaseAuth.instance.currentUser!.uid}');
-                        userRef.update(
-                          {
-                            'rideConfirmed': false,
-                          },
-                        );
-                        final userReference =
-                            FirebaseDatabase.instance.ref().child('/drivers');
-                        Stream stream = userReference.onValue;
-                        stream.listen((event) {
-                          final driverList = event.snapshot.value;
-                          for (int i = 0; i < driverList.length; i++) {
-                            final userRef = FirebaseDatabase.instance
-                                .ref()
-                                .child(
-                                    '/drivers/${driverList.keys.elementAt(i)}');
-                            userRef.update(
-                              {
-                                'noLuck': false,
-                              },
-                            );
-                          }
-                        });
-                        final usersRef = FirebaseDatabase.instance
-                            .ref()
-                            .child('/users/${Get.arguments[0]}');
-
-                        usersRef.update({'rideFinished': true});
-
-                        Get.toNamed('/driver_incoming_rides');
-                      },
-                      color: Styles.primaryColor,
+                ? Stack(children: [
+                    Positioned(
+                      bottom: 80,
+                      right: 15,
+                      left: 15,
+                      child: AppTextButton(
+                        text: "Chat",
+                        onTap: () {},
+                        color: Styles.primaryColor,
+                      ),
                     ),
-                  )
+                    Positioned(
+                      bottom: 10,
+                      right: 15,
+                      left: 15,
+                      child: AppTextButton(
+                        text: "End Ride",
+                        onTap: () {
+                          final userRef = FirebaseDatabase.instance.ref().child(
+                              '/drivers/${FirebaseAuth.instance.currentUser!.uid}');
+                          userRef.update(
+                            {
+                              'rideConfirmed': false,
+                            },
+                          );
+                          final userReference =
+                              FirebaseDatabase.instance.ref().child('/drivers');
+                          Stream stream = userReference.onValue;
+                          stream.listen((event) {
+                            final driverList = event.snapshot.value;
+                            for (int i = 0; i < driverList.length; i++) {
+                              final userRef = FirebaseDatabase.instance
+                                  .ref()
+                                  .child(
+                                      '/drivers/${driverList.keys.elementAt(i)}');
+                              userRef.update(
+                                {
+                                  'noLuck': false,
+                                },
+                              );
+                            }
+                          });
+                          final usersRef = FirebaseDatabase.instance
+                              .ref()
+                              .child('/users/${Get.arguments[0]}');
+
+                          usersRef.update({'rideFinished': true});
+
+                          Get.toNamed('/driver_incoming_rides');
+                        },
+                        color: Styles.primaryColor,
+                      ),
+                    ),
+                  ])
                 : viewModel.isCustomBidPressed
                     ? Container()
                     : Positioned(

@@ -63,7 +63,7 @@ class DriverSelectViewModel extends BaseViewModel {
     debugPrint('Payment Clicked');
   }
 
-  void onShareClicked() {
+  void onChatClicked() {
     debugPrint('Share Clicked');
   }
 

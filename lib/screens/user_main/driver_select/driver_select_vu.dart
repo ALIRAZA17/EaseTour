@@ -168,12 +168,12 @@ Container container2(BuildContext context, DriverSelectViewModel viewModel) {
           ),
         ),
         GestureDetector(
-          onTap: viewModel.onShareClicked,
+          onTap: viewModel.onChatClicked,
           child: Column(
             children: [
               SvgPicture.asset('assets/icons/friends.svg'),
               Text(
-                'Payment',
+                'Chat',
                 style: Styles.displayXXXSLightStyle,
               )
             ],
