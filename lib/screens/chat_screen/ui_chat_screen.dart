@@ -189,13 +189,7 @@ class _ChatRoomState extends State<ChatRoom> {
                 ? Alignment.centerRight
                 : Alignment.centerLeft,
             child: InkWell(
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => ShowImage(
-                    imageUrl: map['message'],
-                  ),
-                ),
-              ),
+              onTap: () {},
               child: Container(
                 height: size.height / 2.5,
                 width: size.width / 2,
