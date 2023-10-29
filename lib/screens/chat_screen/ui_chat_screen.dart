@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:uuid/uuid.dart';
@@ -22,10 +20,6 @@ class _ChatRoomState extends State<ChatRoom> {
   // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  File? imageFile;
-
-  Future getImage() async {}
 
   void onSendMessage() async {
     // if (_message.text.isNotEmpty) {
@@ -204,25 +198,5 @@ class _ChatRoomState extends State<ChatRoom> {
               ),
             ),
           );
-  }
-}
-
-class ShowImage extends StatelessWidget {
-  final String imageUrl;
-
-  const ShowImage({required this.imageUrl, Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-
-    return Scaffold(
-      body: Container(
-        height: size.height,
-        width: size.width,
-        color: Colors.black,
-        child: Image.network(imageUrl),
-      ),
-    );
   }
 }
