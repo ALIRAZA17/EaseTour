@@ -27,50 +27,6 @@ class _ChatRoomState extends State<ChatRoom> {
 
   Future getImage() async {}
 
-  Future uploadImage() async {
-    // String fileName = Uuid().v1();
-    // int status = 1;
-
-    // await _firestore
-    //     .collection('chatroom')
-    //     .doc(widget.chatRoomId)
-    //     .collection('chats')
-    //     .doc(fileName)
-    //     .set({
-    //   "sendby": _auth.currentUser!.displayName,
-    //   "message": "",
-    //   "type": "img",
-    //   "time": FieldValue.serverTimestamp(),
-    // });
-
-    // var ref =
-    //     FirebaseStorage.instance.ref().child('images').child("$fileName.jpg");
-
-    // var uploadTask = await ref.putFile(imageFile!).catchError((error) async {
-    //   await _firestore
-    //       .collection('chatroom')
-    //       .doc(widget.chatRoomId)
-    //       .collection('chats')
-    //       .doc(fileName)
-    //       .delete();
-
-    //   status = 0;
-    // });
-
-    // if (status == 1) {
-    //   String imageUrl = await uploadTask.ref.getDownloadURL();
-
-    //   await _firestore
-    //       .collection('chatroom')
-    //       .doc(widget.chatRoomId)
-    //       .collection('chats')
-    //       .doc(fileName)
-    //       .update({"message": imageUrl});
-
-    //   print(imageUrl);
-    // }
-  }
-
   void onSendMessage() async {
     // if (_message.text.isNotEmpty) {
     //   Map<String, dynamic> messages = {
