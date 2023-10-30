@@ -1,9 +1,11 @@
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_loc_latlng_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -302,5 +304,26 @@ class DriverMainScreenViewModel extends BaseViewModel {
         'bid': bid,
       },
     );
+  }
+
+  String chatRoomId(String user1, String user2) {
+    if (user1[0].toLowerCase().codeUnits[0] >
+        user2.toLowerCase().codeUnits[0]) {
+      return "$user1$user2";
+    } else {
+      return "$user2$user1";
+    }
+  }
+
+  Future<String> getUserName(String id, String role) async {
+    final doc = await FirebaseFirestore.instance.collection(role).doc(id).get();
+    final docData = doc.data();
+    return docData!['full_name'];
+  }
+
+  Future<String> getCurrentUserName(String id, String role) async {
+    final doc = await FirebaseFirestore.instance.collection(role).doc(id).get();
+    final docData = doc.data();
+    return docData!['full_name'];
   }
 }

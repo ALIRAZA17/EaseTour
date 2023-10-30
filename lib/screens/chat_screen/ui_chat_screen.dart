@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 // import 'package:uuid/uuid.dart';
 
 class ChatRoom extends StatefulWidget {
-  final Map<String, dynamic> userMap;
+  final String userName;
   final String chatRoomId;
+  final String loggedInUserName;
 
   const ChatRoom({
     super.key,
-    required this.userMap,
+    required this.userName,
     required this.chatRoomId,
+    required this.loggedInUserName,
   });
 
   @override
@@ -27,7 +29,7 @@ class _ChatRoomState extends State<ChatRoom> {
   void onSendMessage() async {
     if (_message.text.isNotEmpty) {
       Map<String, dynamic> messages = {
-        "sendby": _auth.currentUser!.displayName,
+        "sendby": widget.loggedInUserName,
         "message": _message.text,
         "type": "text",
         "time": FieldValue.serverTimestamp(),
@@ -49,66 +51,37 @@ class _ChatRoomState extends State<ChatRoom> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(
-        title: StreamBuilder<DocumentSnapshot>(
-          stream: _firestore
-              .collection("users")
-              .doc(widget.userMap['uid'])
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.data != null) {
-              return Column(
-                children: [
-                  Text(widget.userMap['name']),
-                  Text(
-                    snapshot.data!['status'],
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ],
-              );
-            } else {
-              return Container();
-            }
-          },
-        ),
-      ),
+      appBar: AppBar(title: Text(widget.userName)),
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            // Container(
-            //   height: size.height / 1.25,
-            //   width: size.width,
-            //   child: StreamBuilder<QuerySnapshot>(
-            //     stream: _firestore
-            //         .collection('chatroom')
-            //         .doc(widget.chatRoomId)
-            //         .collection('chats')
-            //         .orderBy("time", descending: false)
-            //         .snapshots(),
-            //     builder: (BuildContext context,
-            //         AsyncSnapshot<QuerySnapshot> snapshot) {
-            //       if (snapshot.data != null) {
-            //         return ListView.builder(
-            //           itemCount: snapshot.data!.docs.length,
-            //           itemBuilder: (context, index) {
-            //             Map<String, dynamic> map = snapshot.data!.docs[index]
-            //                 .data() as Map<String, dynamic>;
-            //             return messages(size, map, context);
-            //           },
-            //         );
-            //       } else {
-            //         return Container();
-            //       }
-            //     },
-            //   ),
-            // ),
-
-            SizedBox(
+            Container(
               height: size.height / 1.25,
               width: size.width,
-              child: const Text("My Messagesuisfdhudhfuidshfuishd"),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _firestore
+                    .collection('chatroom')
+                    .doc(widget.chatRoomId)
+                    .collection('chats')
+                    .orderBy("time", descending: false)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.data != null) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> map = snapshot.data!.docs[index]
+                            .data() as Map<String, dynamic>;
+                        return messages(size, map, context);
+                      },
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
             ),
-
             Positioned(
               left: 0,
               right: 0,

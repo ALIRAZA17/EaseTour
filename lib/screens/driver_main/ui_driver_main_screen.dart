@@ -5,6 +5,7 @@ import 'package:ease_tour/common/widgets/button/app_icon_button.dart';
 import 'package:ease_tour/common/widgets/button/app_small_text_button.dart';
 import 'package:ease_tour/common/widgets/button/app_text_button.dart';
 import 'package:ease_tour/common/widgets/textFields/app_text_field.dart';
+import 'package:ease_tour/screens/chat_screen/ui_chat_screen.dart';
 import 'package:ease_tour/screens/driver_main/driver_main_screen_view_model.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
@@ -293,7 +294,46 @@ class WillPop extends ConsumerWidget {
                       left: 15,
                       child: AppTextButton(
                         text: "Chat",
-                        onTap: () {},
+                        onTap: () async {
+                          String userId = Get.arguments[0];
+
+                          String role = ref.read(roleProvider.notifier).state;
+
+                          String firstPerson;
+                          String secondPerson;
+
+                          if (role == "users") {
+                            firstPerson =
+                                await viewModel.getUserName(userId, "drivers");
+                            secondPerson = await viewModel.getUserName(
+                                FirebaseAuth.instance.currentUser!.uid,
+                                "users");
+                          } else {
+                            firstPerson =
+                                await viewModel.getUserName(userId, "users");
+                            secondPerson = await viewModel.getUserName(
+                                FirebaseAuth.instance.currentUser!.uid,
+                                "drivers");
+                          }
+
+                          String roomId =
+                              viewModel.chatRoomId(secondPerson, firstPerson);
+
+                          String loggedInUserName =
+                              await viewModel.getCurrentUserName(
+                                  FirebaseAuth.instance.currentUser!.uid, role);
+
+                          // ignore: use_build_context_synchronously
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => ChatRoom(
+                                chatRoomId: roomId,
+                                userName: firstPerson,
+                                loggedInUserName: loggedInUserName,
+                              ),
+                            ),
+                          );
+                        },
                         color: Styles.primaryColor,
                       ),
                     ),
