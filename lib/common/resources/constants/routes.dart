@@ -1,4 +1,3 @@
-import 'package:ease_tour/screens/chat_screen/ui_chat_screen.dart';
 import 'package:ease_tour/screens/driver_home/ui_driver_home_screen.dart';
 import 'package:ease_tour/screens/driver_main/ui_driver_main_screen.dart';
 import 'package:ease_tour/screens/driver_main/widgets/incoming_rides/incoming_rides_screen.dart';
@@ -169,12 +168,6 @@ appRoutes() => [
       GetPage(
         name: '/sign_in_options',
         page: () => const SignInOptionsScreen(),
-        transition: Transition.fadeIn,
-        transitionDuration: const Duration(milliseconds: 200),
-      ),
-      GetPage(
-        name: '/chat_screen',
-        page: () => const ChatRoom(),
         transition: Transition.fadeIn,
         transitionDuration: const Duration(milliseconds: 200),
       ),

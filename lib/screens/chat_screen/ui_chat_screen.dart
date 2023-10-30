@@ -1,13 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:uuid/uuid.dart';
 
 class ChatRoom extends StatefulWidget {
-  // final Map<String, dynamic> userMap;
-  // final String chatRoomId;
+  final Map<String, dynamic> userMap;
+  final String chatRoomId;
 
   const ChatRoom({
     super.key,
+    required this.userMap,
+    required this.chatRoomId,
   });
 
   @override
@@ -17,28 +20,28 @@ class ChatRoom extends StatefulWidget {
 class _ChatRoomState extends State<ChatRoom> {
   final TextEditingController _message = TextEditingController();
 
-  // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void onSendMessage() async {
-    // if (_message.text.isNotEmpty) {
-    //   Map<String, dynamic> messages = {
-    //     "sendby": _auth.currentUser!.displayName,
-    //     "message": _message.text,
-    //     "type": "text",
-    //     "time": FieldValue.serverTimestamp(),
-    //   };
+    if (_message.text.isNotEmpty) {
+      Map<String, dynamic> messages = {
+        "sendby": _auth.currentUser!.displayName,
+        "message": _message.text,
+        "type": "text",
+        "time": FieldValue.serverTimestamp(),
+      };
 
-    //   _message.clear();
-    //   await _firestore
-    //       .collection('chatroom')
-    //       .doc(widget.chatRoomId)
-    //       .collection('chats')
-    //       .add(messages);
-    // } else {
-    //   print("Enter Some Text");
-    // }
+      _message.clear();
+      await _firestore
+          .collection('chatroom')
+          .doc(widget.chatRoomId)
+          .collection('chats')
+          .add(messages);
+    } else {
+      print("Enter Some Text");
+    }
   }
 
   @override
@@ -47,33 +50,28 @@ class _ChatRoomState extends State<ChatRoom> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Name"),
+        title: StreamBuilder<DocumentSnapshot>(
+          stream: _firestore
+              .collection("users")
+              .doc(widget.userMap['uid'])
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.data != null) {
+              return Column(
+                children: [
+                  Text(widget.userMap['name']),
+                  Text(
+                    snapshot.data!['status'],
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ],
+              );
+            } else {
+              return Container();
+            }
+          },
+        ),
       ),
-      // appBar: AppBar(
-      // title: StreamBuilder<DocumentSnapshot>(
-      //   stream: _firestore
-      //       .collection("users")
-      //       .doc(widget.userMap['uid'])
-      //       .snapshots(),
-      //   builder: (context, snapshot) {
-      //     if (snapshot.data != null) {
-      //       return Container(
-      //         child: Column(
-      //           children: [
-      //             Text(widget.userMap['name']),
-      //             Text(
-      //               snapshot.data!['status'],
-      //               style: TextStyle(fontSize: 14),
-      //             ),
-      //           ],
-      //         ),
-      //       );
-      //     } else {
-      //       return Container();
-      //     }
-      //   },
-      // ),
-      // ),
       body: SingleChildScrollView(
         child: Stack(
           children: [
