@@ -27,8 +27,6 @@ class UserMainView extends StackedView<UserMainViewModel> {
     return pv.Consumer(builder: (builder, ThemeProvider provider, child) {
       return WillPop(viewModel: viewModel);
     });
-
-    // return WillPop(viewModel: viewModel,);
   }
 
   @override

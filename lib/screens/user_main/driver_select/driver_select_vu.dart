@@ -289,17 +289,13 @@ Container container1(BuildContext context, DriverSelectViewModel viewModel,
                     //   driverCar = docData['vehicleName'];
                     //   vehicleNumber = docData['vehicalNumber'];
                     // });
-                    print(
-                        'These are the 2 Lists: $driversList, <=====> ${viewModel.listDriver}');
+
                     if (driversList != viewModel.listDriver) {
-                      print('Inside If ==========>');
                       viewModel.getDriverData(
                           driversList.keys
                               .elementAt(driversList.keys.length - 1),
                           driversList);
                     }
-
-                    print(driversList);
 
                     return GestureDetector(
                       onTap: () {

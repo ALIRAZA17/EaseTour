@@ -75,7 +75,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
     distanceInKiloMeters = 0;
     selectedLocation = ref.read(userLocLatLngProvider);
     await addCustomIcon();
-    print('Awaited Add Custom Icon');
     var position = await GeolocatorPlatform.instance.getCurrentPosition();
 
     currentLocation = LatLng(position.latitude, position.longitude);
