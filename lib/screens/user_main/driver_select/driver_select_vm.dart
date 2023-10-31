@@ -168,4 +168,25 @@ class DriverSelectViewModel extends BaseViewModel {
     });
     // notifyListeners();
   }
+
+  String chatRoomId(String user1, String user2) {
+    if (user1[0].toLowerCase().codeUnits[0] >
+        user2.toLowerCase().codeUnits[0]) {
+      return "$user1$user2";
+    } else {
+      return "$user2$user1";
+    }
+  }
+
+  Future<String> getUserName(String id, String role) async {
+    final doc = await FirebaseFirestore.instance.collection(role).doc(id).get();
+    final docData = doc.data();
+    return docData!['full_name'];
+  }
+
+  Future<String> getCurrentUserName(String id, String role) async {
+    final doc = await FirebaseFirestore.instance.collection(role).doc(id).get();
+    final docData = doc.data();
+    return docData!['full_name'];
+  }
 }

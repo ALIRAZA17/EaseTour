@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:uuid/uuid.dart';
 
@@ -24,8 +23,6 @@ class _ChatRoomState extends State<ChatRoom> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   void onSendMessage() async {
     if (_message.text.isNotEmpty) {
       Map<String, dynamic> messages = {
@@ -41,9 +38,7 @@ class _ChatRoomState extends State<ChatRoom> {
           .doc(widget.chatRoomId)
           .collection('chats')
           .add(messages);
-    } else {
-      print("Enter Some Text");
-    }
+    } else {}
   }
 
   @override
@@ -52,10 +47,10 @@ class _ChatRoomState extends State<ChatRoom> {
 
     return Scaffold(
       appBar: AppBar(title: Text(widget.userName)),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Container(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: SizedBox(
               height: size.height / 1.25,
               width: size.width,
               child: StreamBuilder<QuerySnapshot>(
@@ -82,42 +77,41 @@ class _ChatRoomState extends State<ChatRoom> {
                 },
               ),
             ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                height: size.height / 10,
-                width: size.width,
-                alignment: Alignment.center,
-                child: SizedBox(
-                  height: size.height / 12,
-                  width: size.width / 1.1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: size.height / 17,
-                        width: size.width / 1.3,
-                        child: TextField(
-                          controller: _message,
-                          decoration: InputDecoration(
-                              hintText: "Send Message",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              )),
-                        ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              height: size.height / 10,
+              width: size.width,
+              alignment: Alignment.center,
+              child: SizedBox(
+                height: size.height / 12,
+                width: size.width / 1.1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: size.height / 17,
+                      width: size.width / 1.3,
+                      child: TextField(
+                        controller: _message,
+                        decoration: InputDecoration(
+                            hintText: "Send Message",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            )),
                       ),
-                      IconButton(
-                          icon: const Icon(Icons.send),
-                          onPressed: onSendMessage),
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                        icon: const Icon(Icons.send), onPressed: onSendMessage),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -126,7 +120,7 @@ class _ChatRoomState extends State<ChatRoom> {
     return map['type'] == "text"
         ? Container(
             width: size.width,
-            alignment: map['sendby'] == _auth.currentUser!.displayName
+            alignment: map['sendby'] == widget.loggedInUserName
                 ? Alignment.centerRight
                 : Alignment.centerLeft,
             child: Container(
@@ -150,7 +144,7 @@ class _ChatRoomState extends State<ChatRoom> {
             height: size.height / 2.5,
             width: size.width,
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-            alignment: map['sendby'] == _auth.currentUser!.displayName
+            alignment: map['sendby'] == widget.loggedInUserName
                 ? Alignment.centerRight
                 : Alignment.centerLeft,
             child: InkWell(

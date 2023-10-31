@@ -1,6 +1,9 @@
 import 'package:ease_tour/common/resources/app_theme/theme_provider.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
+import 'package:ease_tour/screens/chat_screen/ui_chat_screen.dart';
+import 'package:ease_tour/screens/role/providers/role_provider.dart';
 import 'package:ease_tour/screens/user_main/driver_select/driver_select_vm.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -73,7 +76,7 @@ class MainWidget extends ConsumerWidget {
       const SizedBox(
         height: 15,
       ),
-      container2(context, viewModel),
+      container2(context, viewModel, ref),
       const SizedBox(
         height: 15,
       ),
@@ -140,7 +143,8 @@ class MainWidget extends ConsumerWidget {
   }
 }
 
-Container container2(BuildContext context, DriverSelectViewModel viewModel) {
+Container container2(
+    BuildContext context, DriverSelectViewModel viewModel, WidgetRef ref) {
   return Container(
     width: MediaQuery.of(context).size.width,
     padding: EdgeInsets.only(
@@ -167,18 +171,65 @@ Container container2(BuildContext context, DriverSelectViewModel viewModel) {
             ],
           ),
         ),
-        GestureDetector(
-          onTap: viewModel.onChatClicked,
-          child: Column(
-            children: [
-              SvgPicture.asset('assets/icons/friends.svg'),
-              Text(
-                'Chat',
-                style: Styles.displayXXXSLightStyle,
+        viewModel.changeScreenBool
+            ? GestureDetector(
+                onTap: () async {
+                  String id = viewModel.selectedDriverId!;
+
+                  String role = ref.read(roleProvider.notifier).state;
+
+                  String firstPerson;
+                  String secondPerson;
+
+                  if (role == "users") {
+                    firstPerson = await viewModel.getUserName(id, "drivers");
+                    secondPerson = await viewModel.getUserName(
+                        FirebaseAuth.instance.currentUser!.uid, "users");
+                  } else {
+                    firstPerson = await viewModel.getUserName(id, "users");
+                    secondPerson = await viewModel.getUserName(
+                        FirebaseAuth.instance.currentUser!.uid, "drivers");
+                  }
+
+                  String roomId =
+                      viewModel.chatRoomId(secondPerson, firstPerson);
+
+                  String loggedInUserName = await viewModel.getCurrentUserName(
+                      FirebaseAuth.instance.currentUser!.uid, role);
+
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => ChatRoom(
+                        chatRoomId: roomId,
+                        userName: firstPerson,
+                        loggedInUserName: loggedInUserName,
+                      ),
+                    ),
+                  );
+                },
+                child: Column(
+                  children: [
+                    SvgPicture.asset('assets/icons/friends.svg'),
+                    Text(
+                      'Chat',
+                      style: Styles.displayXXXSLightStyle,
+                    )
+                  ],
+                ),
               )
-            ],
-          ),
-        ),
+            : GestureDetector(
+                onTap: viewModel.onPaymentClicked,
+                child: Column(
+                  children: [
+                    SvgPicture.asset('assets/icons/friends.svg'),
+                    Text(
+                      'Payment',
+                      style: Styles.displayXXXSLightStyle,
+                    ),
+                  ],
+                ),
+              )
       ],
     ),
   );

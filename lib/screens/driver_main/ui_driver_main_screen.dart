@@ -343,7 +343,7 @@ class WillPop extends ConsumerWidget {
                       left: 15,
                       child: AppTextButton(
                         text: "End Ride",
-                        onTap: () {
+                        onTap: () async {
                           final userRef = FirebaseDatabase.instance.ref().child(
                               '/drivers/${FirebaseAuth.instance.currentUser!.uid}');
                           userRef.update(
@@ -354,20 +354,23 @@ class WillPop extends ConsumerWidget {
                           final userReference =
                               FirebaseDatabase.instance.ref().child('/drivers');
                           Stream stream = userReference.onValue;
-                          stream.listen((event) {
-                            final driverList = event.snapshot.value;
-                            for (int i = 0; i < driverList.length; i++) {
-                              final userRef = FirebaseDatabase.instance
-                                  .ref()
-                                  .child(
-                                      '/drivers/${driverList.keys.elementAt(i)}');
-                              userRef.update(
-                                {
-                                  'noLuck': false,
-                                },
-                              );
-                            }
-                          });
+                          stream.listen(
+                            (event) {
+                              final driverList = event.snapshot.value;
+                              for (int i = 0; i < driverList.length; i++) {
+                                final userRef = FirebaseDatabase.instance
+                                    .ref()
+                                    .child(
+                                        '/drivers/${driverList.keys.elementAt(i)}');
+                                userRef.update(
+                                  {
+                                    'noLuck': false,
+                                  },
+                                );
+                              }
+                            },
+                          );
+
                           final usersRef = FirebaseDatabase.instance
                               .ref()
                               .child('/users/${Get.arguments[0]}');
