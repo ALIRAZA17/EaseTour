@@ -151,7 +151,7 @@ class WillPop extends ConsumerWidget {
                                   ),
                                   AppTextButton(
                                     text: "Offer",
-                                    onTap: () {
+                                    onTap: () async {
                                       if (viewModel
                                           .controller.text.isNotEmpty) {
                                         bid = int.parse(
@@ -162,6 +162,14 @@ class WillPop extends ConsumerWidget {
                                               .instance.currentUser!.uid,
                                           bid,
                                         );
+
+                                        final rideStarted = await Get.toNamed(
+                                            '/ride_processing_screen',
+                                            arguments: [
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid
+                                            ]);
+                                        viewModel.ridetoStart(rideStarted);
                                       }
                                     },
                                     color: Styles.primaryColor,
