@@ -37,13 +37,10 @@ class OnBoardingView extends StackedView<OnBoardingViewModel> {
           children: [
             SvgPicture.asset('assets/images/onBoarding.svg'),
             DropShadowImage(
-              image: Image.asset('assets/images/logo.png'), borderRadius: 20,
-              //@blurRadius if not defined default value is
+              image: Image.asset('assets/images/logo.png'),
+              borderRadius: 20,
               blurRadius: 0.2,
-              //@offset default value is Offset(8,8)
               offset: const Offset(0, 0),
-              //@scale if not defined default value is 1
-              // scale: 1.05,
               scale: 0,
             ),
             // const Spacer(),

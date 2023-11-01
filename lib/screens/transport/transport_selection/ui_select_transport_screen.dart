@@ -36,7 +36,7 @@ class SelectTransportScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "WeGo",
+                      "HireCar",
                       style: Styles.displayXlBoldStyle.copyWith(
                         fontSize: 48,
                       ),
@@ -79,7 +79,7 @@ class SelectTransportScreen extends StatelessWidget {
                   width: 20,
                 ),
                 TransportOptionsContainer(
-                  image: "car.png",
+                  image: "logout.png",
                   title: "logOut",
                   onTap: () async {
                     try {

@@ -33,7 +33,11 @@ class TransportOptionsContainer extends StatelessWidget {
           child: Column(
             children: [
               Center(
-                child: Image.asset('assets/images/$image'),
+                child: Image.asset(
+                  'assets/images/$image',
+                  width: 108,
+                  height: 74,
+                ),
               ),
               const SizedBox(
                 height: 10,

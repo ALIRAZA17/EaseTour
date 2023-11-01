@@ -33,7 +33,7 @@ class SignInOptionsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "WeGo",
+                      "HireCar",
                       style: Styles.displayXlBoldStyle.copyWith(
                         fontSize: 48,
                       ),
@@ -66,7 +66,7 @@ class SignInOptionsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TransportOptionsContainer(
-                  image: "car.png",
+                  image: "signin.png",
                   title: "Sign In",
                   onTap: () {
                     Get.toNamed('/login');
@@ -76,7 +76,7 @@ class SignInOptionsScreen extends StatelessWidget {
                   width: 20,
                 ),
                 TransportOptionsContainer(
-                  image: "car.png",
+                  image: "signup.png",
                   title: "Sign Up",
                   onTap: () {
                     Get.toNamed('/signup');
