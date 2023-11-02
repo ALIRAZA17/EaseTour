@@ -68,6 +68,9 @@ class DriverMainScreenViewModel extends BaseViewModel {
   }
 
   void updateUserLocationLatLng(WidgetRef ref) async {
+    print('Recalled');
+    updateRequired = false;
+
     polylines.clear();
     markers.clear();
     polylinesPoints = [];
@@ -94,7 +97,6 @@ class DriverMainScreenViewModel extends BaseViewModel {
         icon: markerIcon,
       ),
     );
-
     await _getPolyline();
 
     if (allowAnimation) {
@@ -125,7 +127,7 @@ class DriverMainScreenViewModel extends BaseViewModel {
       (position) {
         position = position;
         currentLocation = LatLng(position.latitude, position.longitude);
-        // updateRequired = true;
+        updateRequired = true;
         notifyListeners();
       },
     );

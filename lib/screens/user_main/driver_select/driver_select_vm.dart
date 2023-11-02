@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ease_tour/screens/user_main/providers/driver_location.dart';
+import 'package:ease_tour/screens/user_main/providers/update_location_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -105,6 +106,7 @@ class DriverSelectViewModel extends BaseViewModel {
         );
       }
     }
+    ref.read(updateProvider.notifier).state = false;
     notifyListeners();
   }
 

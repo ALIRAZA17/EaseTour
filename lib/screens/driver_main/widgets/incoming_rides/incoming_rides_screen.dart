@@ -142,7 +142,7 @@ Widget friendsList(
                                   child: Text(
                                     userDestinationAddress,
                                     style: Styles.displayXMxtrLightStyle
-                                        .copyWith(fontSize: 14),
+                                        .copyWith(fontSize: 12),
                                   ),
                                 ),
                                 FittedBox(
@@ -152,7 +152,7 @@ Widget friendsList(
                                     style:
                                         Styles.displayXXXSLightStyle.copyWith(
                                       color: Styles.lightGrayTextColor,
-                                      fontSize: 14,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ),
@@ -164,12 +164,11 @@ Widget friendsList(
                                           .copyWith(
                                               color: const Color.fromRGBO(
                                                   135, 6, 46, 100),
-                                              fontSize: 14),
+                                              fontSize: 12),
                                     ),
                                     const SizedBox(
                                       width: 5,
                                     ),
-                                    const Text("-2.1 Km")
                                   ],
                                 ),
                               ],

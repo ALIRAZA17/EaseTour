@@ -60,8 +60,9 @@ class WillPop extends ConsumerWidget {
     if (data.isNotEmpty) {
       bid = data["rides"]["bid_amount"];
     }
-
+    print('This is the value of Update Required ${viewModel.updateRequired}');
     if (viewModel.updateRequired) {
+      print('Update Required is True');
       viewModel.updateUserLocationLatLng(ref);
     }
     if (viewModel.currentLocation != null) {
