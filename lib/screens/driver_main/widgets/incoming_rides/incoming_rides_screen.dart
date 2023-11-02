@@ -108,16 +108,6 @@ Widget friendsList(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipOval(
-                      child: Container(
-                        width: 50,
-                        height: 50,
-                        color: Styles.primaryColor,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 40,
-                    ),
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.only(
@@ -142,7 +132,7 @@ Widget friendsList(
                                   child: Text(
                                     userDestinationAddress,
                                     style: Styles.displayXMxtrLightStyle
-                                        .copyWith(fontSize: 12),
+                                        .copyWith(fontSize: 14),
                                   ),
                                 ),
                                 FittedBox(
@@ -152,7 +142,7 @@ Widget friendsList(
                                     style:
                                         Styles.displayXXXSLightStyle.copyWith(
                                       color: Styles.lightGrayTextColor,
-                                      fontSize: 12,
+                                      fontSize: 14,
                                     ),
                                   ),
                                 ),
@@ -164,7 +154,7 @@ Widget friendsList(
                                           .copyWith(
                                               color: const Color.fromRGBO(
                                                   135, 6, 46, 100),
-                                              fontSize: 12),
+                                              fontSize: 14),
                                     ),
                                     const SizedBox(
                                       width: 5,

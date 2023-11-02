@@ -42,7 +42,7 @@ class UserMainViewModel extends BaseViewModel {
   bool showDes = true;
   int money = 0;
   double _distanceInKiloMeters = 0;
-  double pricePerKm = 200;
+  double pricePerKm = 100;
   Map<dynamic, dynamic> driversData = {};
   bool allowMapClick = true;
   bool updateLocation = true;
