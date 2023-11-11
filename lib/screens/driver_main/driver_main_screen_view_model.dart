@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
+import 'package:ease_tour/screens/driver_main/widgets/providers/user_des_latlng_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_loc_latlng_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -75,9 +76,8 @@ class DriverMainScreenViewModel extends BaseViewModel {
     distanceInKiloMeters = 0;
     selectedLocation = ref.read(userLocLatLngProvider);
     await addCustomIcon();
-    var position = await GeolocatorPlatform.instance.getCurrentPosition();
 
-    currentLocation = LatLng(position.latitude, position.longitude);
+    currentLocation = ref.read(userDestLatLngProvider);
     if (currentLocation != null) {
       markers.add(
         Marker(

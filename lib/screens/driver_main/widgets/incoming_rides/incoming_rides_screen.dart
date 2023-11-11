@@ -2,6 +2,7 @@ import 'package:ease_tour/common/resources/app_theme/theme_provider.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/appBar/app_bar.dart';
 import 'package:ease_tour/screens/driver_main/widgets/incoming_rides/incoming_rides_view_model.dart';
+import 'package:ease_tour/screens/driver_main/widgets/providers/user_des_latlng_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_destination_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_loc_latlng_provider.dart';
 import 'package:ease_tour/screens/driver_main/widgets/providers/user_location_provider.dart';
@@ -100,6 +101,9 @@ Widget friendsList(
               final userLocation = LatLng(
                   ridesData.values.elementAt(index)["location"]["latitude"],
                   ridesData.values.elementAt(index)["location"]["longitude"]);
+              final userDestin = LatLng(
+                  ridesData.values.elementAt(index)["rides"]["des_latitude"],
+                  ridesData.values.elementAt(index)["rides"]["des_longitude"]);
               return Padding(
                 padding: const EdgeInsets.only(
                   top: 20.0,
@@ -186,6 +190,9 @@ Widget friendsList(
 
                                 ref.read(userLocLatLngProvider.notifier).state =
                                     userLocation;
+                                ref
+                                    .read(userDestLatLngProvider.notifier)
+                                    .state = userDestin;
 
                                 Get.toNamed('/driver_main_screen',
                                     arguments: [userIdToBeSent]);
