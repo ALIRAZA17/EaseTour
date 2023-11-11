@@ -58,11 +58,11 @@ class WillPop extends ConsumerWidget {
           viewModel.currentLocation!.longitude,
           viewModel.currentAddress);
     }
+
     if (ref.watch(driversLocationProvider) != null && viewModel.counter == 0) {
       viewModel.updatedSelectedLocation(ref);
-    }
-    if (viewModel.rideFinished) {
-      ref.read(driversLocationProvider.notifier).state = null;
+
+      // viewModel.resetDriverProvider = false;
     }
 
     return WillPopScope(

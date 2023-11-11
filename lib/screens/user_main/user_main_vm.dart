@@ -6,9 +6,11 @@ import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/button/multi_button.dart';
 import 'package:ease_tour/screens/user_main/providers/bid_amount_provider.dart';
 import 'package:ease_tour/screens/user_main/providers/driver_location.dart';
+import 'package:ease_tour/screens/user_main/providers/update_location_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart' as pp;
@@ -40,11 +42,12 @@ class UserMainViewModel extends BaseViewModel {
   bool showDes = true;
   int money = 0;
   double _distanceInKiloMeters = 0;
-  double pricePerKm = 200;
+  double pricePerKm = 100;
   Map<dynamic, dynamic> driversData = {};
   bool allowMapClick = true;
   bool updateLocation = true;
   int counter = 0;
+  bool resetDriverProvider = false;
 
   dynamic inviteeId;
 
@@ -109,9 +112,10 @@ class UserMainViewModel extends BaseViewModel {
       if (rideIsCompleted['rideFinished'] != null) {
         rideFinished = rideIsCompleted['rideFinished'];
         if (rideFinished) {
+          print('Ride is Finished');
           selectedLocation = null;
           confirmPressed = false;
-          counter = 0;
+          resetDriverProvider = true;
 
           destinationAddress = 'Enter Your Destination';
           polylines.clear();
@@ -135,9 +139,13 @@ class UserMainViewModel extends BaseViewModel {
             );
             currentAddress = await _getAddressFromLatLng(currentLocation);
           }
-          Future(() {
-            notifyListeners();
-          });
+          // Future(() {
+          notifyListeners();
+          // });
+
+          counter = 0;
+          resetDriverProvider = true;
+
           userRef.update({
             "rideFinished": false,
           });
@@ -169,6 +177,8 @@ class UserMainViewModel extends BaseViewModel {
   }
 
   void onGetDestinatation(BuildContext context, WidgetRef ref) async {
+    // ref.read(driversLocationProvider.notifier).state = null;
+
     polylines.clear();
     markers.clear();
     polylinesPoints = [];
@@ -609,44 +619,53 @@ class UserMainViewModel extends BaseViewModel {
   void updatedSelectedLocation(
     WidgetRef ref,
   ) async {
-    selectedLocation = ref.watch(driversLocationProvider);
-    polylines.clear();
-    markers.clear();
-    polylinesPoints = [];
-    if (currentLocation != null) {
-      markers.add(
-        Marker(
-          markerId: const MarkerId('maker'),
-          position: currentLocation!,
-          draggable: true,
-          onDragEnd: (location) => onDragEnd(location),
-          icon: markerIcon,
-        ),
-      );
-      markers.add(
-        Marker(
-          markerId: const MarkerId('destination'),
-          position: selectedLocation!,
-          icon: markerIcon,
-        ),
-      );
-
-      await _getPolyline();
-
-      mapController?.animateCamera(
-        CameraUpdate.newLatLngBounds(
-          LatLngBounds(
-            southwest: LatLng(currentLocation!.latitude - 0.05,
-                currentLocation!.longitude - 0.05),
-            northeast: LatLng(selectedLocation!.latitude + 0.05,
-                selectedLocation!.longitude + 0.05),
+    resetDriverProvider = ref.read(updateProvider);
+    if (!resetDriverProvider) {
+      selectedLocation = ref.watch(driversLocationProvider);
+      polylines.clear();
+      markers.clear();
+      polylinesPoints = [];
+      if (currentLocation != null) {
+        markers.add(
+          Marker(
+            markerId: const MarkerId('maker'),
+            position: currentLocation!,
+            draggable: true,
+            onDragEnd: (location) => onDragEnd(location),
+            icon: markerIcon,
           ),
-          0,
-        ),
-      );
+        );
+        markers.add(
+          Marker(
+            markerId: const MarkerId('destination'),
+            position: selectedLocation!,
+            icon: markerIcon,
+          ),
+        );
+
+        await _getPolyline();
+
+        mapController?.animateCamera(
+          CameraUpdate.newLatLngBounds(
+            LatLngBounds(
+              southwest: LatLng(currentLocation!.latitude - 0.05,
+                  currentLocation!.longitude - 0.05),
+              northeast: LatLng(selectedLocation!.latitude + 0.05,
+                  selectedLocation!.longitude + 0.05),
+            ),
+            0,
+          ),
+        );
+      }
+      counter++;
+      notifyListeners();
+      Future(() => ref.read(updateProvider.notifier).state = true);
+    } else {
+      print('DriverLocationProvider has been reset to null');
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        ref.read(driversLocationProvider.notifier).state = null;
+      });
     }
-    counter++;
-    notifyListeners();
   }
 
   void onInviteFriend() {

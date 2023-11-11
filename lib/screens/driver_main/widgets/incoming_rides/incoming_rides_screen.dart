@@ -112,16 +112,6 @@ Widget friendsList(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipOval(
-                      child: Container(
-                        width: 50,
-                        height: 50,
-                        color: Styles.primaryColor,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 40,
-                    ),
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.only(
@@ -173,7 +163,6 @@ Widget friendsList(
                                     const SizedBox(
                                       width: 5,
                                     ),
-                                    const Text("-2.1 Km")
                                   ],
                                 ),
                               ],
