@@ -660,7 +660,6 @@ class UserMainViewModel extends BaseViewModel {
       notifyListeners();
       Future(() => ref.read(updateProvider.notifier).state = true);
     } else {
-      print('DriverLocationProvider has been reset to null');
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         ref.read(driversLocationProvider.notifier).state = null;
       });
