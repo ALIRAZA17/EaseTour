@@ -112,7 +112,6 @@ class UserMainViewModel extends BaseViewModel {
       if (rideIsCompleted['rideFinished'] != null) {
         rideFinished = rideIsCompleted['rideFinished'];
         if (rideFinished) {
-          print('Ride is Finished');
           selectedLocation = null;
           confirmPressed = false;
           resetDriverProvider = true;
