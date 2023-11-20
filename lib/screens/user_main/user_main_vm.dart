@@ -523,9 +523,6 @@ class UserMainViewModel extends BaseViewModel {
   }
 
   getInvites(dynamic userId, context, message) async {
-    String userName =
-        await getUsersCurrentUserName(FirebaseAuth.instance.currentUser!.uid);
-
     DatabaseReference ref =
         FirebaseDatabase.instance.ref("users/$userId/invites");
     Stream stream = ref.onValue;
@@ -534,9 +531,11 @@ class UserMainViewModel extends BaseViewModel {
       if (invites == null) {
       } else {
         inviteeId = invites['requested_by'];
+
+        final username = getUserName(inviteeId);
         if (count == 0) {
           showWarningAlert(context,
-              title: "Invite from $userName",
+              title: "Invite from $username",
               message: message,
               enableCancelButton: true,
               okButtonLabel: 'Accept', onConfirm: () async {
@@ -601,7 +600,7 @@ class UserMainViewModel extends BaseViewModel {
     });
   }
 
-  Future<String> getUsersCurrentUserName(String id) async {
+  Future<String> getUserName(String id) async {
     final doc =
         await FirebaseFirestore.instance.collection("users").doc(id).get();
     final docData = doc.data();
