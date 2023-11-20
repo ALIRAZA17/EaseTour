@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ease_tour/common/resources/constants/others.dart';
 import 'package:ease_tour/common/resources/constants/styles.dart';
 import 'package:ease_tour/common/widgets/button/multi_button.dart';
@@ -521,7 +522,10 @@ class UserMainViewModel extends BaseViewModel {
     });
   }
 
-  getInvites(dynamic userId, context, title, message) async {
+  getInvites(dynamic userId, context, message) async {
+    String userName =
+        await getUsersCurrentUserName(FirebaseAuth.instance.currentUser!.uid);
+
     DatabaseReference ref =
         FirebaseDatabase.instance.ref("users/$userId/invites");
     Stream stream = ref.onValue;
@@ -532,7 +536,7 @@ class UserMainViewModel extends BaseViewModel {
         inviteeId = invites['requested_by'];
         if (count == 0) {
           showWarningAlert(context,
-              title: title,
+              title: "Invite from $userName",
               message: message,
               enableCancelButton: true,
               okButtonLabel: 'Accept', onConfirm: () async {
@@ -595,6 +599,13 @@ class UserMainViewModel extends BaseViewModel {
 
       notifyListeners();
     });
+  }
+
+  Future<String> getUsersCurrentUserName(String id) async {
+    final doc =
+        await FirebaseFirestore.instance.collection("users").doc(id).get();
+    final docData = doc.data();
+    return docData!['full_name'];
   }
 
   Future<void> updateUserBid(String userId, int bid) async {

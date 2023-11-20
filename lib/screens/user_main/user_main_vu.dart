@@ -33,8 +33,9 @@ class UserMainView extends StackedView<UserMainViewModel> {
   UserMainViewModel viewModelBuilder(BuildContext context) {
     UserMainViewModel userMainViewModel = UserMainViewModel();
     userMainViewModel.getUserLocation();
+
     userMainViewModel.getInvites(FirebaseAuth.instance.currentUser!.uid,
-        context, 'Invite From Friend', 'Press Accept to Start Ride');
+        context, 'Press Accept to Start Ride');
 
     userMainViewModel.getToPreviousScreen();
 
